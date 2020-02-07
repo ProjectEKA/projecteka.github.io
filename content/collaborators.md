@@ -11,5 +11,3 @@ Various organizations are involved in this endeavor,
 - [iSPIRT](https://ispirt.in/) as Advisor/Consultant of NHS Architecture
 - [ThoughtWorks Technologies](https://www.thoughtworks.com) as Technology partner
 
-If you are interested to know more or want to contribute, we would love to hear from you. Please join the [google group](https://groups.google.com/forum/#!forum/projecteka)
-
