@@ -7,7 +7,7 @@ layout: home
 API Documentation for the HDCM, HIP and HIU are available from the source code repositories. 
 
 - [Health Data Consent Manager (HDCM) APIs](https://github.com/ProjectEKA/consent-manager/blob/master/src/main/resources/static/api.yaml)
-- [Health Information User (HIP) APIs](https://github.com/ProjectEKA/health-information-user/blob/master/src/main/resources/static/swagger.yaml)
+- [Health Information User (HIU) APIs](https://github.com/ProjectEKA/health-information-user/blob/master/src/main/resources/static/swagger.yaml)
 - [Health Information Provider (HIP) APIs](https://github.com/ProjectEKA/hip-service/blob/master/src/In.ProjectEKA.HipService/wwwroot/swagger.yaml)
 
 
