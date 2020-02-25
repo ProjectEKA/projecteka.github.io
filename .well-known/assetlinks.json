@@ -1,0 +1,9 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "in.projecteka.jataayu.debug",
+    "sha256_cert_fingerprints":
+    ["E8:F3:67:C9:E8:BD:90:25:E2:41:E0:2E:5D:EB:EA:78:B9:F9:84:B2:57:9B:3C:92:CB:52:53:3D:3D:AA:7A:F9"]
+  }
+}]
