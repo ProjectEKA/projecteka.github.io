@@ -1,0 +1,44 @@
+{
+	"resourceType": "Bundle",
+	"id": "11123232324",
+	"type": "collection",
+	"entry": [{
+			"fullUrl": "https://example.com/base/Observation/clinicalnote1",
+			"resource": {
+				"resourceType": "Observation",
+				"id": "101",
+				"status": "final",
+				"code": {
+					"text": "Clinical notes"
+				},
+				"subject": {
+					"display": "Riyaz"
+				},
+				"performer": [{
+					"display": "400454"
+				}],
+				"effectiveDateTime": "2015-09-28T12:48:34+01:00",
+				"valueString": "CE/27726 Resection cavity is seen in the right CP angle region with evidence of partial resection of rightsided cerebellar peduncles, cerebellar hemisphere, pons and medulla oblongata. Linear area of post op hemmorrhage is seen in posterior wall of re"
+			}
+		},
+		{
+			"fullUrl": "https://example.com/base/Observation/clinicalnote1",
+			"resource": {
+				"resourceType": "Observation",
+				"id": "147",
+				"status": "final",
+				"code": {
+					"text": "Clinical notes"
+				},
+				"subject": {
+					"display": "Riyaz"
+				},
+				"performer": [{
+					"display": "102222"
+				}],
+				"effectiveDateTime": "2015-09-28T12:48:34+01:00",
+				"valueString": "USG ABDOMEN PORTABLE DATED 01.08.2016: The liver is normal in size, shape and shows homogenous echotexture. No focal or diffuse area of altered echogenicity is seen in the liver.There is no dilatation of the biliary tree. The gall bladder, pancr"
+			}
+		}
+	]
+}
