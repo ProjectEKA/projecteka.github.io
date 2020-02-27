@@ -1,0 +1,128 @@
+{
+  "resourceType": "Bundle",
+  "id": "11123232324",
+  "type": "collection",
+  "entry": [
+    {
+      "fullUrl": "123",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "vitals-panel",
+        "status": "final",
+        "code": {
+          "text": "Vital signs Panel"
+        },
+        "subject": {
+          "display": "Riya"
+        },
+        "effectiveDateTime": "1999-07-02",
+        "hasMember": [
+          {
+            "reference": "Observation/respiratory-rate",
+            "display": "Respiratory Rate"
+          },
+          {
+            "reference": "Observation/heart-rate",
+            "display": "Heart Rate"
+          },
+          {
+            "reference": "Observation/blood-pressure",
+            "display": "Blood Pressure"
+          },
+          {
+            "reference": "Observation/body-temperature",
+            "display": "Body Temperature"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "respiratory-rate",
+        "status": "final",
+        "code": {
+          "text": "Respiratory rate"
+        },
+        "subject": {
+          "display": "Riya"
+        },
+        "effectiveDateTime": "1999-07-02",
+        "valueString": "26 breaths/minute"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "heart-rate",
+        "status": "final",
+        "code": {
+          "text": "Heart rate"
+        },
+        "subject": {
+          "display": "Riya"
+        },
+        "effectiveDateTime": "1999-07-02",
+        "valueString": "44 beats/minutee"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "blood-pressure",
+        "status": "final",
+        "code": {
+          "text": "Blood pressure systolic & diastolic"
+        },
+        "subject": {
+          "display": "Riya"
+        },
+        "effectiveDateTime": "2012-09-17",
+        "interpretation": [
+          {
+            "text": "Below low normal"
+          }
+        ],
+        "component": [
+          {
+            "code": {
+              "text": "Systolic Blood pressure"
+            },
+            "valueString": "107 mmHg",
+            "interpretation": [
+              {
+                "text": "Normal"
+              }
+            ]
+          },
+          {
+            "code": {
+              "text": "Diastolic blood pressure"
+            },
+            "valueString": "60 mmHg",
+            "interpretation": [
+              {
+                "text": "Below low normal"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "body-temperature",
+        "status": "final",
+        "code": {
+          "text": "Body temperature"
+        },
+        "subject": {
+          "display": "Riya"
+        },
+        "effectiveDateTime": "1999-07-02",
+        "valueString": "36.5 C"
+      }
+    }
+  ]
+}
