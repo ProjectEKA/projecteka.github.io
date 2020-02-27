@@ -41,7 +41,7 @@
           {
             "display": "Doctor Dave"
           }
-          ],
+        ],
         "section": [
           {
             "title": "Events",
@@ -145,7 +145,6 @@
               {
                 "reference": "DiagnosticReport/diagnosticReport3"
               }
-              
             ]
           },
           {
@@ -550,6 +549,7 @@
       }
     },
     {
+      "fullUrl": "92093029",
       "resource": {
         "resourceType": "Observation",
         "id": "observation11",
@@ -563,23 +563,48 @@
         },
         "effectiveDateTime": "2019-12-03",
         "issued": "2018-04-03T15:30:10+01:00",
-        "component": [
+        "hasMember": [
           {
-            "code": {
-              "text": "Key Events"
-            },
-            "valueString": "Afebrile"
+            "reference": "Observation/Keyevent1",
+            "display": "Key Events"
           },
           {
-            "code": {
-              "text": "Action Taken"
-            },
-            "valueString": "Received Induction D1, Started Syp. Posaconazole D1, Anti TLS"
+            "reference": "Observation/Actiontaken1",
+            "display": "Actiontaken1"
           }
         ]
       }
     },
     {
+      "fullUrl": "9209308029",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Keyevent1",
+        "status": "final",
+        "code": {
+          "text": "Observation on Day1"
+        },
+        "effectiveDateTime": "2019-12-03",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "valueString": "Afebrile"
+      }
+    },
+    {
+      "fullUrl": "920930801029",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Actiontaken1",
+        "status": "final",
+        "code": {
+          "text": "Observation on Day1"
+        },
+        "effectiveDateTime": "2019-12-03",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "valueString": "Received Induction D1, Started Syp. Posaconazole D1, Anti TLS"
+      }
+    },
+    {
+      "fullUrl": "9120930801029",
       "resource": {
         "resourceType": "Observation",
         "id": "observation12",
@@ -593,23 +618,48 @@
         },
         "effectiveDateTime": "2019-12-04",
         "issued": "2018-04-03T15:30:10+01:00",
-        "component": [
+        "hasMember": [
           {
-            "code": {
-              "text": "Key Events"
-            },
-            "valueString": "Afebrile, mild cough"
+            "reference": "Observation/Keyevent2",
+            "display": "Key Events"
           },
           {
-            "code": {
-              "text": "Action Taken"
-            },
-            "valueString": "Continue Induction D2, Syp. Posaconazole, Anti TLS"
+            "reference": "Observation/Actiontaken2",
+            "display": "Actiontaken1"
           }
         ]
       }
     },
     {
+      "fullUrl": "9207756930801029",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Keyevent2",
+        "status": "final",
+        "code": {
+          "text": "Observation on Day2"
+        },
+        "effectiveDateTime": "2019-12-03",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "valueString": "Afebrile, mild cough"
+      }
+    },
+    {
+      "fullUrl": "9082220930801029",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Actiontaken2",
+        "status": "final",
+        "code": {
+          "text": "Observation on Day2"
+        },
+        "effectiveDateTime": "2019-12-03",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "valueString": "Continue Induction D2, Syp. Posaconazole, Anti TLS"
+      }
+    },
+    {
+      "fullUrl": "920930801211029",
       "resource": {
         "resourceType": "Observation",
         "id": "observation13",
@@ -623,20 +673,44 @@
         },
         "effectiveDateTime": "2019-12-05",
         "issued": "2018-04-03T15:30:10+01:00",
-        "component": [
+        "hasMember": [
           {
-            "code": {
-              "text": "Key Events"
-            },
-            "valueString": "Afebrile, cough better, Vitals stable"
+            "reference": "Observation/Keyevent3",
+            "display": "Key Events"
           },
           {
-            "code": {
-              "text": "Action Taken"
-            },
-            "valueString": "Continue Induction D3, Syp. Posaconazole, Anti TLS stopped "
+            "reference": "Observation/Actiontaken3",
+            "display": "Actiontaken"
           }
         ]
+      }
+    },
+    {
+      "fullUrl": "92093219786720801029",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Keyevent3",
+        "status": "final",
+        "code": {
+          "text": "Observation on Day3"
+        },
+        "effectiveDateTime": "2019-12-03",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "valueString": "Afebrile, cough better, Vitals stable"
+      }
+    },
+    {
+      "fullUrl": "92093543450801029",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Actiontaken3",
+        "status": "final",
+        "code": {
+          "text": "Observation on Day3"
+        },
+        "effectiveDateTime": "2019-12-03",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "valueString": "Continue Induction D3, Syp. Posaconazole, Anti TLS stopped "
       }
     },
     {
