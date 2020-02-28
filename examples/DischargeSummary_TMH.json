@@ -1,0 +1,1056 @@
+{
+  "resourceType": "Bundle",
+  "id": "12454326",
+  "meta": {
+    "lastUpdated": "2020-02-25T10:57:00Z"
+  },
+  "identifier": {
+    "system": "urn:ietf:rfc:3986",
+    "value": "urn:uuid:0c3151bd-1cbf-4d64-b04d-cd9187a4c6e0"
+  },
+  "type": "document",
+  "timestamp": "2020-02-25T10:57:00Z",
+  "entry": [
+    {
+      "fullUrl": "http://tmc.gov.in/composition/<id>",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "123456",
+        "type": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "28655-9"
+            }
+          ],
+          "text": "Discharge Summary from a Clinician"
+        },
+        "meta": {
+          "lastUpdated": "2020-02-25T10:57:00Z"
+        },
+        "status": "final",
+        "subject": {
+          "display": "Riyaz"
+        },
+        "encounter": {
+          "reference": "Encounter/Encounter1"
+        },
+        "date": "2013-02-01T12:30:02Z",
+        "title": "Discharge Summary",
+        "author": [
+          {
+            "display": "Doctor Dave"
+          }
+        ],
+        "section": [
+          {
+            "title": "Events",
+            "entry": [
+              {
+                "reference": "Condition/condition1"
+              }
+            ]
+          },
+          {
+            "title": "Complaints at admission",
+            "entry": [
+              {
+                "reference": "Condition/condition2"
+              },
+              {
+                "reference": "Condition/condition3"
+              }
+            ]
+          },
+          {
+            "title": "Clinical exam at admission",
+            "entry": [
+              {
+                "reference": "Observation/observation1"
+              },
+              {
+                "reference": "Observation/observation2"
+              },
+              {
+                "reference": "Observation/observation3"
+              },
+              {
+                "reference": "Observation/observation4"
+              },
+              {
+                "reference": "Observation/observation5"
+              },
+              {
+                "reference": "Observation/observation6"
+              },
+              {
+                "reference": "Observation/observation7"
+              },
+              {
+                "reference": "Observation/observation8"
+              },
+              {
+                "reference": "Observation/observation9"
+              },
+              {
+                "reference": "Observation/observation10"
+              }
+            ]
+          },
+          {
+            "title": "Medication Request",
+            "entry": [
+              {
+                "reference": "MedicationRequest/medicationrequest1"
+              },
+              {
+                "reference": "MedicationRequest/medicationrequest2"
+              }
+            ]
+          },
+          {
+            "title": "Course during hospital stay",
+            "entry": [
+              {
+                "reference": "Observation/observation11"
+              },
+              {
+                "reference": "Observation/observation12"
+              },
+              {
+                "reference": "Observation/observation13"
+              }
+            ]
+          },
+          {
+            "title": "Infection during hospital stay",
+            "entry": [
+              {
+                "reference": "Condition/condition4"
+              },
+              {
+                "reference": "Condition/condition5"
+              }
+            ]
+          },
+          {
+            "title": "Diagnostic Report",
+            "entry": [
+              {
+                "reference": "DiagnosticReport/diagnosticReport1"
+              },
+              {
+                "reference": "DiagnosticReport/diagnosticReport2"
+              },
+              {
+                "reference": "DiagnosticReport/diagnosticReport3"
+              }
+            ]
+          },
+          {
+            "title": "IV antibiotics ",
+            "entry": [
+              {
+                "reference": "MedicationRequest/medicationrequest3"
+              },
+              {
+                "reference": "MedicationRequest/medicationrequest4"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "1320080",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "condition1",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">unstructured data can be sent here</div>"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ],
+          "text": "active"
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ],
+          "text": "unconfirmed"
+        },
+        "severity": {
+          "text": "Intermediate"
+        },
+        "code": {
+          "text": "Probable Fungal Pneumonia(BAL Galactomannan positive)"
+        },
+        "subject": {
+          "display": "Riyaz"
+        },
+        "onsetDateTime": "2012-05-24",
+        "recordedDate": "2020-02-25T10:57:00Z"
+      }
+    },
+    {
+      "fullUrl": "3729732143498434123",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "condition2",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">unstructured data can be sent here</div>"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ],
+          "text": "active"
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ],
+          "text": "confirmed"
+        },
+        "severity": {
+          "text": "Intermediate"
+        },
+        "code": {
+          "text": "Fever high grade from last 2 weeks"
+        },
+        "subject": {
+          "display": "Riyaz"
+        },
+        "onsetDateTime": "2012-05-24",
+        "recordedDate": "2020-02-25T10:57:00Z"
+      }
+    },
+    {
+      "fullUrl": "3724334397321984343989",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "condition3",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">unstructured data can be sent here</div>"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ],
+          "text": "active"
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ],
+          "text": "confirmed"
+        },
+        "severity": {
+          "text": "Intermediate"
+        },
+        "code": {
+          "text": "Had pancytopenia with Dengue weak positive"
+        },
+        "subject": {
+          "display": "Riyaz"
+        },
+        "onsetDateTime": "2012-05-24",
+        "recordedDate": "2020-02-25T10:57:00Z"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "observation1",
+        "status": "final",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
+        },
+        "code": {
+          "text": "PS"
+        },
+        "effectiveDateTime": "2012-09-17",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "valueString": "0/1/2/3/4",
+        "interpretation": [
+          {
+            "text": "1"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "observation2",
+        "status": "final",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
+        },
+        "code": {
+          "text": "Nodes"
+        },
+        "effectiveDateTime": "2012-09-17",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "valueString": "No"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "observation3",
+        "status": "final",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
+        },
+        "code": {
+          "text": "Gums "
+        },
+        "effectiveDateTime": "2012-09-17",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "valueString": "NA"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "observation4",
+        "status": "final",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
+        },
+        "code": {
+          "text": "CNS"
+        },
+        "effectiveDateTime": "2012-09-17",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "valueString": "NA"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "observation5",
+        "status": "final",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
+        },
+        "code": {
+          "text": "Palllor"
+        },
+        "effectiveDateTime": "2012-09-17",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "valueString": "NA"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "observation6",
+        "status": "final",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
+        },
+        "code": {
+          "text": "Liver "
+        },
+        "effectiveDateTime": "2012-09-17",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "valueString": "No"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "observation7",
+        "status": "final",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
+        },
+        "code": {
+          "text": "Chest"
+        },
+        "effectiveDateTime": "2012-09-17",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "valueString": "B/L Clear, VBS+"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "observation8",
+        "status": "final",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
+        },
+        "code": {
+          "text": "Icterus"
+        },
+        "effectiveDateTime": "2012-09-17",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "valueString": "NA"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "observation9",
+        "status": "final",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
+        },
+        "code": {
+          "text": "Spleen"
+        },
+        "effectiveDateTime": "2012-09-17",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "valueString": "NO"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "observation10",
+        "status": "final",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
+        },
+        "code": {
+          "text": "CVS"
+        },
+        "effectiveDateTime": "2012-09-17",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "valueString": "S1 S2"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "medicationrequest1",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
+        },
+        "contained": [
+          {
+            "resourceType": "Medication",
+            "id": "medication1",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/sid/ndc",
+                  "code": "76388-713-25",
+                  "display": "Daunomycin"
+                }
+              ]
+            }
+          }
+        ],
+        "status": "active",
+        "intent": "order",
+        "subject": {
+          "display": "Riyaz"
+        },
+        "medicationReference": {
+          "reference": "#medication1",
+          "display": "Induction medication"
+        },
+        "authoredOn": "2019-12-03",
+        "dosageInstruction": [
+          {
+            "sequence": 1,
+            "text": "60mg/m2 ",
+            "timing": {
+              "code": {
+                "text": "D1-3"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "medicationrequest2",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
+        },
+        "contained": [
+          {
+            "resourceType": "Medication",
+            "id": "medication2",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/sid/ndc",
+                  "code": "76388-713-25",
+                  "display": "Cytarabine"
+                }
+              ]
+            }
+          }
+        ],
+        "status": "active",
+        "intent": "order",
+        "subject": {
+          "display": "Riyaz"
+        },
+        "medicationReference": {
+          "reference": "#medication2",
+          "display": "Induction medication"
+        },
+        "authoredOn": "2019-12-03",
+        "dosageInstruction": [
+          {
+            "sequence": 2,
+            "text": "100mg/m2/day",
+            "timing": {
+              "code": {
+                "text": "D1-7"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "92093029",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "observation11",
+        "status": "final",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
+        },
+        "code": {
+          "text": "Day1"
+        },
+        "effectiveDateTime": "2019-12-03",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "hasMember": [
+          {
+            "reference": "Observation/Keyevent1",
+            "display": "Key Events"
+          },
+          {
+            "reference": "Observation/Actiontaken1",
+            "display": "Actiontaken1"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "9209308029",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Keyevent1",
+        "status": "final",
+        "code": {
+          "text": "Observation on Day1"
+        },
+        "effectiveDateTime": "2019-12-03",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "valueString": "Afebrile"
+      }
+    },
+    {
+      "fullUrl": "920930801029",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Actiontaken1",
+        "status": "final",
+        "code": {
+          "text": "Observation on Day1"
+        },
+        "effectiveDateTime": "2019-12-03",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "valueString": "Received Induction D1, Started Syp. Posaconazole D1, Anti TLS"
+      }
+    },
+    {
+      "fullUrl": "9120930801029",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "observation12",
+        "status": "final",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
+        },
+        "code": {
+          "text": "Day2"
+        },
+        "effectiveDateTime": "2019-12-04",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "hasMember": [
+          {
+            "reference": "Observation/Keyevent2",
+            "display": "Key Events"
+          },
+          {
+            "reference": "Observation/Actiontaken2",
+            "display": "Actiontaken1"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "9207756930801029",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Keyevent2",
+        "status": "final",
+        "code": {
+          "text": "Observation on Day2"
+        },
+        "effectiveDateTime": "2019-12-03",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "valueString": "Afebrile, mild cough"
+      }
+    },
+    {
+      "fullUrl": "9082220930801029",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Actiontaken2",
+        "status": "final",
+        "code": {
+          "text": "Observation on Day2"
+        },
+        "effectiveDateTime": "2019-12-03",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "valueString": "Continue Induction D2, Syp. Posaconazole, Anti TLS"
+      }
+    },
+    {
+      "fullUrl": "920930801211029",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "observation13",
+        "status": "final",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
+        },
+        "code": {
+          "text": "Day3"
+        },
+        "effectiveDateTime": "2019-12-05",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "hasMember": [
+          {
+            "reference": "Observation/Keyevent3",
+            "display": "Key Events"
+          },
+          {
+            "reference": "Observation/Actiontaken3",
+            "display": "Actiontaken"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "92093219786720801029",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Keyevent3",
+        "status": "final",
+        "code": {
+          "text": "Observation on Day3"
+        },
+        "effectiveDateTime": "2019-12-03",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "valueString": "Afebrile, cough better, Vitals stable"
+      }
+    },
+    {
+      "fullUrl": "92093543450801029",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Actiontaken3",
+        "status": "final",
+        "code": {
+          "text": "Observation on Day3"
+        },
+        "effectiveDateTime": "2019-12-03",
+        "issued": "2018-04-03T15:30:10+01:00",
+        "valueString": "Continue Induction D3, Syp. Posaconazole, Anti TLS stopped "
+      }
+    },
+    {
+      "fullUrl": "37297321787898",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "condition4",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">unstructured data can be sent here</div>"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ],
+          "text": "Positive"
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ],
+          "text": "confirmed"
+        },
+        "severity": {
+          "text": "NA"
+        },
+        "code": {
+          "text": "BAL Galactomannan: Galactomannan antigen Index 1.181"
+        },
+        "subject": {
+          "display": "Riyaz"
+        },
+        "onsetDateTime": "2019-12-18",
+        "recordedDate": "2019-12-18T10:57:00Z"
+      }
+    },
+    {
+      "fullUrl": "3729732198",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "condition5",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">unstructured data can be sent here</div>"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "inactive"
+            }
+          ],
+          "text": "Negative"
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ],
+          "text": "confirmed"
+        },
+        "severity": {
+          "text": "NA"
+        },
+        "code": {
+          "text": "BAL CS, AFB"
+        },
+        "subject": {
+          "display": "Riyaz"
+        },
+        "onsetDateTime": "2019-12-23",
+        "recordedDate": "2019-12-23T10:57:00Z"
+      }
+    },
+    {
+      "fullUrl": "124343243",
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "diagnosticReport1",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
+        },
+        "status": "final",
+        "code": {
+          "text": "NCCT Thorax"
+        },
+        "subject": {
+          "display": "Riyaz"
+        },
+        "effectiveDateTime": "2019-11-26T08:30:00+11:00",
+        "issued": "2019-11-26T11:45:33+11:00",
+        "performer": [
+          {
+            "display": "Acme Laboratory, Inc"
+          }
+        ],
+        "media": [
+          {
+            "comment": "NCCT Thorax",
+            "link": {
+              "reference": "Media/media1",
+              "display": "NCCT Thorax"
+            }
+          }
+        ],
+        "conclusion": "CT reveals few subcm sized nodules in both the lungs -too small to characterize- in both the lungs. Follow up is suggested "
+      }
+    },
+    {
+      "fullUrl": "123875e5454213266565",
+      "resource": {
+        "resourceType": "Media",
+        "id": "media1",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
+        },
+        "status": "completed",
+        "content": {
+          "contentType": "application/dicom",
+          "data": "dG9vIGJpZyB0b28gaW5jbHVkZSB0aGUgd2hvbGU="
+        }
+      }
+    },
+    {
+      "fullUrl": "123088989",
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "diagnosticReport2",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
+        },
+        "status": "final",
+        "code": {
+          "text": "NCCT Thorax"
+        },
+        "subject": {
+          "display": "Riyaz"
+        },
+        "effectiveDateTime": "2019-11-26T08:30:00+11:00",
+        "issued": "2019-11-26T11:45:33+11:00",
+        "performer": [
+          {
+            "display": "Acme Laboratory, Inc"
+          }
+        ],
+        "media": [
+          {
+            "comment": "NCCT Thorax",
+            "link": {
+              "reference": "Media/media2",
+              "display": "NCCT Thorax"
+            }
+          }
+        ],
+        "conclusion": "CT reveals Few tiny subcm sized nodules scattered in bilateral lung – too small to characterize"
+      }
+    },
+    {
+      "fullUrl": "123875e5451114660000565",
+      "resource": {
+        "resourceType": "Media",
+        "id": "media2",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
+        },
+        "status": "completed",
+        "content": {
+          "contentType": "application/dicom",
+          "data": "dG9vIGJpZyB0b28gaW5jbHVkZSB0aGUgd2hvbGU="
+        }
+      }
+    },
+    {
+      "fullUrl": "123090",
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "diagnosticReport3",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
+        },
+        "status": "final",
+        "code": {
+          "text": "NCCT Thorax"
+        },
+        "subject": {
+          "display": "Riyaz"
+        },
+        "effectiveDateTime": "2019-11-26T08:30:00+11:00",
+        "issued": "2019-11-26T11:45:33+11:00",
+        "performer": [
+          {
+            "display": "Acme Laboratory, Inc"
+          }
+        ],
+        "media": [
+          {
+            "comment": "NCCT Thorax",
+            "link": {
+              "reference": "Media/media3",
+              "display": "NCCT Thorax"
+            }
+          }
+        ],
+        "conclusion": "CT reveals -Two new onset irregular nodules with subtle ground glass density around are seen in right upper lobe - likely infective"
+      }
+    },
+    {
+      "fullUrl": "123811232175e545466565",
+      "resource": {
+        "resourceType": "Media",
+        "id": "media3",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
+        },
+        "status": "completed",
+        "content": {
+          "contentType": "application/dicom",
+          "data": "dG9vIGJpZyB0b28gaW5jbHVkZSB0aGUgd2hvbGU="
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "medicationrequest3",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
+        },
+        "contained": [
+          {
+            "resourceType": "Medication",
+            "id": "medication3",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/sid/ndc",
+                  "code": "76388-713-25",
+                  "display": "Syp. Posaconazole"
+                }
+              ]
+            }
+          }
+        ],
+        "status": "active",
+        "intent": "order",
+        "subject": {
+          "display": "Riyaz"
+        },
+        "medicationReference": {
+          "reference": "#medication3",
+          "display": "IV antibiotics "
+        },
+        "authoredOn": "2019-12-03",
+        "dosageInstruction": [
+          {
+            "sequence": 1,
+            "text": "03/12/19 to 17/12/19",
+            "timing": {
+              "code": {
+                "text": "15 days"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "medicationrequest4",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
+        },
+        "contained": [
+          {
+            "resourceType": "Medication",
+            "id": "medication4",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/sid/ndc",
+                  "code": "76388-713-25",
+                  "display": "Inj. Magnex"
+                }
+              ]
+            }
+          }
+        ],
+        "status": "active",
+        "intent": "order",
+        "subject": {
+          "display": "Riyaz"
+        },
+        "medicationReference": {
+          "reference": "#medication4",
+          "display": "IV antibiotics "
+        },
+        "authoredOn": "2019-12-03",
+        "dosageInstruction": [
+          {
+            "sequence": 1,
+            "text": "10/12/19 to 18/12/19",
+            "timing": {
+              "code": {
+                "text": "9 days"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "Encounter1",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Encounter with patient @example</div>"
+        },
+        "status": "in-progress",
+        "class": {
+          "display": "Admitted for Induction"
+        }
+      }
+    }
+  ]
+}
