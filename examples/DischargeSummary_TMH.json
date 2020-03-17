@@ -457,6 +457,7 @@
       }
     },
     {
+      "fullUrl": "3724312e34397321984343989",
       "resource": {
         "resourceType": "MedicationRequest",
         "id": "medicationrequest1",
@@ -464,28 +465,13 @@
           "status": "additional",
           "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
         },
-        "contained": [
-          {
-            "resourceType": "Medication",
-            "id": "medication1",
-            "code": {
-              "coding": [
-                {
-                  "system": "http://hl7.org/fhir/sid/ndc",
-                  "code": "76388-713-25",
-                  "display": "Daunomycin"
-                }
-              ]
-            }
-          }
-        ],
         "status": "active",
         "intent": "order",
         "subject": {
           "display": "Riyaz"
         },
         "medicationReference": {
-          "reference": "#medication1",
+          "reference": "Medication/medication1",
           "display": "Induction medication"
         },
         "authoredOn": "2019-12-03",
@@ -504,34 +490,35 @@
     },
     {
       "resource": {
+        "resourceType": "Medication",
+        "id": "medication1",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/ndc",
+              "code": "76388-713-25",
+              "display": "Daunomycin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "3724312e346ub397321984343989",
+      "resource": {
         "resourceType": "MedicationRequest",
         "id": "medicationrequest2",
         "text": {
           "status": "additional",
           "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
         },
-        "contained": [
-          {
-            "resourceType": "Medication",
-            "id": "medication2",
-            "code": {
-              "coding": [
-                {
-                  "system": "http://hl7.org/fhir/sid/ndc",
-                  "code": "76388-713-25",
-                  "display": "Cytarabine"
-                }
-              ]
-            }
-          }
-        ],
         "status": "active",
         "intent": "order",
         "subject": {
           "display": "Riyaz"
         },
         "medicationReference": {
-          "reference": "#medication2",
+          "reference": "Medication/medication2",
           "display": "Induction medication"
         },
         "authoredOn": "2019-12-03",
@@ -546,6 +533,22 @@
             }
           }
         ]
+      }
+    },
+    {
+      "fullUrl": "1243543090",
+      "resource": {
+        "resourceType": "Medication",
+        "id": "medication2",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/ndc",
+              "code": "76388-713-25",
+              "display": "Cytarabine"
+            }
+          ]
+        }
       }
     },
     {
@@ -947,6 +950,7 @@
       }
     },
     {
+      "fullUrl": "123811232175e545454566565",
       "resource": {
         "resourceType": "MedicationRequest",
         "id": "medicationrequest3",
@@ -954,28 +958,13 @@
           "status": "additional",
           "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
         },
-        "contained": [
-          {
-            "resourceType": "Medication",
-            "id": "medication3",
-            "code": {
-              "coding": [
-                {
-                  "system": "http://hl7.org/fhir/sid/ndc",
-                  "code": "76388-713-25",
-                  "display": "Syp. Posaconazole"
-                }
-              ]
-            }
-          }
-        ],
         "status": "active",
         "intent": "order",
         "subject": {
           "display": "Riyaz"
         },
         "medicationReference": {
-          "reference": "#medication3",
+          "reference": "Medication/medication3",
           "display": "IV antibiotics "
         },
         "authoredOn": "2019-12-03",
@@ -993,6 +982,23 @@
       }
     },
     {
+      "fullUrl": "1254549090983090",
+      "resource": {
+        "resourceType": "Medication",
+        "id": "medication3",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/ndc",
+              "code": "76388-713-25",
+              "display": "Syp. Posaconazole"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "12381123211375e545454566565",
       "resource": {
         "resourceType": "MedicationRequest",
         "id": "medicationrequest4",
@@ -1000,28 +1006,13 @@
           "status": "additional",
           "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
         },
-        "contained": [
-          {
-            "resourceType": "Medication",
-            "id": "medication4",
-            "code": {
-              "coding": [
-                {
-                  "system": "http://hl7.org/fhir/sid/ndc",
-                  "code": "76388-713-25",
-                  "display": "Inj. Magnex"
-                }
-              ]
-            }
-          }
-        ],
         "status": "active",
         "intent": "order",
         "subject": {
           "display": "Riyaz"
         },
         "medicationReference": {
-          "reference": "#medication4",
+          "reference": "Medication/medication4",
           "display": "IV antibiotics "
         },
         "authoredOn": "2019-12-03",
@@ -1036,6 +1027,22 @@
             }
           }
         ]
+      }
+    },
+    {
+      "fullUrl": "1232344088096560",
+      "resource": {
+        "resourceType": "Medication",
+        "id": "medication4",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/ndc",
+              "code": "76388-713-25",
+              "display": "Inj. Magnex"
+            }
+          ]
+        }
       }
     },
     {
