@@ -1,13 +1,13 @@
 {
   "resourceType": "Bundle",
-  "id":"2345",
+  "id":"3cdc2933-2215-4af2-a055-52d9792354be",
   "type": "collection",
   "entry": [
     {
-      "fullUrl": "123efdfzxa8i34u7",
+      "fullUrl": "urn:uuid:2f573025-c783-45b3-8c40-5b2d7de9f3a1",
       "resource": {
         "resourceType": "DiagnosticReport",
-        "id": "diagnosticreport1",
+        "id": "2f573025-c783-45b3-8c40-5b2d7de9f3a1",
         "status": "final",
         "code": {
           "text": "Cardio-Oncology Case Sheet"
@@ -32,10 +32,10 @@
       }
     },
     {
-      "fullUrl": "123e23232fdfzxa87434837483",
+      "fullUrl": "urn:uuid:d2cf167b-8197-4500-bd4e-4a74c7b84998",
       "resource": {
         "resourceType": "DiagnosticReport",
-        "id": "diagnosticreport2",
+        "id": "d2cf167b-8197-4500-bd4e-4a74c7b84998",
         "status": "final",
         "code": {
           "text": "Radiology Report"
@@ -55,10 +55,10 @@
       }
     },
     {
-      "fullUrl": "123e23232fdfz74632894738xa87434837483",
+      "fullUrl": "urn:uuid:d0f533df-0f72-495c-90fe-50847d609414",
       "resource": {
         "resourceType": "DiagnosticReport",
-        "id": "diagnosticreport3",
+        "id": "d0f533df-0f72-495c-90fe-50847d609414",
         "status": "final",
         "code": {
           "text": "Surgical Pathology Report"
