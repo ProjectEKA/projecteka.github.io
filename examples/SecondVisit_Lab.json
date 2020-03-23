@@ -82,6 +82,174 @@
 				],
 				"address": "https://server.dcmjs.org/dcm4chee-arc/aets/DCM4CHEE/rs/studies/1.2.840.113619.2.1.1.322987881.621.736170080.681"
 			}
-		}
+		},
+  {
+      "fullUrl": "urn:uuid:c912214e-2e27-40e5-93da-c08b5a0008b9",
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "c912214e-2e27-40e5-93da-c08b5a0008b9",
+        "status": "final",
+        "subject": {
+          "display": "Mrs. Geetha Sundhar"
+        },
+        "code": {
+          "text": "Complete blood count (hemogram) panel - Blood by Automated count"
+        },
+        "issued": "2019-11-10T00:00:00+00:00",
+        "performer": [
+          {
+            "display": "Infinity labs"
+          }
+        ],
+        "result": [
+          {
+            "reference": "Observation/1a3094de-bd8f-4f31-a3f3-bd6097e1babe"
+          },
+          {
+            "reference": "Observation/85df1b1f-32a6-4df4-9406-7b8e26fb9c17"
+          },
+          {
+            "reference": "Observation/a93526da-d5e7-40b2-8c6b-022cbac2f77a"
+          },
+          {
+            "reference": "Observation/135b8565-3489-4146-82b7-ca1ae766c066"
+          },
+          {
+            "reference": "Observation/581859a5-7b4c-49e6-a0af-981b52181697"
+          }
+        ],
+        "conclusion": "Core lab"
+      }
+    },
+  {
+      "fullUrl": "urn:uuid:1a3094de-bd8f-4f31-a3f3-bd6097e1babe",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "1a3094de-bd8f-4f31-a3f3-bd6097e1babe",
+        "status": "final",
+        "code": {
+          "text": "Carbon dioxide in blood"
+        },
+        "subject": {
+          "display": "Mrs. Geetha Sundhar"
+        },
+        "effectiveDateTime": "2019-11-10T00:00:00+00:00",
+        "performer": [
+          {
+            "display": "Infinity labs"
+          }
+        ],
+        "valueString": "6.3 mmol/l",
+        "interpretation": [
+          {
+            "text": "High"
+          }
+        ]
+      }
+    },
+  {
+      "fullUrl": "urn:uuid:85df1b1f-32a6-4df4-9406-7b8e26fb9c17",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "85df1b1f-32a6-4df4-9406-7b8e26fb9c17",
+        "status": "final",
+        "code": {
+          "text": "Base excess in Blood by calculation"
+        },
+        "subject": {
+          "display": "Mrs. Geetha Sundhar"
+        },
+        "effectiveDateTime": "2019-11-10T00:00:00+00:00",
+        "performer": [
+          {
+            "display": "Infinity labs"
+          }
+        ],
+        "valueString": "12.6 mmol/l",
+        "interpretation": [
+          {
+            "text": "High"
+          }
+        ]
+      }
+    },
+  {
+      "fullUrl": "urn:uuid:a93526da-d5e7-40b2-8c6b-022cbac2f77a",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "a93526da-d5e7-40b2-8c6b-022cbac2f77a",
+        "status": "final",
+        "code": {
+          "text": "Carbon dioxide in blood"
+        },
+        "subject": {
+          "display": "Mrs. Geetha Sundhar"
+        },
+        "effectiveDateTime": "2019-11-10T00:00:00+00:00",
+        "performer": [
+          {
+            "display": "Infinity labs"
+          }
+        ],
+        "valueString": "6.2kPa",
+        "interpretation": [
+          {
+            "text": "High"
+          }
+        ]
+      }
+    },
+  {
+      "fullUrl": "urn:uuid:135b8565-3489-4146-82b7-ca1ae766c066",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "135b8565-3489-4146-82b7-ca1ae766c066",
+        "status": "final",
+        "code": {
+          "text": "Erythrocytes [#/volume] in Blood by Automated count"
+        },
+        "subject": {
+          "display": "Mrs. Geetha Sundhar"
+        },
+        "effectiveDateTime": "2019-11-10T00:00:00+00:00",
+        "performer": [
+          {
+            "display": "Infinity labs"
+          }
+        ],
+        "valueString": "4.12 10^12/L",
+        "interpretation": [
+          {
+            "text": "Low"
+          }
+        ]
+      }
+    },
+  {
+      "fullUrl": "urn:uuid:581859a5-7b4c-49e6-a0af-981b52181697",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "581859a5-7b4c-49e6-a0af-981b52181697",
+        "status": "final",
+        "code": {
+          "text": "Hemoglobin [Mass/volume] in Blood"
+        },
+        "subject": {
+          "display": "Mrs. Geetha Sundhar"
+        },
+        "effectiveDateTime": "2019-11-10T00:00:00+00:00",
+        "performer": [
+          {
+            "display": "Infinity labs"
+          }
+        ],
+        "valueString": "7.2 g/dl",
+        "interpretation": [
+          {
+            "text": "Low"
+          }
+        ]
+      }
+    }
   ]
 }
