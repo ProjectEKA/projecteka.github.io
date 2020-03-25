@@ -1,0 +1,132 @@
+{
+  "resourceType": "Bundle",
+  "id": "52333f82-baf9-4efe-98e8-3a7baa021974",
+  "type": "collection",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:0708cd9f-9413-40e8-b78b-4e49d8f450d7",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "0708cd9f-9413-40e8-b78b-4e49d8f450d7",
+        "status": "final",
+        "code": {
+          "text": "Vital signs Panel"
+        },
+        "subject": {
+          "display": "Riya"
+        },
+        "effectiveDateTime": "2019-07-02",
+        "hasMember": [
+          {
+            "reference": "Observation/6fbca7f5-046d-4a1e-a086-b769065e2385",
+            "display": "Respiratory Rate"
+          },
+          {
+            "reference": "Observation/d0819e70-8dcd-4048-a8c6-e63704b4d731",
+            "display": "Heart Rate"
+          },
+          {
+            "reference": "Observation/c1271eaf-3ebf-481b-9adf-d342a374c102",
+            "display": "Blood Pressure"
+          },
+          {
+            "reference": "Observation/40369761-c554-4ffe-9bde-2053d549f872",
+            "display": "Body Temperature"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl":"urn:uuid:6fbca7f5-046d-4a1e-a086-b769065e2385",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "6fbca7f5-046d-4a1e-a086-b769065e2385",
+        "status": "final",
+        "code": {
+          "text": "Respiratory rate"
+        },
+        "subject": {
+          "display": "Riya"
+        },
+        "effectiveDateTime": "2019-07-02",
+        "valueString": "26 breaths/minute"
+      }
+    },
+    {
+      "fullUrl":"urn:uuid:d0819e70-8dcd-4048-a8c6-e63704b4d731",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "d0819e70-8dcd-4048-a8c6-e63704b4d731",
+        "status": "final",
+        "code": {
+          "text": "Heart rate"
+        },
+        "subject": {
+          "display": "Riya"
+        },
+        "effectiveDateTime": "2019-07-02",
+        "valueString": "44 beats/minutee"
+      }
+    },
+    {
+      "fullUrl":"urn:uuid:c1271eaf-3ebf-481b-9adf-d342a374c102",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "c1271eaf-3ebf-481b-9adf-d342a374c102",
+        "status": "final",
+        "code": {
+          "text": "Blood pressure systolic & diastolic"
+        },
+        "subject": {
+          "display": "Riya"
+        },
+        "effectiveDateTime": "2012-09-17",
+        "interpretation": [
+          {
+            "text": "Below low normal"
+          }
+        ],
+        "component": [
+          {
+            "code": {
+              "text": "Systolic Blood pressure"
+            },
+            "valueString": "107 mmHg",
+            "interpretation": [
+              {
+                "text": "Normal"
+              }
+            ]
+          },
+          {
+            "code": {
+              "text": "Diastolic blood pressure"
+            },
+            "valueString": "60 mmHg",
+            "interpretation": [
+              {
+                "text": "Below low normal"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl":"urn:uuid:40369761-c554-4ffe-9bde-2053d549f872",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "40369761-c554-4ffe-9bde-2053d549f872",
+        "status": "final",
+        "code": {
+          "text": "Body temperature"
+        },
+        "subject": {
+          "display": "Riya"
+        },
+        "effectiveDateTime": "2019-07-02",
+        "valueString": "36.5 C"
+      }
+    }
+  ]
+}

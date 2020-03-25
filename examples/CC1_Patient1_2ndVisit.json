@@ -1,6 +1,6 @@
 {
   "resourceType": "Bundle",
-  "id": "d89b7d71-f0e1-4c29-840d-7ca0c4bffafc",
+  "id": "0e75550c-e78b-40e1-950a-1777e4ce94f7",
   "meta": {
     "lastUpdated": "2020-02-25T10:57:00Z"
   },
@@ -12,10 +12,10 @@
   "timestamp": "2020-02-25T10:57:00Z",
   "entry": [
     {
-      "fullUrl": "urn:uuid:809daedd-ab1c-4efe-9559-f0fcfae82dcb",
+      "fullUrl": "urn:uuid:bc3a4cc7-308a-4835-9e18-646f3bf6ec71",
       "resource": {
         "resourceType": "Composition",
-        "id": "809daedd-ab1c-4efe-9559-f0fcfae82dcb",
+        "id": "bc3a4cc7-308a-4835-9e18-646f3bf6ec71",
         "type": {
           "coding": [
             {
@@ -30,7 +30,7 @@
           "display": "Riyaz"
         },
         "encounter": {
-          "reference": "Encounter/27e9ade8-1243-49cd-9779-d9a31809f930"
+          "reference": "Encounter/37da31fe-3b85-4b20-886e-99da1a85263c"
         },
         "date": "2013-02-01T12:30:02Z",
         "title": "Discharge Summary",
@@ -52,7 +52,7 @@
             "title": "Events",
             "entry": [
               {
-                "reference": "Condition/74c88f34-58ef-466a-b245-2327e62f9632"
+                "reference": "Condition/7acb7079-a610-4921-adcc-8e6632e2d1bb"
               }
             ]
           },
@@ -60,10 +60,10 @@
             "title": "Complaints at admission",
             "entry": [
               {
-                "reference": "Condition/c0edcb20-0802-4437-9e9e-13814c40f559"
+                "reference": "Condition/280afe45-d8f8-4f0f-a558-93d44bd4b38e"
               },
               {
-                "reference": "Condition/f0494ca1-09f8-4e3c-b757-311c52eb164b"
+                "reference": "Condition/4746f237-f1f9-46ff-a5ac-a28571e1048d"
               }
             ]
           },
@@ -71,34 +71,34 @@
             "title": "Clinical exam at admission",
             "entry": [
               {
-                "reference": "Observation/70117bf4-9ff7-4d0f-91db-d256ede2a308"
+                "reference": "Observation/562940e4-d93c-49e4-b804-a17dd3d56df9"
               },
               {
-                "reference": "Observation/829cf837-fdde-43b6-9a55-71952166f506"
+                "reference": "Observation/1b1f56ee-a65c-4264-9725-3a0aefec158f"
               },
               {
                 "reference": "Observation/b305d94b-7c2b-4e5b-a904-c544efad0675"
               },
               {
-                "reference": "Observation/14f15dfa-877f-4174-bf18-40f9e43f0aad"
+                "reference": "Observation/ecb0dacf-4156-4c60-889d-6d5c0933e767"
               },
               {
-                "reference": "Observation/11601cfe-6f9f-4903-b1b9-96c8bf801338"
+                "reference": "Observation/1344b75a-f06e-4f95-b211-84851874ce90"
               },
               {
-                "reference": "Observation/2f1e0599-f584-4a1e-8bff-0577001fd3bf"
+                "reference": "Observation/4200b731-dbd4-4b83-801e-1d4d8f3782ef"
               },
               {
-                "reference": "Observation/ed90f213-579d-45eb-9874-bbf72ae1397d"
+                "reference": "Observation/b2a10875-b20d-4915-a675-99857c7f7e6f"
               },
               {
-                "reference": "Observation/9112f124-a38e-4c6b-a155-0f84aa7b6118"
+                "reference": "Observation/b4166718-86a7-49b8-9aa0-070067888eab"
               },
               {
-                "reference": "Observation/de6219e7-45b3-4bb1-8347-d559c4bea4ed"
+                "reference": "Observation/50ef3a1d-7dbf-4a06-a5dc-c40d6054245b"
               },
               {
-                "reference": "Observation/ff04a2b3-ea2d-4973-b124-2124f642283c"
+                "reference": "Observation/1f64c3e2-1fe3-4dc2-ad25-6714429586b6"
               }
             ]
           },
@@ -106,10 +106,10 @@
             "title": "Medication Request",
             "entry": [
               {
-                "reference": "MedicationRequest/1883ffd6-b84b-412d-9c3b-5da2289943c5"
+                "reference": "MedicationRequest/16372933-3497-4d6c-b481-a81136ce1481"
               },
               {
-                "reference": "MedicationRequest/b10ef439-f43f-48ae-a4f6-be9247d81797"
+                "reference": "MedicationRequest/f927cc40-c944-481b-88fe-a2ce78b6ea98"
               }
             ]
           },
@@ -117,13 +117,13 @@
             "title": "Course during hospital stay",
             "entry": [
               {
-                "reference": "Observation/f92f545f-3235-41b7-8f48-0b52e4355cdf"
+                "reference": "Observation/51b9203d-359c-44d7-9324-b96645d4c32c"
               },
               {
-                "reference": "Observation/c6222c1b-9921-4102-bb71-caaf60bc2715"
+                "reference": "Observation/adb9cc6b-e664-44a2-b84c-cd560510fa5e"
               },
               {
-                "reference": "Observation/f7405de9-37e5-4e0f-b083-39c649a51777"
+                "reference": "Observation/bba466a1-34f7-4b5b-b01f-29f43a29c65a"
               }
             ]
           },
@@ -131,10 +131,10 @@
             "title": "Infection during hospital stay",
             "entry": [
               {
-                "reference": "Condition/fa69b6c8-63d6-4eaf-8e81-88678fe6c6b4"
+                "reference": "Condition/687bd079-bad2-462f-9a12-d187062db7f1"
               },
               {
-                "reference": "Condition/19713b2d-82c2-489f-8882-d0b976d72d56"
+                "reference": "Condition/9b6f8a32-7ac1-4199-8bf0-b22a83bd5521"
               }
             ]
           },
@@ -142,13 +142,13 @@
             "title": "Diagnostic Report",
             "entry": [
               {
-                "reference": "DiagnosticReport/f9339fe7-0a7f-4e77-b734-b1240c169370"
+                "reference": "DiagnosticReport/f2cd6704-bd4e-4149-9cb9-dca65fdf8f65"
               },
               {
-                "reference": "DiagnosticReport/5d803665-3620-47a5-bf8a-7067b6a8226e"
+                "reference": "DiagnosticReport/9b97e2ef-ec01-4c59-9d88-9ccf4d1f4c5a"
               },
               {
-                "reference": "DiagnosticReport/ded01d76-cd63-4c37-9409-cf82e42510b9"
+                "reference": "DiagnosticReport/00e1304b-2e00-4676-b7dc-40dbf1c54bb0"
               }
             ]
           },
@@ -156,10 +156,10 @@
             "title": "IV antibiotics ",
             "entry": [
               {
-                "reference": "MedicationRequest/dafa854f-9f31-42e0-bc0c-e5f9be082adf"
+                "reference": "MedicationRequest/50216ddb-5317-4b16-94a7-71b1119dc73d"
               },
               {
-                "reference": "MedicationRequest/ef42ed48-67bf-405c-aeaa-5d230670b8dc"
+                "reference": "MedicationRequest/8e74a9d9-48cf-44c2-a4e4-6c9c22966b61"
               }
             ]
           }
@@ -167,10 +167,10 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:74c88f34-58ef-466a-b245-2327e62f9632",
+      "fullUrl": "urn:uuid:7acb7079-a610-4921-adcc-8e6632e2d1bb",
       "resource": {
         "resourceType": "Condition",
-        "id": "74c88f34-58ef-466a-b245-2327e62f9632",
+        "id": "7acb7079-a610-4921-adcc-8e6632e2d1bb",
         "text": {
           "status": "additional",
           "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">unstructured data can be sent here</div>"
@@ -207,10 +207,10 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:c0edcb20-0802-4437-9e9e-13814c40f559",
+      "fullUrl": "urn:uuid:280afe45-d8f8-4f0f-a558-93d44bd4b38e",
       "resource": {
         "resourceType": "Condition",
-        "id": "c0edcb20-0802-4437-9e9e-13814c40f559",
+        "id": "280afe45-d8f8-4f0f-a558-93d44bd4b38e",
         "text": {
           "status": "additional",
           "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">unstructured data can be sent here</div>"
@@ -247,10 +247,10 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:f0494ca1-09f8-4e3c-b757-311c52eb164b",
+      "fullUrl": "urn:uuid:4746f237-f1f9-46ff-a5ac-a28571e1048d",
       "resource": {
         "resourceType": "Condition",
-        "id": "f0494ca1-09f8-4e3c-b757-311c52eb164b",
+        "id": "4746f237-f1f9-46ff-a5ac-a28571e1048d",
         "text": {
           "status": "additional",
           "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">unstructured data can be sent here</div>"
@@ -287,9 +287,10 @@
       }
     },
     {
+      "fullUrl": "urn:uuid:562940e4-d93c-49e4-b804-a17dd3d56df9",
       "resource": {
         "resourceType": "Observation",
-        "id": "70117bf4-9ff7-4d0f-91db-d256ede2a308",
+        "id": "562940e4-d93c-49e4-b804-a17dd3d56df9",
         "status": "final",
         "text": {
           "status": "additional",
@@ -309,9 +310,10 @@
       }
     },
     {
+      "fullUrl": "urn:uuid:1b1f56ee-a65c-4264-9725-3a0aefec158f",
       "resource": {
         "resourceType": "Observation",
-        "id": "829cf837-fdde-43b6-9a55-71952166f506",
+        "id": "1b1f56ee-a65c-4264-9725-3a0aefec158f",
         "status": "final",
         "text": {
           "status": "additional",
@@ -343,9 +345,10 @@
       }
     },
     {
+      "fullUrl": "urn:uuid:ecb0dacf-4156-4c60-889d-6d5c0933e767",
       "resource": {
         "resourceType": "Observation",
-        "id": "14f15dfa-877f-4174-bf18-40f9e43f0aad",
+        "id": "ecb0dacf-4156-4c60-889d-6d5c0933e767",
         "status": "final",
         "text": {
           "status": "additional",
@@ -360,9 +363,10 @@
       }
     },
     {
+      "fullUrl": "urn:uuid:1344b75a-f06e-4f95-b211-84851874ce90",
       "resource": {
         "resourceType": "Observation",
-        "id": "11601cfe-6f9f-4903-b1b9-96c8bf801338",
+        "id": "1344b75a-f06e-4f95-b211-84851874ce90",
         "status": "final",
         "text": {
           "status": "additional",
@@ -377,9 +381,10 @@
       }
     },
     {
+      "fullUrl": "urn:uuid:4200b731-dbd4-4b83-801e-1d4d8f3782ef",
       "resource": {
         "resourceType": "Observation",
-        "id": "2f1e0599-f584-4a1e-8bff-0577001fd3bf",
+        "id": "4200b731-dbd4-4b83-801e-1d4d8f3782ef",
         "status": "final",
         "text": {
           "status": "additional",
@@ -394,9 +399,10 @@
       }
     },
     {
+      "fullUrl": "urn:uuid:b2a10875-b20d-4915-a675-99857c7f7e6f",
       "resource": {
         "resourceType": "Observation",
-        "id": "ed90f213-579d-45eb-9874-bbf72ae1397d",
+        "id": "b2a10875-b20d-4915-a675-99857c7f7e6f",
         "status": "final",
         "text": {
           "status": "additional",
@@ -411,9 +417,10 @@
       }
     },
     {
+      "fullUrl": "urn:uuid:b4166718-86a7-49b8-9aa0-070067888eab",
       "resource": {
         "resourceType": "Observation",
-        "id": "9112f124-a38e-4c6b-a155-0f84aa7b6118",
+        "id": "b4166718-86a7-49b8-9aa0-070067888eab",
         "status": "final",
         "text": {
           "status": "additional",
@@ -428,9 +435,10 @@
       }
     },
     {
+      "fullUrl": "urn:uuid:50ef3a1d-7dbf-4a06-a5dc-c40d6054245b",
       "resource": {
         "resourceType": "Observation",
-        "id": "de6219e7-45b3-4bb1-8347-d559c4bea4ed",
+        "id": "50ef3a1d-7dbf-4a06-a5dc-c40d6054245b",
         "status": "final",
         "text": {
           "status": "additional",
@@ -445,9 +453,10 @@
       }
     },
     {
+      "fullUrl": "urn:uuid:1f64c3e2-1fe3-4dc2-ad25-6714429586b6",
       "resource": {
         "resourceType": "Observation",
-        "id": "ff04a2b3-ea2d-4973-b124-2124f642283c",
+        "id": "1f64c3e2-1fe3-4dc2-ad25-6714429586b6",
         "status": "final",
         "text": {
           "status": "additional",
@@ -462,10 +471,10 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:1883ffd6-b84b-412d-9c3b-5da2289943c5",
+      "fullUrl": "urn:uuid:16372933-3497-4d6c-b481-a81136ce1481",
       "resource": {
         "resourceType": "MedicationRequest",
-        "id": "1883ffd6-b84b-412d-9c3b-5da2289943c5",
+        "id": "16372933-3497-4d6c-b481-a81136ce1481",
         "text": {
           "status": "additional",
           "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
@@ -483,12 +492,7 @@
         "dosageInstruction": [
           {
             "sequence": 1,
-            "text": "60mg/m2 ",
-            "timing": {
-              "code": {
-                "text": "D1-3"
-              }
-            }
+            "text": "60mg/m2 D1-3"
           }
         ]
       }
@@ -509,10 +513,10 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:b10ef439-f43f-48ae-a4f6-be9247d81797",
+      "fullUrl": "urn:uuid:f927cc40-c944-481b-88fe-a2ce78b6ea98",
       "resource": {
         "resourceType": "MedicationRequest",
-        "id": "b10ef439-f43f-48ae-a4f6-be9247d81797",
+        "id": "f927cc40-c944-481b-88fe-a2ce78b6ea98",
         "text": {
           "status": "additional",
           "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
@@ -530,12 +534,7 @@
         "dosageInstruction": [
           {
             "sequence": 2,
-            "text": "100mg/m2/day",
-            "timing": {
-              "code": {
-                "text": "D1-7"
-              }
-            }
+            "text": "100mg/m2/day D1-7"
           }
         ]
       }
@@ -557,10 +556,10 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:f92f545f-3235-41b7-8f48-0b52e4355cdf",
+      "fullUrl": "urn:uuid:51b9203d-359c-44d7-9324-b96645d4c32c",
       "resource": {
         "resourceType": "Observation",
-        "id": "f92f545f-3235-41b7-8f48-0b52e4355cdf",
+        "id": "51b9203d-359c-44d7-9324-b96645d4c32c",
         "status": "final",
         "text": {
           "status": "additional",
@@ -612,10 +611,10 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:c6222c1b-9921-4102-bb71-caaf60bc2715",
+      "fullUrl": "urn:uuid:adb9cc6b-e664-44a2-b84c-cd560510fa5e",
       "resource": {
         "resourceType": "Observation",
-        "id": "c6222c1b-9921-4102-bb71-caaf60bc2715",
+        "id": "adb9cc6b-e664-44a2-b84c-cd560510fa5e",
         "status": "final",
         "text": {
           "status": "additional",
@@ -667,10 +666,10 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:f7405de9-37e5-4e0f-b083-39c649a51777",
+      "fullUrl": "urn:uuid:bba466a1-34f7-4b5b-b01f-29f43a29c65a",
       "resource": {
         "resourceType": "Observation",
-        "id": "f7405de9-37e5-4e0f-b083-39c649a51777",
+        "id": "bba466a1-34f7-4b5b-b01f-29f43a29c65a",
         "status": "final",
         "text": {
           "status": "additional",
@@ -722,10 +721,10 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:fa69b6c8-63d6-4eaf-8e81-88678fe6c6b4",
+      "fullUrl": "urn:uuid:687bd079-bad2-462f-9a12-d187062db7f1",
       "resource": {
         "resourceType": "Condition",
-        "id": "fa69b6c8-63d6-4eaf-8e81-88678fe6c6b4",
+        "id": "687bd079-bad2-462f-9a12-d187062db7f1",
         "text": {
           "status": "additional",
           "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">unstructured data can be sent here</div>"
@@ -762,10 +761,10 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:19713b2d-82c2-489f-8882-d0b976d72d56",
+      "fullUrl": "urn:uuid:9b6f8a32-7ac1-4199-8bf0-b22a83bd5521",
       "resource": {
         "resourceType": "Condition",
-        "id": "19713b2d-82c2-489f-8882-d0b976d72d56",
+        "id": "9b6f8a32-7ac1-4199-8bf0-b22a83bd5521",
         "text": {
           "status": "additional",
           "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">unstructured data can be sent here</div>"
@@ -802,16 +801,16 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:f9339fe7-0a7f-4e77-b734-b1240c169370",
+      "fullUrl": "urn:uuid:f2cd6704-bd4e-4149-9cb9-dca65fdf8f65",
       "resource": {
         "resourceType": "DiagnosticReport",
-        "id": "f9339fe7-0a7f-4e77-b734-b1240c169370",
+        "id": "f2cd6704-bd4e-4149-9cb9-dca65fdf8f65",
         "text": {
           "status": "additional",
           "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
         },
         "status": "final",
-          "category": [
+        "category": [
           {
             "coding": [
               {
@@ -863,10 +862,10 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:5d803665-3620-47a5-bf8a-7067b6a8226e",
+      "fullUrl": "urn:uuid:9b97e2ef-ec01-4c59-9d88-9ccf4d1f4c5a",
       "resource": {
         "resourceType": "DiagnosticReport",
-        "id": "5d803665-3620-47a5-bf8a-7067b6a8226e",
+        "id": "9b97e2ef-ec01-4c59-9d88-9ccf4d1f4c5a",
         "text": {
           "status": "additional",
           "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
@@ -924,16 +923,16 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:ded01d76-cd63-4c37-9409-cf82e42510b9",
+      "fullUrl": "urn:uuid:00e1304b-2e00-4676-b7dc-40dbf1c54bb0",
       "resource": {
         "resourceType": "DiagnosticReport",
-        "id": "ded01d76-cd63-4c37-9409-cf82e42510b9",
+        "id": "00e1304b-2e00-4676-b7dc-40dbf1c54bb0",
         "text": {
           "status": "additional",
           "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
         },
         "status": "final",
-         "category": [
+        "category": [
           {
             "coding": [
               {
@@ -985,10 +984,10 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:dafa854f-9f31-42e0-bc0c-e5f9be082adf",
+      "fullUrl": "urn:uuid:50216ddb-5317-4b16-94a7-71b1119dc73d",
       "resource": {
         "resourceType": "MedicationRequest",
-        "id": "dafa854f-9f31-42e0-bc0c-e5f9be082adf",
+        "id": "50216ddb-5317-4b16-94a7-71b1119dc73d",
         "text": {
           "status": "additional",
           "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
@@ -1008,8 +1007,14 @@
             "sequence": 1,
             "text": "03/12/19 to 17/12/19",
             "timing": {
-              "code": {
-                "text": "15 days"
+              "repeat": {
+                "frequency": 1,
+                "period": 15,
+                "periodUnit": "d",
+                "when": [
+                  "ACM"
+                ],
+                "offset": 10
               }
             }
           }
@@ -1033,10 +1038,10 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:ef42ed48-67bf-405c-aeaa-5d230670b8dc",
+      "fullUrl": "urn:uuid:8e74a9d9-48cf-44c2-a4e4-6c9c22966b61",
       "resource": {
         "resourceType": "MedicationRequest",
-        "id": "ef42ed48-67bf-405c-aeaa-5d230670b8dc",
+        "id": "8e74a9d9-48cf-44c2-a4e4-6c9c22966b61",
         "text": {
           "status": "additional",
           "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Unstructured data can be sent here</div>"
@@ -1052,17 +1057,23 @@
         },
         "authoredOn": "2019-12-03",
         "note": [
-    {
-      "text": "Check patients vitals before taking the medicine"
-    }
-  ],
+          {
+            "text": "Check patients vitals before taking the medicine"
+          }
+        ],
         "dosageInstruction": [
           {
             "sequence": 1,
             "text": "10/12/19 to 18/12/19",
             "timing": {
-              "code": {
-                "text": "9 days"
+              "repeat": {
+                "frequency": 1,
+                "period": 9,
+                "periodUnit": "d",
+                "when": [
+                  "ACM"
+                ],
+                "offset": 10
               }
             }
           }
@@ -1088,7 +1099,7 @@
     {
       "resource": {
         "resourceType": "Encounter",
-        "id": "27e9ade8-1243-49cd-9779-d9a31809f930",
+        "id": "37da31fe-3b85-4b20-886e-99da1a85263c",
         "text": {
           "status": "generated",
           "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Encounter with patient @example</div>"

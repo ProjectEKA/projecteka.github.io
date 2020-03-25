@@ -1,0 +1,115 @@
+{
+  "resourceType": "Bundle",
+  "id": "389b3bc1-d68c-4ca8-b740-980fa52d8895",
+  "type": "collection",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:3cde962d-03a1-453c-a418-1248303ce41b",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "3cde962d-03a1-453c-a418-1248303ce41b",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ],
+          "text": "active"
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ],
+          "text": "unconfirmed"
+        },
+        "severity": {
+          "text": "Intermediate"
+        },
+        "code": {
+          "text": "Probable Fungal Pneumonia(BAL Galactomannan positive)"
+        },
+        "subject": {
+          "display": "Riyaz"
+        },
+        "onsetDateTime": "2012-05-24",
+        "recordedDate": "2020-02-25T10:57:00Z"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:fb511247-30f0-470b-b206-3516769c5d1a",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "fb511247-30f0-470b-b206-3516769c5d1a",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ],
+          "text": "active"
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ],
+          "text": "confirmed"
+        },
+        "severity": {
+          "text": "Intermediate"
+        },
+        "code": {
+          "text": "Fever high grade from last 2 weeks"
+        },
+        "subject": {
+          "display": "Riyaz"
+        },
+        "onsetDateTime": "2012-05-24",
+        "recordedDate": "2020-02-25T10:57:00Z"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:d18f6d7c-65d9-4792-a4d1-ea3f31e01906",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "d18f6d7c-65d9-4792-a4d1-ea3f31e01906",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ],
+          "text": "active"
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ],
+          "text": "confirmed"
+        },
+        "severity": {
+          "text": "Intermediate"
+        },
+        "code": {
+          "text": "Had pancytopenia with Dengue weak positive"
+        },
+        "subject": {
+          "display": "Riyaz"
+        },
+        "onsetDateTime": "2012-05-24",
+        "recordedDate": "2020-02-25T10:57:00Z"
+      }
+    }
+  ]
+}
