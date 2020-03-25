@@ -30,7 +30,7 @@
         "resourceType": "DiagnosticReport",
         "id": "6bd2a2f9-40bc-4a79-afd6-81e9db05429c",
         "status": "final",
-          "category": [
+        "category": [
           {
             "coding": [
               {
@@ -135,14 +135,26 @@
           "display": "IV antibiotics "
         },
         "authoredOn": "2020-01-22",
+        "note": [
+          {
+            "text": "Check patients vitals before taking the medicine"
+          }
+        ],
         "dosageInstruction": [
           {
             "sequence": 1,
             "text": "22/01/2020 to 07/02/2020",
             "timing": {
-              "code": {
-                "text": "15 days"
+              "repeat": {
+                "frequency": 1,
+                "period": 15,
+                "periodUnit": "d",
+                "when": [
+                  "ACM"
+                ],
+                "offset": 10
               }
+            }
             }
           }
         ]
@@ -184,8 +196,14 @@
             "sequence": 1,
             "text": "22/01/2020 to 31/01/2020",
             "timing": {
-              "code": {
-                "text": "9 days"
+              "repeat": {
+                "frequency": 1,
+                "period": 9,
+                "periodUnit": "d",
+                "when": [
+                  "ACM"
+                ],
+                "offset": 10
               }
             }
           }
