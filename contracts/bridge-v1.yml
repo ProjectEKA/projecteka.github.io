@@ -1,9 +1,9 @@
 openapi: 3.0.0
 info:
   version: 0.0.1
-  title: API Bridge
+  title: Bridge
   description: >
-    API bridge where health information providers and health information users are connected.
+    Bridge where health information providers and health information users are connected.
 servers:
   - url: https://ncg-dev.projecteka.in/api-bridge1
     description: Dev
