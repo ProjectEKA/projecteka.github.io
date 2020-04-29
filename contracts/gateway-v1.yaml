@@ -556,6 +556,21 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1/heartbeat:
+    get:
+      tags:
+        - monitoring
+      summary: Get consent request status
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HeartbeatResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/HeartbeatResponse'
 components:
   parameters:
     authorization:
@@ -1150,3 +1165,20 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ConsentArtefactReference'
+    HeartbeatResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          xml:
+            attribute: true
+        Status:
+          type: string
+          enum:
+            - UP
+            - DOWN
+        Error:
+          $ref: '#/components/schemas/Error'
+      xml:
+        name: HeartbeatResponse
