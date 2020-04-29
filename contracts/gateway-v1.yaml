@@ -609,7 +609,45 @@ paths:
         '401':
           description:  >
             **Causes:**
-              * Expired/Invalid token.
+              * Invalid client Id or secret.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/.well-known/openid-configuration:
+    get:
+      tags:
+        - sessions
+      summary: Get openid configuration
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenIdConfiguration'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/OpenIdConfiguration'
+        '404':
+          description: >
+            **Causes:**
+              * Invalid consent request id
           content:
             application/json:
               schema:
@@ -1270,3 +1308,10 @@ components:
         tokenType:
           type: string
           example: bearer
+    OpenIdConfiguration:
+      type: object
+      properties:
+        jwks_uri:
+          type: string
+          format: uri
+          example: "https://ncg-gateway/certs"
