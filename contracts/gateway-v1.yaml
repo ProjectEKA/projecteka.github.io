@@ -315,6 +315,80 @@ paths:
       responses:
         '201':
           description: Consent artefact stored
+  /v1/consent-requests:
+    post:
+      tags:
+        - consents
+      summary: Create consent request
+      description: Creates a consent request to get data about a patient by HIU user.
+      operationId: createConsentRequest
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-CM-ID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/ConsentRequest'
+      responses:
+        '200':
+          description: Successful creation of consent request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  consentRequest:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+        '400':
+          description:  >
+            **Causes:**
+              * Invalid data being sent such as patient doesn't exist in the system.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description:  >
+            **Causes:**
+              * Expired/Invalid token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   parameters:
     authorization:
@@ -336,6 +410,13 @@ components:
       in: header
       required: true
       description: Identifier of the health information user to which the request was intended.
+      schema:
+        type: string
+    X-CM-ID:
+      name: X-CM-ID
+      in: header
+      required: true
+      description: Suffix of the consent manager to which the request was intended.
       schema:
         type: string
     LinkRefNumber:
@@ -739,10 +820,6 @@ components:
           type: string
           xml:
             attribute: true
-        name:
-          type: string
-          xml:
-            attribute: true
       xml:
         name: OrganizationResponse
     OrganizationReference:
@@ -795,3 +872,54 @@ components:
         keyValue:
           type: string
           format: string
+    ConsentRequest:
+      type: object
+      properties:
+        consent:
+          type: object
+          required:
+            - purpose
+            - patient
+            - hiu
+            - requester
+            - hiTypes
+            - permission
+            - consentNotificationUrl
+          properties:
+            purpose:
+              $ref: '#/components/schemas/UsePurpose'
+            patient:
+              type: object
+              allOf:
+                - $ref: '#/components/schemas/ConsentManagerPatientID'
+                - xml:
+                    name: patient
+            hip:
+              type: object
+              allOf:
+                - $ref: '#/components/schemas/OrganizationRepresentation'
+                - xml:
+                    name: hip
+            hiu:
+              type: object
+              allOf:
+                - $ref: '#/components/schemas/OrganizationRepresentation'
+                - xml:
+                    name: hiu
+            requester:
+              $ref: '#/components/schemas/Requester'
+            hiTypes:
+              type: array
+              items:
+                $ref: '#/components/schemas/HITypeEnum'
+            permission:
+              $ref: '#/components/schemas/Permission'
+    Requester:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        identifier:
+          $ref: '#/components/schemas/Identifier'
