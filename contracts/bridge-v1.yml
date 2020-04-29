@@ -1,18 +1,17 @@
 openapi: 3.0.0
 info:
   version: 0.0.1
-  title: Gateway
+  title: API Bridge
   description: >
-    Gateway which orchestrates the interaction between consent managers and API bridges.
+    API bridge where health information providers and health information users are connected.
 servers:
-  - url: https://ncg-dev.projecteka.in/gateway
+  - url: https://ncg-dev.projecteka.in/api-bridge1
     description: Dev
 tags:
   - name: discovery
   - name: link
   - name: data flow
   - name: consents
-  - name: sessions
 paths:
   /v1/patients/discover/carecontexts:
     post:
@@ -29,7 +28,6 @@ paths:
           6. **Store the discover request entry with transactionId and care contexts discovered for a given request**
           7. **In case if there more than one patients (after ranking) or no patient satisfy the filters, return error**
       parameters:
-        - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"
       requestBody:
         required: true
@@ -100,7 +98,6 @@ paths:
           3. **Before linking, HIP needs to authenticate the request with the patient(Ex: OTP verification)**
           4. **Communicate the mode of authentication of a successful request with Consent Manager**
       parameters:
-        - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"
       requestBody:
         required: true
@@ -161,7 +158,6 @@ paths:
       tags:
         - link
       parameters:
-        - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"
         - $ref: '#/components/parameters/LinkRefNumber'
       summary: Authenticates the token submitted by Consent Manager and links the account if authentication is successful.
@@ -236,7 +232,6 @@ paths:
           2. When HIU bridge wants to consent manager need to set X-CM-ID
           3. When Consent manager wants to call HIP need to set X-HIP-ID
       parameters:
-        - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"
         - $ref: "#/components/parameters/X-CM-ID"
       requestBody:
@@ -302,7 +297,6 @@ paths:
           1. **IF status is GRANTED, both consent-artefact and signature are available**
           2. **ELSE both of these fields will be empty**
       parameters:
-        - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"
       requestBody:
         required: true
@@ -346,7 +340,6 @@ paths:
       description: >
        Health information user will get notified about the consent request granted or denied, consent revoked, consent expired.
       parameters:
-        - $ref: '#/components/parameters/authorization'
         - $ref: '#/components/parameters/X-HIU-ID'
       requestBody:
         required: true
@@ -387,8 +380,8 @@ paths:
       description: Creates a consent request to get data about a patient by HIU user.
       operationId: createConsentRequest
       parameters:
-        - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-CM-ID"
+        - $ref: '#/components/parameters/X-Origin-ID'
       requestBody:
         required: true
         content:
@@ -459,9 +452,9 @@ paths:
         - consents
       summary: Get consent artefact
       parameters:
-        - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-CM-ID"
         - $ref: "#/components/parameters/ConsentId"
+        - $ref: "#/components/parameters/X-Origin-ID"
       responses:
         '200':
           description: Consent artefact
@@ -512,8 +505,8 @@ paths:
         - data flow
       description: Notifications corresponding to events during data flow
       parameters:
-        - $ref: '#/components/parameters/authorization'
         - $ref: '#/components/parameters/X-CM-ID'
+        - $ref: "#/components/parameters/X-Origin-ID"
       requestBody:
         required: true
         content:
@@ -566,7 +559,7 @@ paths:
         - consents
       summary: Get consent request status
       parameters:
-        - $ref: '#/components/parameters/authorization'
+        - $ref: "#/components/parameters/X-Origin-ID"
         - $ref: '#/components/parameters/ConsentRequestId'
       responses:
         '200':
@@ -627,147 +620,13 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/HeartbeatResponse'
-  /v1/sessions:
-    post:
-      tags:
-        - sessions
-      summary: Get access token
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SessionRequest'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/SessionRequest'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SessionResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/SessionResponse'
-        '404':
-          description: >
-            **Causes:**
-              * Invalid consent request id
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description:  >
-            **Causes:**
-              * Invalid client Id or secret.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: >
-            **Causes:**
-              * Downstream system(s) is down.
-              * Unhandled exceptions.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v1/.well-known/openid-configuration:
-    get:
-      tags:
-        - sessions
-      summary: Get openid configuration
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OpenIdConfiguration'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/OpenIdConfiguration'
-        '404':
-          description: >
-            **Causes:**
-              * Invalid consent request id
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: >
-            **Causes:**
-              * Downstream system(s) is down.
-              * Unhandled exceptions.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v1/certs:
-    get:
-      tags:
-        - sessions
-      summary: Get certs for JWT verification
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Certs'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Certs'
-        '404':
-          description: >
-            **Causes:**
-              * Invalid consent request id
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: >
-            **Causes:**
-              * Downstream system(s) is down.
-              * Unhandled exceptions.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
 components:
   parameters:
-    authorization:
-      name: Authorization
+    X-Origin-ID:
+      name: X-HIP-ID
       in: header
       required: true
-      description: Access token which was issued after successful login with gateway auth server.
+      description: Identifier of the health information provider/user from which the request came. (Essentiality of this header depends on the authentication at the Bridge)
       schema:
         type: string
     X-HIP-ID:
@@ -1370,74 +1229,6 @@ components:
           $ref: '#/components/schemas/Error'
       xml:
         name: HeartbeatResponse
-    SessionRequest:
-      type: object
-      properties:
-        clientId:
-          type: string
-        clientSecret:
-          type: string
-        grantType:
-          type: string
-          enum: [ClientCredentials,RefreshToken]
-    SessionResponse:
-      type: object
-      properties:
-        accessToken:
-          type: string
-          example: eyJhbGciOiJSUzI1Ni.IsInR5cCIgOiAiSldUIiwia2lkIiA6ICJrVVp.2MXJQMjRyYXN1UW9wU2lWbkdZQUZIVFowYVZGVWpYNXFLMnNibTk0In0
-        expiresIn:
-          type: integer
-          example: 1800
-          description: In Minutes
-        refreshExpiresIn:
-          type: integer
-          example: 1800
-          description: In Minutes
-        refreshToken:
-          type: string
-          example: eyJhbGciOiJSUzI1Ni.IsInR5cCIgOiAiSldUIiwia2lkIiA6ICJrVVp.2MXJQMjRyYXN1UW9wU2lWbkdZQUZIVFowYVZGVWpYNXFLMnNibTk0In0
-        tokenType:
-          type: string
-          example: bearer
-    OpenIdConfiguration:
-      type: object
-      properties:
-        jwks_uri:
-          type: string
-          format: uri
-          example: "https://ncg-gateway/certs"
-    Certs:
-      type: object
-      properties:
-        keys:
-          type: array
-          items:
-            $ref: '#/components/schemas/CertificateOrKeyGetSchema'
-    CertificateOrKeyGetSchema:
-      type: object
-      properties:
-        e:
-          type: string
-        kid:
-          type: string
-        kty:
-          type: string
-        n:
-          type: string
-        use:
-          type: string
-        x5c:
-          type: array
-          items:
-            description: A PKIX certificate [RFC5280]
-            type: string
-        x5t:
-          type: string
-        x5t#S256:
-          type: string
-        alg:
-          type: string
     ConsentArtefactRepresentation:
       type: object
       properties:
