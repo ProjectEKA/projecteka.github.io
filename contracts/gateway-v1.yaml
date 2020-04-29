@@ -289,20 +289,18 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/consent/notification:
+  /v1/hip/consent/notification:
     post:
       tags:
         - consents
       summary: Consent notification
       description: >
-        Notification of consents to HIP and HIU when
-          1. **Consent request granted/denied(only to HIU if it's denied)**
-          2. **Consent revoked**
-          3. **Consent expired**
+        Notification of consents to health information providers consent request granted, consent revoked, consent expired.
+          1. **IF status is GRANTED, both consent-artefact and signature are available**
+          2. **ELSE both of these fields will be empty**
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"
-        - $ref: "#/components/parameters/X-HIU-ID"
       requestBody:
         required: true
         content:
@@ -313,8 +311,71 @@ paths:
             schema:
               $ref: '#/components/schemas/ConsentArtefact'
       responses:
-        '201':
-          description: Consent artefact stored
+        '204':
+          description: Consent notification accepted
+        '401':
+          description: >
+            **Causes:**
+              * Invalid/Expired/Empty token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream services are down
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/hiu/consent/notification/:
+    post:
+      tags:
+        - consents
+      summary: Consent notification
+      description: >
+       Health information user will get notified about the consent request granted or denied, consent revoked, consent expired.
+      parameters:
+        - $ref: '#/components/parameters/authorization'
+        - $ref: '#/components/parameters/X-HIU-ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentNotification'
+      responses:
+        '204':
+          description: Notification successful.
+        '401':
+          description: >
+            **Causes:**
+              * Invalid/Expired/Empty token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream services are down
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1/consent-requests:
     post:
       tags:
@@ -698,11 +759,8 @@ components:
       type: object
       required:
         - id
-        - digitalSignature
       properties:
         id:
-          type: string
-        digitalSignature:
           type: string
     dateRange:
       type: object
@@ -718,9 +776,15 @@ components:
           format: date-time
     ConsentArtefact:
       type: object
+      required:
+        - status
+        - consentId
       properties:
         status:
           $ref: '#/components/schemas/ConsentStatus'
+        consentId:
+          type: string
+          format: uuid
         consentDetail:
           type: object
           properties:
@@ -995,3 +1059,25 @@ components:
                     example: OK
                   description:
                     type: string
+    ConsentArtefactReference:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '<consent-artefact-id>'
+    ConsentNotification:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ConsentStatus'
+        timestamp:
+          type: string
+          format: date-time
+          description: Denotes the time at which consent was granted/revoked
+        consentRequestId:
+          type: string
+          example: '<consent-request-id>'
+        consentArtefacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConsentArtefactReference'
