@@ -481,6 +481,81 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description:  >
+            **Causes:**
+              * Expired/Invalid token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/consent-requests/{consentRequestId}/status:
+    get:
+      tags:
+        - consents
+      summary: Get consent request status
+      parameters:
+        - $ref: '#/components/parameters/authorization'
+        - $ref: '#/components/parameters/ConsentRequestId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentNotification'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ConsentNotification'
+        '404':
+          description: >
+            **Causes:**
+              * Invalid consent request id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description:  >
+            **Causes:**
+              * Expired/Invalid token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   parameters:
     authorization:
@@ -518,20 +593,14 @@ components:
       description: Reference number for the link request made earlier.
       schema:
         $ref: '#/components/schemas/UuidSchema'
-    InformationId:
-      name: informationId
+    ConsentRequestId:
+      name: consentRequestId
       in: path
       required: true
-      description: Information Id for which the link was created
+      description: Consent request's identifier
       schema:
-        $ref: '#/components/schemas/UuidSchema'
-    Token:
-      name: token
-      in: query
-      required: true
-      description: token that was generated for the link
-      schema:
-        $ref: '#/components/schemas/UuidSchema'
+        type: string
+        format: uuid
     TransactionId:
       name: transactionId
       in: query
