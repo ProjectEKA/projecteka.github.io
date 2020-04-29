@@ -29,6 +29,7 @@ paths:
           7. **In case if there more than one patients (after ranking) or no patient satisfy the filters, return error**
       parameters:
         - $ref: "#/components/parameters/X-HIP-ID"
+        - $ref: "#/components/parameters/authorization"
       requestBody:
         required: true
         content:
@@ -98,6 +99,7 @@ paths:
           3. **Before linking, HIP needs to authenticate the request with the patient(Ex: OTP verification)**
           4. **Communicate the mode of authentication of a successful request with Consent Manager**
       parameters:
+        - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"
       requestBody:
         required: true
@@ -158,6 +160,7 @@ paths:
       tags:
         - link
       parameters:
+        - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"
         - $ref: '#/components/parameters/LinkRefNumber'
       summary: Authenticates the token submitted by Consent Manager and links the account if authentication is successful.
@@ -232,6 +235,8 @@ paths:
           2. When HIU bridge wants to consent manager need to set X-CM-ID
           3. When Consent manager wants to call HIP need to set X-HIP-ID
       parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-Origin-ID"
         - $ref: "#/components/parameters/X-HIP-ID"
         - $ref: "#/components/parameters/X-CM-ID"
       requestBody:
@@ -297,6 +302,7 @@ paths:
           1. **IF status is GRANTED, both consent-artefact and signature are available**
           2. **ELSE both of these fields will be empty**
       parameters:
+        - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"
       requestBody:
         required: true
@@ -622,6 +628,13 @@ paths:
                 $ref: '#/components/schemas/HeartbeatResponse'
 components:
   parameters:
+    authorization:
+      name: Authorization
+      in: header
+      required: true
+      description: Access token which was issued after successful login with gateway auth server, which will be sent by gateway to authenticate itself with API bridge.
+      schema:
+        type: string
     X-Origin-ID:
       name: X-HIP-ID
       in: header
