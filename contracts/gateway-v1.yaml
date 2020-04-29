@@ -1,9 +1,9 @@
 openapi: 3.0.0
 info:
   version: 0.0.1
-  title: Consent Gateway
+  title: Gateway
   description: >
-    Consent gateway which orchestrates the interaction between consent managers and API bridges.
+    Gateway which orchestrates the interaction between consent managers and API bridges.
 servers:
   - url: https://ncg-dev.projecteka.in/gateway
     description: Dev
@@ -811,13 +811,6 @@ components:
       schema:
         type: string
         format: uuid
-    TransactionId:
-      name: transactionId
-      in: query
-      required: true
-      description: Data flow transaction id
-      schema:
-        $ref: '#/components/schemas/UuidSchema'
   schemas:
     UuidSchema:
       type: string
@@ -1008,13 +1001,13 @@ components:
     HealthInformationRequest:
       type: object
       required:
-        - transactionId
+        - requestId
         - consent
         - dataPushUrl
         - keyMaterial
         - dateRange
       properties:
-        transactionId:
+        requestId:
           $ref: '#/components/schemas/UuidSchema'
         consent:
           $ref: '#/components/schemas/consent'
@@ -1297,10 +1290,10 @@ components:
     HINotification:
       type: object
       properties:
-        transactionId:
-          type: string
+        requestId:
+          $ref: '#/components/schemas/UuidSchema'
         consentId:
-          type: string
+          $ref: '#/components/schemas/UuidSchema'
         doneAt:
           type: string
           format: date-time
