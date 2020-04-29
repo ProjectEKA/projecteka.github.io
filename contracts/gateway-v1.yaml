@@ -450,6 +450,59 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1/consents/{consentId}:
+    get:
+      tags:
+        - consents
+      summary: Get consent artefact
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-CM-ID"
+        - $ref: "#/components/parameters/ConsentId"
+      responses:
+        '200':
+          description: Successful creation of consent request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentArtefactRepresentation'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ConsentArtefactRepresentation'
+        '400':
+          description:  >
+            **Causes:**
+              * Invalid data being sent such as patient doesn't exist in the system.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description:  >
+            **Causes:**
+              * Expired/Invalid token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1/health-information/notification:
     post:
       tags:
@@ -750,6 +803,14 @@ components:
       schema:
         type: string
         format: uuid
+    ConsentId:
+      name: consentId
+      in: path
+      required: true
+      description: Consent request's identifier
+      schema:
+        type: string
+        format: uuid
     TransactionId:
       name: transactionId
       in: query
@@ -926,9 +987,6 @@ components:
         code:
           type: integer
           enum: [1000, 10001]
-          description: >
-            1. Error code 1000 : No patient found
-            2. Error code 1001: Multiple patients found
         message:
           type: string
       xml:
@@ -1384,3 +1442,67 @@ components:
           type: string
         alg:
           type: string
+    ConsentArtefactRepresentation:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ConsentStatus'
+        consentDetail:
+          type: object
+          properties:
+            schemaVersion:
+              type: string
+              format: string
+            consentId:
+              type: string
+              format: uuid
+            createdAt:
+              type: string
+              format: date-time
+            patient:
+              $ref: '#/components/schemas/ConsentManagerPatientID'
+            careContexts:
+              type: array
+              items:
+                type: object
+                required:
+                  - patientReference
+                  - careContextReference
+                properties:
+                  patientReference:
+                    type: string
+                    example: batman@tmh
+                  careContextReference:
+                    type: string
+                    example: Episode1
+            purpose:
+              $ref: '#/components/schemas/UsePurpose'
+            hip:
+              type: object
+              allOf:
+                - $ref: '#/components/schemas/OrganizationRepresentation'
+                - xml:
+                    name: hip
+            hiu:
+              type: object
+              allOf:
+                - $ref: '#/components/schemas/OrganizationRepresentation'
+                - xml:
+                    name: hiu
+            consentManager:
+              type: object
+              allOf:
+                - $ref: '#/components/schemas/OrganizationRepresentation'
+                - xml:
+                    name: consentManager
+            requester:
+              $ref: '#/components/schemas/Requester'
+            hiTypes:
+              type: array
+              items:
+                $ref: '#/components/schemas/HITypeEnum'
+            permission:
+              $ref: '#/components/schemas/Permission'
+        signature:
+          type: string
+          example: Signature of CM as defined in W3C standards; Base64 encoded
