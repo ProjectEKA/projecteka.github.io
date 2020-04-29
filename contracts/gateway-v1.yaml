@@ -761,6 +761,116 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+                
+  
+  /v1/providers:
+    get:
+      tags:
+        - providers
+      summary: Search providers
+      description: >
+        Returns matching providers by query parameters
+          1. **Gateway returns only providers that are connected to it via the bridges**
+          2. **The provider Id and representation is same as the provider registry public api.**
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - in: path
+          name: name
+          schema:
+            type: string
+          required: true
+          description: Name of the provider
+      responses:
+        '200':
+          description: Provider/Facility representation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderSearchRepresentation'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ProviderSearchRepresentation'
+        '401':
+          description:  >
+            **Causes:**
+              * Expired/Invalid token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        
+  /v1/providers/{providerId}:
+    get:
+      tags:
+        - providers
+      summary: Get specific provider by id
+      description: >
+        Returns matching providers by given providerId
+          1. **Gateway returns only if a provider is connected to it via a bridge**
+          2. **The provider Id and representation is same as the provider registry public api**
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/ProviderId"
+      responses:
+        '200':
+          description: Provider/Facility representation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderRepresentation'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ProviderRepresentation'
+        '401':
+          description:  >
+            **Causes:**
+              * Expired/Invalid token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: >
+            **Causes:**
+              * No matching provider record found for the given identifiers.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          
 components:
   parameters:
     authorization:
@@ -814,6 +924,14 @@ components:
       schema:
         type: string
         format: uuid
+    ProviderId:
+      name: providerId
+      in: path
+      required: true
+      description: Provider/Facility Registry id of the facility
+      schema:
+        type: string
+        format: number
   schemas:
     UuidSchema:
       type: string
@@ -1502,3 +1620,42 @@ components:
         signature:
           type: string
           example: Signature of CM as defined in W3C standards; Base64 encoded
+    ProviderRepresentation:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "100005"
+        name:
+          type: string
+          example: "TMH"
+        active:
+          type: boolean
+          example: true
+        endpoint:
+          type: array
+          items:
+            $ref: '#/components/schemas/EndpointRepresentation'
+    EndpointRepresentation:
+      type: object
+      properties:
+        address:
+          type: string
+          format: url
+          example: http://bridge1.example.com/hip/
+        type:
+          type: string
+          example: "HIPBRIDGE"
+        managingOrganization:
+              type: object
+              allOf:
+                - $ref: '#/components/schemas/OrganizationRepresentation'
+                - xml:
+                    name: managingOrganization
+    ProviderSearchRepresentation:
+      type: array
+      items:
+        $ref: '#/components/schemas/ProviderRepresentation'
+      xml:
+        name: ProvidersResponse
+          
