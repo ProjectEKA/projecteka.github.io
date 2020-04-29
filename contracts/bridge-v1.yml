@@ -636,10 +636,12 @@ components:
       schema:
         type: string
     X-Origin-ID:
-      name: X-HIP-ID
+      name: X-Origin-ID
       in: header
-      required: true
-      description: Identifier of the health information provider/user from which the request came. (Essentiality of this header depends on the authentication at the Bridge)
+      description: >
+       Identifier of the health information provider user from which the request came.
+       (Necessity of this header depends on the authentication at the Bridge)
+       If gateway uses JWT authentication, from access token itself originator can be identified.
       schema:
         type: string
     X-HIP-ID:
