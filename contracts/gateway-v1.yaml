@@ -667,6 +667,44 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1/certs:
+    get:
+      tags:
+        - sessions
+      summary: Get certs for JWT verification
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Certs'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Certs'
+        '404':
+          description: >
+            **Causes:**
+              * Invalid consent request id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   parameters:
     authorization:
@@ -1315,3 +1353,34 @@ components:
           type: string
           format: uri
           example: "https://ncg-gateway/certs"
+    Certs:
+      type: object
+      properties:
+        keys:
+          type: array
+          items:
+            $ref: '#/components/schemas/CertificateOrKeyGetSchema'
+    CertificateOrKeyGetSchema:
+      type: object
+      properties:
+        e:
+          type: string
+        kid:
+          type: string
+        kty:
+          type: string
+        n:
+          type: string
+        use:
+          type: string
+        x5c:
+          type: array
+          items:
+            description: A PKIX certificate [RFC5280]
+            type: string
+        x5t:
+          type: string
+        x5t#S256:
+          type: string
+        alg:
+          type: string
