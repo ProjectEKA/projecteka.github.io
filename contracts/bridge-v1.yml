@@ -249,15 +249,8 @@ paths:
             schema:
               $ref: '#/components/schemas/HealthInformationRequest'
       responses:
-        '200':
-          description: An Acknowledged data transfer request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HealthInformationRequestResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/HealthInformationRequestResponse'
+        '204':
+          description: Data transfer request accepted.
         '400':
           description: >
             **Causes:**
@@ -894,13 +887,6 @@ components:
           type: string
         keyMaterial:
           $ref: '#/components/schemas/keyMaterial'
-    HealthInformationRequestResponse:
-      type: object
-      required:
-        - acknowledgementId
-      properties:
-        acknowledgementId:
-          type: string
     consent:
       type: object
       required:
