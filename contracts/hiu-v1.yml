@@ -16,7 +16,7 @@ tags:
   - name: data notification
 
 paths:
-  /consent/notification/:
+  /v1/consent/notification/:
     post:
       tags:
         - consent notification
@@ -42,7 +42,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /data/notification:
+  /v1/data/notification:
     post:
       tags:
         - data notification
