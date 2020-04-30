@@ -1115,7 +1115,12 @@ components:
           format: string
     ConsentRequest:
       type: object
+      required:
+        - requestId
+        - consent
       properties:
+        requestId:
+          $ref: '#/components/schemas/UuidSchema'
         consent:
           type: object
           required:
