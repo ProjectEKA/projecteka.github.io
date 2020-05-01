@@ -1,0 +1,233 @@
+openapi: 3.0.0
+info:
+  version: 0.0.1
+  title: Provider Registry
+  description: >
+    Provider Registry that provides minimal information about a Healthcare Provider
+servers:
+  - url: https://ncg-dev.projecteka.in/provider
+    description: Dev
+tags:
+  - name: providers
+paths:
+  /v1/healthcare-service:
+    get:
+      tags:
+        - healthcare service
+      summary: Search a healthcare service
+      description: >
+        Returns matching providers by query parameters
+          1. **returns a specific healthcare service**
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/offset'
+        - in: path
+          name: name
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Provider/Facility representation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderSearchRepresentation'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ProviderSearchRepresentation'
+        '401':
+          description:  >
+            **Causes:**
+              * Expired/Invalid token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /v1/healthcare-service/{healthcareServiceId}:
+    get:
+      tags:
+        - providers
+      summary: Get specific healthcare service by id
+      description: >
+        Returns matching healthcare services by given healthcareServiceId
+          1. **Gateway returns only if a provider is connected to it via a bridge**
+          2. **The provider Id and representation is same as the provider registry public api**
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/healthcareServiceId"
+      responses:
+        '200':
+          description: Provider/Facility representation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderRepresentation'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ProviderRepresentation'
+        '401':
+          description:  >
+            **Causes:**
+              * Expired/Invalid token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: >
+            **Causes:**
+              * No matching provider record found for the given identifiers.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          
+components:
+  parameters:
+    authorization:
+      name: Authorization
+      in: header
+      required: true
+      description: Access token which was issued after successful login with gateway auth server.
+      schema:
+        type: string
+    healthcareServiceId:
+      name: healthcareServiceId
+      in: path
+      required: true
+      description: Provider/Facility Registry id of the facility
+      schema:
+        type: string
+        format: number
+    limit:
+      name: limit
+      in: query
+      description: How many items to return at one time (max 100) (recommended to sent always)
+      required: false
+      schema:
+        type: integer
+        format: int32
+    offset:
+      name: offset
+      in: query
+      description: How many items out of line.
+      required: false
+      schema:
+        type: integer
+        format: int32
+  
+  schemas:
+    UuidSchema:
+      type: string
+      format: uuid
+      example: a1s2c932-2f70-3ds3-a3b5-2sfd46b12a18d
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          enum: [1000, 10001]
+        message:
+          type: string
+      xml:
+        name: Error
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/Error'
+    OrganizationRepresentation:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          xml:
+            attribute: true
+      xml:
+        name: OrganizationResponse
+    ProviderRepresentation:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "100005"
+        name:
+          type: string
+          example: "TMH"
+        active:
+          type: boolean
+          example: true
+        endpoint:
+          type: array
+          items:
+            $ref: '#/components/schemas/EndpointRepresentation'
+    EndpointRepresentation:
+      type: object
+      properties:
+        address:
+          type: string
+          format: url
+          example: http://bridge1.example.com/hip/
+        type:
+          type: string
+          example: "HIPBRIDGE"
+        managingOrganization:
+              type: object
+              allOf:
+                - $ref: '#/components/schemas/OrganizationRepresentation'
+                - xml:
+                    name: managingOrganization
+    ProviderSearchRepresentation:
+      type: object
+      properties:
+        limit:
+            type: integer
+        offset:
+          type: integer
+        size:
+          type: integer
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProviderRepresentation'
+      xml:
+        name: ProvidersResponse
+          
