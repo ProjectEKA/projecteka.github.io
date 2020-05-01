@@ -234,11 +234,9 @@ paths:
         Acknowledge data request for Health information
           1. **Validate consent artefact id**
           2. When HIU bridge wants to consent manager need to set X-CM-ID
-          3. When Consent manager wants to call HIP need to set X-HIP-ID
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-Origin-ID"
-        - $ref: "#/components/parameters/X-HIP-ID"
         - $ref: "#/components/parameters/X-CM-ID"
       requestBody:
         required: true
