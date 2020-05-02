@@ -10,8 +10,9 @@ servers:
 tags:
   - name: discovery
   - name: link
+  - name: consent flow
   - name: data flow
-  - name: consents
+  - name: monitoring
 paths:
   /v1/patients/discover/carecontexts:
     post:
@@ -233,11 +234,9 @@ paths:
         Acknowledge data request for Health information
           1. **Validate consent artefact id**
           2. When HIU bridge wants to consent manager need to set X-CM-ID
-          3. When Consent manager wants to call HIP need to set X-HIP-ID
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-Origin-ID"
-        - $ref: "#/components/parameters/X-HIP-ID"
         - $ref: "#/components/parameters/X-CM-ID"
       requestBody:
         required: true
@@ -285,96 +284,12 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/hip/consent/notification:
-    post:
-      tags:
-        - consents
-      summary: Consent notification
-      description: >
-        Notification of consents to health information providers consent request granted, consent revoked, consent expired.
-          1. **IF status is GRANTED, both consent-artefact and signature are available**
-          2. **ELSE both of these fields will be empty**
-      parameters:
-        - $ref: "#/components/parameters/authorization"
-        - $ref: "#/components/parameters/X-HIP-ID"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ConsentArtefact'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/ConsentArtefact'
-      responses:
-        '204':
-          description: Consent notification accepted
-        '401':
-          description: >
-            **Causes:**
-              * Invalid/Expired/Empty token.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: >
-            **Causes:**
-              * Downstream services are down
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v1/hiu/consent/notification/:
-    post:
-      tags:
-        - consents
-      summary: Consent notification
-      description: >
-       Health information user will get notified about the consent request granted or denied, consent revoked, consent expired.
-      parameters:
-        - $ref: '#/components/parameters/X-HIU-ID'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ConsentNotification'
-      responses:
-        '204':
-          description: Notification successful.
-        '401':
-          description: >
-            **Causes:**
-              * Invalid/Expired/Empty token.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: >
-            **Causes:**
-              * Downstream services are down
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+  
+  
   /v1/consent-requests:
     post:
       tags:
-        - consents
+        - consent flow
       summary: Create consent request
       description: Creates a consent request to get data about a patient by HIU user.
       operationId: createConsentRequest
@@ -411,59 +326,6 @@ paths:
                       id:
                         type: string
                         format: uuid
-        '400':
-          description:  >
-            **Causes:**
-              * Invalid data being sent such as patient doesn't exist in the system.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description:  >
-            **Causes:**
-              * Expired/Invalid token.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: >
-            **Causes:**
-              * Downstream system(s) is down.
-              * Unhandled exceptions.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v1/consents/{consentId}:
-    get:
-      tags:
-        - consents
-      summary: Get consent artefact
-      parameters:
-        - $ref: "#/components/parameters/X-CM-ID"
-        - $ref: "#/components/parameters/ConsentId"
-        - $ref: "#/components/parameters/X-Origin-ID"
-      responses:
-        '200':
-          description: Consent artefact
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConsentArtefactRepresentation'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ConsentArtefactRepresentation'
         '400':
           description:  >
             **Causes:**
@@ -555,7 +417,7 @@ paths:
   /v1/consent-requests/{consentRequestId}/status:
     get:
       tags:
-        - consents
+        - consent flow
       summary: Get consent request status
       parameters:
         - $ref: "#/components/parameters/X-Origin-ID"
@@ -574,6 +436,145 @@ paths:
           description: >
             **Causes:**
               * Invalid consent request id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description:  >
+            **Causes:**
+              * Expired/Invalid token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/hiu/consent/notification/:
+    post:
+      tags:
+        - consent flow
+      summary: Consent notification
+      description: >
+       Health information user will get notified about the consent request granted or denied, consent revoked, consent expired.
+      parameters:
+        - $ref: '#/components/parameters/X-HIU-ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentNotification'
+      responses:
+        '204':
+          description: Notification successful.
+        '401':
+          description: >
+            **Causes:**
+              * Invalid/Expired/Empty token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream services are down
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/hip/consent/notification:
+    post:
+      tags:
+        - consent flow
+      summary: Consent notification
+      description: >
+        Notification of consents to health information providers consent request granted, consent revoked, consent expired.
+          1. **IF status is GRANTED, both consent-artefact and signature are available**
+          2. **ELSE both of these fields will be empty**
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-HIP-ID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentArtefact'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/ConsentArtefact'
+      responses:
+        '204':
+          description: Consent notification accepted
+        '401':
+          description: >
+            **Causes:**
+              * Invalid/Expired/Empty token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream services are down
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/consents/{consentId}:
+    get:
+      tags:
+        - consent flow
+      summary: Get consent artefact
+      parameters:
+        - $ref: "#/components/parameters/X-CM-ID"
+        - $ref: "#/components/parameters/ConsentId"
+        - $ref: "#/components/parameters/X-Origin-ID"
+      responses:
+        '200':
+          description: Consent artefact
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentArtefactRepresentation'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ConsentArtefactRepresentation'
+        '400':
+          description:  >
+            **Causes:**
+              * Invalid data being sent such as patient doesn't exist in the system.
           content:
             application/json:
               schema:

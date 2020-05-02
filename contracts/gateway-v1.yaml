@@ -10,8 +10,9 @@ servers:
 tags:
   - name: discovery
   - name: link
+  - name: consent flow
   - name: data flow
-  - name: consents
+  - name: monitoring
   - name: sessions
 paths:
   /v1/patients/discover/carecontexts:
@@ -285,97 +286,10 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/hip/consent/notification:
-    post:
-      tags:
-        - consents
-      summary: Consent notification
-      description: >
-        Notification of consents to health information providers consent request granted, consent revoked, consent expired.
-          1. **IF status is GRANTED, both consent-artefact and signature are available**
-          2. **ELSE both of these fields will be empty**
-      parameters:
-        - $ref: "#/components/parameters/authorization"
-        - $ref: "#/components/parameters/X-HIP-ID"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ConsentArtefact'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/ConsentArtefact'
-      responses:
-        '204':
-          description: Consent notification accepted
-        '401':
-          description: >
-            **Causes:**
-              * Invalid/Expired/Empty token.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: >
-            **Causes:**
-              * Downstream services are down
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v1/hiu/consent/notification/:
-    post:
-      tags:
-        - consents
-      summary: Consent notification
-      description: >
-       Health information user will get notified about the consent request granted or denied, consent revoked, consent expired.
-      parameters:
-        - $ref: '#/components/parameters/authorization'
-        - $ref: '#/components/parameters/X-HIU-ID'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ConsentNotification'
-      responses:
-        '204':
-          description: Notification successful.
-        '401':
-          description: >
-            **Causes:**
-              * Invalid/Expired/Empty token.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: >
-            **Causes:**
-              * Downstream services are down
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
   /v1/consent-requests:
     post:
       tags:
-        - consents
+        - consent flow
       summary: Create consent request
       description: Creates a consent request to get data about a patient by HIU user.
       operationId: createConsentRequest
@@ -446,10 +360,149 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1/consent-requests/{consentRequestId}/status:
+    get:
+      tags:
+        - consent flow
+      summary: Get consent request status
+      parameters:
+        - $ref: '#/components/parameters/authorization'
+        - $ref: '#/components/parameters/ConsentRequestId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentNotification'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ConsentNotification'
+        '404':
+          description: >
+            **Causes:**
+              * Invalid consent request id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description:  >
+            **Causes:**
+              * Expired/Invalid token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/hip/consent/notification:
+    post:
+      tags:
+        - consent flow
+      summary: Consent notification
+      description: >
+        Notification of consents to health information providers consent request granted, consent revoked, consent expired.
+          1. **IF status is GRANTED, both consent-artefact and signature are available**
+          2. **ELSE both of these fields will be empty**
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-HIP-ID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentArtefact'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/ConsentArtefact'
+      responses:
+        '204':
+          description: Consent notification accepted
+        '401':
+          description: >
+            **Causes:**
+              * Invalid/Expired/Empty token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream services are down
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/hiu/consent/notification/:
+    post:
+      tags:
+        - consent flow
+      summary: Consent notification
+      description: >
+       Health information user will get notified about the consent request granted or denied, consent revoked, consent expired.
+      parameters:
+        - $ref: '#/components/parameters/authorization'
+        - $ref: '#/components/parameters/X-HIU-ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentNotification'
+      responses:
+        '204':
+          description: Notification successful.
+        '401':
+          description: >
+            **Causes:**
+              * Invalid/Expired/Empty token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream services are down
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1/consents/{consentId}:
     get:
       tags:
-        - consents
+        - consent flow
       summary: Get consent artefact
       parameters:
         - $ref: "#/components/parameters/authorization"
@@ -553,58 +606,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/consent-requests/{consentRequestId}/status:
-    get:
-      tags:
-        - consents
-      summary: Get consent request status
-      parameters:
-        - $ref: '#/components/parameters/authorization'
-        - $ref: '#/components/parameters/ConsentRequestId'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConsentNotification'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ConsentNotification'
-        '404':
-          description: >
-            **Causes:**
-              * Invalid consent request id
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description:  >
-            **Causes:**
-              * Expired/Invalid token.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: >
-            **Causes:**
-              * Downstream system(s) is down.
-              * Unhandled exceptions.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+  
   /v1/heartbeat:
     get:
       tags:
@@ -754,116 +756,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-                
-  
-  /v1/providers:
-    get:
-      tags:
-        - providers
-      summary: Search providers
-      description: >
-        Returns matching providers by query parameters
-          1. **Gateway returns only providers that are connected to it via the bridges**
-          2. **The provider Id and representation is same as the provider registry public api.**
-      parameters:
-        - $ref: "#/components/parameters/authorization"
-        - in: path
-          name: name
-          schema:
-            type: string
-          required: true
-          description: Name of the provider
-      responses:
-        '200':
-          description: Provider/Facility representation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProviderSearchRepresentation'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ProviderSearchRepresentation'
-        '401':
-          description:  >
-            **Causes:**
-              * Expired/Invalid token.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: >
-            **Causes:**
-              * Downstream system(s) is down.
-              * Unhandled exceptions.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        
-  /v1/providers/{providerId}:
-    get:
-      tags:
-        - providers
-      summary: Get specific provider by id
-      description: >
-        Returns matching providers by given providerId
-          1. **Gateway returns only if a provider is connected to it via a bridge**
-          2. **The provider Id and representation is same as the provider registry public api**
-      parameters:
-        - $ref: "#/components/parameters/authorization"
-        - $ref: "#/components/parameters/ProviderId"
-      responses:
-        '200':
-          description: Provider/Facility representation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProviderRepresentation'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ProviderRepresentation'
-        '401':
-          description:  >
-            **Causes:**
-              * Expired/Invalid token.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: >
-            **Causes:**
-              * No matching provider record found for the given identifiers.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: >
-            **Causes:**
-              * Downstream system(s) is down.
-              * Unhandled exceptions.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-          
+                      
 components:
   parameters:
     authorization:
@@ -917,14 +810,6 @@ components:
       schema:
         type: string
         format: uuid
-    ProviderId:
-      name: providerId
-      in: path
-      required: true
-      description: Provider/Facility Registry id of the facility
-      schema:
-        type: string
-        format: number
   schemas:
     UuidSchema:
       type: string
@@ -1611,41 +1496,4 @@ components:
         signature:
           type: string
           example: Signature of CM as defined in W3C standards; Base64 encoded
-    ProviderRepresentation:
-      type: object
-      properties:
-        id:
-          type: string
-          example: "100005"
-        name:
-          type: string
-          example: "TMH"
-        active:
-          type: boolean
-          example: true
-        endpoint:
-          type: array
-          items:
-            $ref: '#/components/schemas/EndpointRepresentation'
-    EndpointRepresentation:
-      type: object
-      properties:
-        address:
-          type: string
-          format: url
-          example: http://bridge1.example.com/hip/
-        type:
-          type: string
-          example: "HIPBRIDGE"
-        managingOrganization:
-              type: object
-              allOf:
-                - $ref: '#/components/schemas/OrganizationRepresentation'
-                - xml:
-                    name: managingOrganization
-    ProviderSearchRepresentation:
-      type: array
-      items:
-        $ref: '#/components/schemas/ProviderRepresentation'
-      xml:
-        name: ProvidersResponse
+  
