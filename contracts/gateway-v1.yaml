@@ -226,7 +226,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/health-information/request:
+  /v1/cm/health-information/request:
     post:
       tags:
         - data flow
@@ -238,7 +238,6 @@ paths:
           3. When Consent manager wants to call HIP need to set X-HIP-ID
       parameters:
         - $ref: "#/components/parameters/authorization"
-        - $ref: "#/components/parameters/X-HIP-ID"
         - $ref: "#/components/parameters/X-CM-ID"
       requestBody:
         required: true
@@ -250,8 +249,15 @@ paths:
             schema:
               $ref: '#/components/schemas/HealthInformationRequest'
       responses:
-        '204':
-          description: Data transfer request accepted
+        '200':
+          description: A transaction ID is generated and returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthInformationRequestResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/HealthInformationRequestResponse'
         '400':
           description: >
             **Causes:**
@@ -680,6 +686,63 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1/hip/health-information/request:
+    post:
+      tags:
+        - data flow
+      summary: Health information data request
+      description: >
+        Acknowledge data request for Health information
+          1. **Validate consent artefact id**
+      parameters:
+        - $ref: '#/components/parameters/authorization'
+        - $ref: '#/components/parameters/X-HIP-ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HIPHealthInformationRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/HIPHealthInformationRequest'
+      responses:
+        '204':
+          description: Data transfer request accepted.
+        '400':
+          description: >
+            **Causes:**
+              * Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Token is invalid or Link has expired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1/.well-known/openid-configuration:
     get:
       tags:
@@ -756,7 +819,6 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-                      
 components:
   parameters:
     authorization:
@@ -1287,7 +1349,7 @@ components:
     HINotification:
       type: object
       properties:
-        requestId:
+        transactionId:
           $ref: '#/components/schemas/UuidSchema'
         consentId:
           $ref: '#/components/schemas/UuidSchema'
@@ -1496,4 +1558,32 @@ components:
         signature:
           type: string
           example: Signature of CM as defined in W3C standards; Base64 encoded
-  
+    HealthInformationRequestResponse:
+        type: object
+        required:
+          - transactionId
+        properties:
+          transactionId:
+            $ref: '#/components/schemas/UuidSchema'
+    HIPHealthInformationRequest:
+      type: object
+      required:
+        - requestId
+        - transactionId
+        - consent
+        - dataPushUrl
+        - keyMaterial
+        - dateRange
+      properties:
+        requestId:
+          $ref: '#/components/schemas/UuidSchema'
+        transactionId:
+          $ref: '#/components/schemas/UuidSchema'
+        consent:
+          $ref: '#/components/schemas/consent'
+        dateRange:
+          $ref: '#/components/schemas/dateRange'
+        dataPushUrl:
+          type: string
+        keyMaterial:
+          $ref: '#/components/schemas/keyMaterial'
