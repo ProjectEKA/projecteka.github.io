@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 0.0.1
+  version: 0.9.0
   title: Bridge
   description: >
     Bridge where health information providers and health information users are connected.
@@ -13,11 +13,14 @@ tags:
   - name: consent flow
   - name: data flow
   - name: monitoring
+  - name: hiu bridge
+  - name: hip bridge
 paths:
   /v1/patients/discover/carecontexts:
     post:
       tags:
         - discovery
+        - hip bridge
       summary: Discover patient's accounts
       description: >
         Return only one patient record with (potentially masked) associated care contexts
@@ -91,6 +94,7 @@ paths:
     post:
       tags:
         - link
+        - hip bridge
       summary: Link patient's care contexts
       description: >
         Links care contexts associated with only one patient
@@ -160,6 +164,7 @@ paths:
     post:
       tags:
         - link
+        - hip bridge
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"
@@ -229,6 +234,7 @@ paths:
     post:
       tags:
         - data flow
+        - hip bridge
       summary: Health information data request
       description: >
         Acknowledge data request for Health information
@@ -284,86 +290,11 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  
-  
-  /v1/consent-requests:
-    post:
-      tags:
-        - consent flow
-      summary: Create consent request
-      description: Creates a consent request to get data about a patient by HIU user.
-      operationId: createConsentRequest
-      parameters:
-        - $ref: "#/components/parameters/X-CM-ID"
-        - $ref: '#/components/parameters/X-Origin-ID'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ConsentRequest'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/ConsentRequest'
-      responses:
-        '200':
-          description: Successful creation of consent request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-            application/xml:
-              schema:
-                type: object
-                properties:
-                  consentRequest:
-                    type: object
-                    properties:
-                      id:
-                        type: string
-                        format: uuid
-        '400':
-          description:  >
-            **Causes:**
-              * Invalid data being sent such as patient doesn't exist in the system.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description:  >
-            **Causes:**
-              * Expired/Invalid token.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: >
-            **Causes:**
-              * Downstream system(s) is down.
-              * Unhandled exceptions.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
   /v1/health-information/notification:
     post:
       tags:
         - data flow
+        - hiu bridge
       description: Notifications corresponding to events during data flow
       parameters:
         - $ref: '#/components/parameters/X-CM-ID'
@@ -414,62 +345,11 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/consent-requests/{consentRequestId}/status:
-    get:
-      tags:
-        - consent flow
-      summary: Get consent request status
-      parameters:
-        - $ref: "#/components/parameters/X-Origin-ID"
-        - $ref: '#/components/parameters/ConsentRequestId'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConsentNotification'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ConsentNotification'
-        '404':
-          description: >
-            **Causes:**
-              * Invalid consent request id
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description:  >
-            **Causes:**
-              * Expired/Invalid token.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: >
-            **Causes:**
-              * Downstream system(s) is down.
-              * Unhandled exceptions.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
   /v1/hiu/consent/notification/:
     post:
       tags:
         - consent flow
+        - hiu bridge
       summary: Consent notification
       description: >
        Health information user will get notified about the consent request granted or denied, consent revoked, consent expired.
@@ -510,6 +390,7 @@ paths:
     post:
       tags:
         - consent flow
+        - hip bridge
       summary: Consent notification
       description: >
         Notification of consents to health information providers consent request granted, consent revoked, consent expired.
@@ -552,63 +433,12 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/consents/{consentId}:
-    get:
-      tags:
-        - consent flow
-      summary: Get consent artefact
-      parameters:
-        - $ref: "#/components/parameters/X-CM-ID"
-        - $ref: "#/components/parameters/ConsentId"
-        - $ref: "#/components/parameters/X-Origin-ID"
-      responses:
-        '200':
-          description: Consent artefact
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConsentArtefactRepresentation'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ConsentArtefactRepresentation'
-        '400':
-          description:  >
-            **Causes:**
-              * Invalid data being sent such as patient doesn't exist in the system.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description:  >
-            **Causes:**
-              * Expired/Invalid token.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: >
-            **Causes:**
-              * Downstream system(s) is down.
-              * Unhandled exceptions.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
   /v1/heartbeat:
     get:
       tags:
         - monitoring
+        - hiu bridge
+        - hip bridge
       summary: Get consent request status
       responses:
         '200':
@@ -1100,62 +930,6 @@ components:
         keyValue:
           type: string
           format: string
-    ConsentRequest:
-      type: object
-      required:
-        - requestId
-        - consent
-      properties:
-        requestId:
-          $ref: '#/components/schemas/UuidSchema'
-        consent:
-          type: object
-          required:
-            - purpose
-            - patient
-            - hiu
-            - requester
-            - hiTypes
-            - permission
-            - consentNotificationUrl
-          properties:
-            purpose:
-              $ref: '#/components/schemas/UsePurpose'
-            patient:
-              type: object
-              allOf:
-                - $ref: '#/components/schemas/ConsentManagerPatientID'
-                - xml:
-                    name: patient
-            hip:
-              type: object
-              allOf:
-                - $ref: '#/components/schemas/OrganizationRepresentation'
-                - xml:
-                    name: hip
-            hiu:
-              type: object
-              allOf:
-                - $ref: '#/components/schemas/OrganizationRepresentation'
-                - xml:
-                    name: hiu
-            requester:
-              $ref: '#/components/schemas/Requester'
-            hiTypes:
-              type: array
-              items:
-                $ref: '#/components/schemas/HITypeEnum'
-            permission:
-              $ref: '#/components/schemas/Permission'
-    Requester:
-      type: object
-      required:
-        - name
-      properties:
-        name:
-          type: string
-        identifier:
-          $ref: '#/components/schemas/Identifier'
     HINotification:
       type: object
       properties:
@@ -1236,67 +1010,3 @@ components:
           $ref: '#/components/schemas/Error'
       xml:
         name: HeartbeatResponse
-    ConsentArtefactRepresentation:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/ConsentStatus'
-        consentDetail:
-          type: object
-          properties:
-            schemaVersion:
-              type: string
-              format: string
-            consentId:
-              type: string
-              format: uuid
-            createdAt:
-              type: string
-              format: date-time
-            patient:
-              $ref: '#/components/schemas/ConsentManagerPatientID'
-            careContexts:
-              type: array
-              items:
-                type: object
-                required:
-                  - patientReference
-                  - careContextReference
-                properties:
-                  patientReference:
-                    type: string
-                    example: batman@tmh
-                  careContextReference:
-                    type: string
-                    example: Episode1
-            purpose:
-              $ref: '#/components/schemas/UsePurpose'
-            hip:
-              type: object
-              allOf:
-                - $ref: '#/components/schemas/OrganizationRepresentation'
-                - xml:
-                    name: hip
-            hiu:
-              type: object
-              allOf:
-                - $ref: '#/components/schemas/OrganizationRepresentation'
-                - xml:
-                    name: hiu
-            consentManager:
-              type: object
-              allOf:
-                - $ref: '#/components/schemas/OrganizationRepresentation'
-                - xml:
-                    name: consentManager
-            requester:
-              $ref: '#/components/schemas/Requester'
-            hiTypes:
-              type: array
-              items:
-                $ref: '#/components/schemas/HITypeEnum'
-            permission:
-              $ref: '#/components/schemas/Permission'
-        signature:
-          type: string
-          example: Signature of CM as defined in W3C standards; Base64 encoded
