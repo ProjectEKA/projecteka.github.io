@@ -1,9 +1,9 @@
 openapi: 3.0.0
 info:
-  version: 0.0.1
+  version: 0.9.0
   title: Gateway
   description: >
-    Gateway which orchestrates the interaction between consent managers and API bridges.
+    Gateway is the hub that routes/orchestrates the interaction between consent managers and API bridges. There are 5 categories of APIs; discovery, link, consent flow, data flow and  monitoring. To reflect the consumers of APIs, the above apis are also categorized under cm facing, hiu facing and hip facing 
 servers:
   - url: https://ncg-dev.projecteka.in/gateway
     description: Dev
@@ -14,11 +14,15 @@ tags:
   - name: data flow
   - name: monitoring
   - name: sessions
+  - name: cm facing
+  - name: hiu facing
+  - name: hip facing
 paths:
   /v1/patients/discover/carecontexts:
     post:
       tags:
         - discovery
+        - cm facing
       summary: Discover patient's accounts
       description: >
         Return only one patient record with (potentially masked) associated care contexts
@@ -92,6 +96,7 @@ paths:
     post:
       tags:
         - link
+        - cm facing
       summary: Link patient's care contexts
       description: >
         Links care contexts associated with only one patient
@@ -161,6 +166,7 @@ paths:
     post:
       tags:
         - link
+        - cm facing
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"
@@ -230,6 +236,7 @@ paths:
     post:
       tags:
         - data flow
+        - hiu facing
       summary: Health information data request
       description: >
         Acknowledge data request for Health information
@@ -296,6 +303,7 @@ paths:
     post:
       tags:
         - consent flow
+        - hiu facing
       summary: Create consent request
       description: Creates a consent request to get data about a patient by HIU user.
       operationId: createConsentRequest
@@ -370,10 +378,12 @@ paths:
     get:
       tags:
         - consent flow
+        - hiu facing
       summary: Get consent request status
       parameters:
         - $ref: '#/components/parameters/authorization'
         - $ref: '#/components/parameters/ConsentRequestId'
+        - $ref: "#/components/parameters/X-CM-ID"
       responses:
         '200':
           description: OK
@@ -422,6 +432,7 @@ paths:
     post:
       tags:
         - consent flow
+        - cm facing
       summary: Consent notification
       description: >
         Notification of consents to health information providers consent request granted, consent revoked, consent expired.
@@ -468,6 +479,7 @@ paths:
     post:
       tags:
         - consent flow
+        - cm facing
       summary: Consent notification
       description: >
        Health information user will get notified about the consent request granted or denied, consent revoked, consent expired.
@@ -509,6 +521,7 @@ paths:
     get:
       tags:
         - consent flow
+        - hiu facing
       summary: Get consent artefact
       parameters:
         - $ref: "#/components/parameters/authorization"
@@ -562,6 +575,7 @@ paths:
     post:
       tags:
         - data flow
+        - hip facing
       description: Notifications corresponding to events during data flow
       parameters:
         - $ref: '#/components/parameters/authorization'
@@ -612,7 +626,6 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  
   /v1/heartbeat:
     get:
       tags:
@@ -690,6 +703,7 @@ paths:
     post:
       tags:
         - data flow
+        - cm facing
       summary: Health information data request
       description: >
         Acknowledge data request for Health information
