@@ -25,14 +25,15 @@ paths:
         - cm facing
       summary: Discover patient's accounts
       description: >
-        Request for patient care context discover, made by CM for a specific HIP. It is expected that subsequent result is zero or one patient record with (potentially masked) associated care contexts is returned subsequently from HIP with 
+        Request for patient care context discover, made by CM for a specific HIP. It is expected that HIP will subsequently return either zero or one patient record with (potentially masked) associated care contexts
           1. **At least one of the verified identifier matches**
-          2. **Name, gender matches**
+          2. **Name (fuzzy), gender matches**
           3. **If YoB was given, age band(+-2) matches**
           4. **If unverified identifiers were given, one of them matches**
           5. **If more than one patient records would be found after aforementioned steps, then patient who matches most verified and unverified identifiers would be returned.**
           6. **If there would be still more than one patients (after ranking) error would be returned**
-          7. **Intended HIP should store the discover request entry with requestId and care contexts discovered for a given request**
+          7. **Intended HIP should be able to resolve and identify results returned in the subsequent link confirmation request via the specified transactionId**
+          8. **Intended HIP should store the discovery results with transcationId and care contexts discovered for subsequent link initiation**
           
       parameters:
         - $ref: "#/components/parameters/authorization"
@@ -1021,6 +1022,16 @@ components:
         requestId:
           type: string
           format: uuid
+          description: a nonce, unique for each HTTP request. 
+          example: "499a5a4a-7dda-4f20-9b67-e24589627061"
+        timestamp:
+          type: string
+          format: date-time
+          description: Date time format in UTC, includes miliseconds YYYY-MM-DDThh:mm:ss.vZ
+        transactionId:
+          type: string
+          format: uuid
+          description: correlation-Id for patient discovery and subsequent care context linkage
         patient:
           type: object
           properties:
@@ -1059,10 +1070,18 @@ components:
         requestId:
           type: string
           format: uuid
+          description: a nonce, unique for each HTTP request
         patient:
           $ref: '#/components/schemas/PatientRepresentation'
         error: 
           $ref: '#/components/schemas/Error'
+        resp:
+          type: object
+          properties:
+            requestId: 
+              type: string
+              format: uuid
+              description: the requestId that was passed for /discover to bridge
       xml:
         name: PatientDiscoveryResult
         
