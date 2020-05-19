@@ -1071,6 +1071,7 @@ components:
           type: string
           format: uuid
           description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
         patient:
           $ref: '#/components/schemas/PatientRepresentation'
         error: 
