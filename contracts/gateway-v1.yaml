@@ -1076,6 +1076,9 @@ components:
           type: string
           format: date-time
           description: Date time format in UTC, includes miliseconds YYYY-MM-DDThh:mm:ss.vZ
+        transactionId:
+          type: string
+          format: uuid
         patient:
           $ref: '#/components/schemas/PatientRepresentation'
         error: 
