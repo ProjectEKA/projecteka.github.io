@@ -16,11 +16,80 @@ tags:
   - name: hiu bridge
   - name: hip bridge
 paths:
+  /v1/care-contexts/discover:
+    post:
+      tags:
+        - discovery
+        - cm facing
+      summary: Discover patient's accounts
+      description: >
+        Request for patient care context discover, made by Gateway intended for a specific HIP. It is expected that HIP will subsequently return either zero or one patient record with (potentially masked) associated care contexts
+          1. **At least one of the verified identifier matches**
+          2. **Name (fuzzy), gender matches**
+          3. **If YoB was given, age band(+-2) matches**
+          4. **If unverified identifiers were given, one of them matches**
+          5. **If more than one patient records would be found after aforementioned steps, then patient who matches most verified and unverified identifiers would be returned.**
+          6. **If there would be still more than one patients (after ranking) error would be returned**
+          7. **Intended HIP should be able to resolve and identify results returned in the subsequent link confirmation request via the specified transactionId**
+          8. **Intended HIP should store the discovery results with transcationId and care contexts discovered for subsequent link initiation**
+          
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-HIP-ID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientDiscoveryRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PatientDiscoveryRequest'
+      responses:
+        '202':
+          description: Request accepted
+        '400':
+          description: >
+            **Causes:**
+              * Empty verified identifiers.
+              * Format mismatch of any of attributes.
+                | type   | Format/Allowed Values|
+                | ------- | ----------------    |
+                | gender  | M/F/O |
+                | MOBILE  | valid mobile number with proper country code |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1/patients/discover/carecontexts:
     post:
       tags:
         - discovery
         - hip bridge
+      deprecated: true
       summary: Discover patient's accounts
       description: >
         Return only one patient record with (potentially masked) associated care contexts
@@ -90,11 +159,76 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1/links/link/init:
+    post:
+      tags:
+        - link
+        - cm facing
+      summary: Link patient's care contexts
+      description: >
+        Request from Gateway to links care contexts associated with only one patient
+          1. **Validate account reference number and care context reference number**
+          2. **Validate transactionId in the request with discovery request entry to check whether there was a discovery
+              and were these care contexts discovered or not for a given patient**
+          3. **Before eventual link confirmation, HIP needs to authenticate the request with the patient(eg: OTP verification)**
+          4. **HIP should communicate the mode of authentication of a successful request to Consent Manager**
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-HIP-ID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientLinkReferenceRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PatientLinkReferenceRequest'
+      responses:
+        '202':
+          description: Request accepted
+        '400':
+          description: >
+            **Causes:**
+              * Consent manager user id is not provided
+              * Patient reference number is not provided
+              * Care context references are not provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1/patients/link:
     post:
       tags:
         - link
         - hip bridge
+      deprecated: true
       summary: Link patient's care contexts
       description: >
         Links care contexts associated with only one patient
@@ -160,11 +294,68 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1/links/link/confirm:
+    post:
+      tags:
+        - link
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-HIP-ID"
+      summary: Token submission by Consent Manager for link confirmation
+      description: >
+        API to submit the token that was sent by HIP during the link request. 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinkConfirmationRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/LinkConfirmationRequest'
+      responses:
+        '202':
+          description: accepted
+        '400':
+          description: >
+            **Causes:**
+              * Token is not provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1/patients/link/{linkRefNumber}:
     post:
       tags:
         - link
         - hip bridge
+      deprecated: true
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"
@@ -523,6 +714,16 @@ components:
         requestId:
           type: string
           format: uuid
+          description: a nonce, unique for each HTTP request. 
+          example: "499a5a4a-7dda-4f20-9b67-e24589627061"
+        timestamp:
+          type: string
+          format: date-time
+          description: Date time format in UTC, includes miliseconds YYYY-MM-DDThh:mm:ss.vZ
+        transactionId:
+          type: string
+          format: uuid
+          description: correlation-Id for patient discovery and subsequent care context linkage
         patient:
           type: object
           properties:
@@ -622,6 +823,10 @@ components:
         requestId:
           type: string
           format: uuid
+        timestamp:
+          type: string
+          format: date-time
+          description: Date time format in UTC, includes miliseconds YYYY-MM-DDThh:mm:ss.vZ
         transcationId:
           type: string
           format: uuid
@@ -630,8 +835,10 @@ components:
           properties:
             consentManagerUserID:
               type: string
+              example: hinapatel79@ncg
             referenceNumber:
               type: string
+              example: TMH-PUID-001
             careContexts:
               type: array
               items:
@@ -644,6 +851,18 @@ components:
     PatientLinkRequest:
       type: object
       properties:
+        token:
+          type: string
+    LinkConfirmationRequest:
+      type: object
+      properties:
+        requestId:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+          description: Date time format in UTC, includes miliseconds YYYY-MM-DDThh:mm:ss.vZ
         token:
           type: string
     PatientLinkReferenceResponse:
