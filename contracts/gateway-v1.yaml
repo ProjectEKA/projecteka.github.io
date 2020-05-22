@@ -671,14 +671,130 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/consent-requests:
+  /v1/consent-requests/init:
     post:
       tags:
         - consent flow
         - hiu facing
       summary: Create consent request
       description: Creates a consent request to get data about a patient by HIU user.
-      operationId: createConsentRequest
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-CM-ID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/ConsentRequest'
+      responses:
+        '202':
+          description: Request Accepted
+        '400':
+          description:  >
+            **Causes:**
+              * Invalid data sent 
+              * Required attributes not mentioned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description:  >
+            **Causes:**
+              * Expired/Invalid token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/consent-requests/on-init:
+    post:
+      tags:
+        - consent flow
+        - hiu facing
+      summary: Response to consent request
+      description: |
+        Result of consent request creation for a patient. **id** represents the consentrequest id created by CM. The result must contain either **id** or the **error** caused. <br/>
+          Reasons for error may be
+          * Invalid references (e.g patient id, hiu id), purpose, hiTypes, ranges, persmission
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-HIU-ID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentRequestInitResponse'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/ConsentRequestInitResponse'
+      responses:
+        '202':
+          description: Request Accepted
+        '400':
+          description:  >
+            **Causes:**
+              * Invalid data sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description:  >
+            **Causes:**
+              * Expired/Invalid token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/consent-requests:
+    post:
+      tags:
+        - consent flow
+        - hiu facing
+      deprecated: true
+      summary: Create consent request
+      description: Creates a consent request to get data about a patient by HIU user.
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-CM-ID"
@@ -1259,6 +1375,10 @@ components:
         type: string
         format: uuid
   schemas:
+    TimestampSchema:
+      type: string
+      format: date-time
+      description: Date time format in UTC, includes miliseconds YYYY-MM-DDThh:mm:ss.vZ
     UuidSchema:
       type: string
       format: uuid
@@ -1272,9 +1392,7 @@ components:
           description: a nonce, unique for each HTTP request. 
           example: "499a5a4a-7dda-4f20-9b67-e24589627061"
         timestamp:
-          type: string
-          format: date-time
-          description: Date time format in UTC, includes miliseconds YYYY-MM-DDThh:mm:ss.vZ
+          $ref: '#/components/schemas/TimestampSchema'
         transactionId:
           type: string
           format: uuid
@@ -1320,9 +1438,7 @@ components:
           description: a nonce, unique for each HTTP request
           example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
         timestamp:
-          type: string
-          format: date-time
-          description: Date time format in UTC, includes miliseconds YYYY-MM-DDThh:mm:ss.vZ
+          $ref: '#/components/schemas/TimestampSchema'
         transactionId:
           type: string
           format: uuid
@@ -1331,12 +1447,7 @@ components:
         error: 
           $ref: '#/components/schemas/Error'
         resp:
-          type: object
-          properties:
-            requestId: 
-              type: string
-              format: uuid
-              description: the requestId that was passed for /discover to bridge
+          $ref: '#/components/schemas/RequestReference'
       xml:
         name: PatientDiscoveryResult
     ErrorResponse:
@@ -1409,9 +1520,7 @@ components:
           type: string
           format: uuid
         timestamp:
-          type: string
-          format: date-time
-          description: Date time format in UTC, includes miliseconds YYYY-MM-DDThh:mm:ss.vZ
+          $ref: '#/components/schemas/TimestampSchema'
         transcationId:
           type: string
           format: uuid
@@ -1445,9 +1554,7 @@ components:
           type: string
           format: uuid
         timestamp:
-          type: string
-          format: date-time
-          description: Date time format in UTC, includes miliseconds YYYY-MM-DDThh:mm:ss.vZ
+          $ref: '#/components/schemas/TimestampSchema'
         linkRefNumber:
           type: string
         token:
@@ -1461,9 +1568,7 @@ components:
           description: a nonce, unique for each HTTP request
           example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
         timestamp:
-          type: string
-          format: date-time
-          description: Date time format in UTC, includes miliseconds YYYY-MM-DDThh:mm:ss.vZ
+          $ref: '#/components/schemas/TimestampSchema'
         link:
           type: object
           properties:
@@ -1477,12 +1582,7 @@ components:
         error: 
           $ref: '#/components/schemas/Error'
         resp:
-          type: object
-          properties:
-            requestId: 
-              type: string
-              format: uuid
-              description: the requestId that was passed for /link/init to bridge
+          $ref: '#/components/schemas/RequestReference'
     PatientLinkReferenceResponse:
       type: object
       properties:
@@ -1545,9 +1645,7 @@ components:
           description: a nonce, unique for each HTTP request
           example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
         timestamp:
-          type: string
-          format: date-time
-          description: Date time format in UTC, includes miliseconds YYYY-MM-DDThh:mm:ss.vZ
+          $ref: '#/components/schemas/TimestampSchema'
         patient:
           type: object
           properties:
@@ -1562,12 +1660,7 @@ components:
         error: 
           $ref: '#/components/schemas/Error'
         resp:
-          type: object
-          properties:
-            requestId: 
-              type: string
-              format: uuid
-              description: the requestId that was passed for /link/confirm to bridge
+          $ref: '#/components/schemas/RequestReference'
     HealthInformationRequest:
       type: object
       required:
@@ -1806,7 +1899,12 @@ components:
         - consent
       properties:
         requestId:
-          $ref: '#/components/schemas/UuidSchema'
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request. 
+          example: "499a5a4a-7dda-4f20-9b67-e24589627061"
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
         consent:
           type: object
           required:
@@ -1853,8 +1951,19 @@ components:
       properties:
         name:
           type: string
+          example: Dr. Manju
         identifier:
-          $ref: '#/components/schemas/Identifier'
+          type: object
+          properties:
+            type: 
+              type: string
+              example: REGNO
+            value:
+              type: string
+              example: "MH1001"
+            system:
+              type: string
+              example: https://www.mciindia.org
     HINotification:
       type: object
       properties:
@@ -2096,3 +2205,37 @@ components:
           type: string
         keyMaterial:
           $ref: '#/components/schemas/keyMaterial'
+    ConsentRequestInitResponse:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - resp
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        id:
+          type: string
+          format: uuid
+          description: id of the consent-request created
+          example: f29f0e59-8388-4698-9fe6-05db67aeac46
+        error: 
+          $ref: '#/components/schemas/Error'
+        resp:
+          $ref: '#/components/schemas/RequestReference'
+      xml:
+        name: ConsentRequestInitResponse
+    RequestReference:
+      type: object
+      required:
+        - requestId
+      properties:
+        requestId: 
+          type: string
+          format: uuid
+          description: the requestId that was passed
