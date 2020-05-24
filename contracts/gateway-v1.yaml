@@ -1503,10 +1503,10 @@ paths:
       summary: Notifications corresponding to events during data flow
       description: |
         API called by HIU and HIP during data-transfer. 
-        1. HIP on transfer of data would send **sessionStatus** as TRANSFERRED, FAILED
-        2. HIP would also send **hiStatus** for each *careContextReference* as either DELIVERED or ERRORED
-        3. HIU on receipt of data would send **sessionStatus** as TRANSFERRED or FAILED, if data was not sent or if invalid data was sent
-        4. HIU would also send **hiStatus** for each *careContextReference* as OK or ERRORED 
+        1. HIP on transfer of data would send **sessionStatus** - one of [TRANSFERRED, FAILED]
+        2. HIP would also send **hiStatus** for each *careContextReference* - on of [DELIVERED, ERRORED]
+        3. HIU on receipt of data would send **sessionStatus** - one of [TRANSFERRED, FAILED]. For example, FAILED when if data was not sent or if invalid data was sent
+        4. HIU would also send **hiStatus** for each *careContextReference* - one of [OK, ERRORED] 
       parameters:
         - $ref: '#/components/parameters/authorization'
         - $ref: '#/components/parameters/X-CM-ID'
@@ -2966,6 +2966,11 @@ components:
             properties:
               transactionId:
                 $ref: '#/components/schemas/UuidSchema'
+              sessionStatus:
+                type: string
+                enum:
+                - REQUESTED
+                - ACKNOWLEDGED
           error: 
             $ref: '#/components/schemas/Error'
           resp:
@@ -3103,9 +3108,10 @@ components:
             transactionId: 
               type: string
               format: uuid
-            status:
+            sessionStatus:
               type: string
-              enum: [ACKNOWLEDGED]
+              enum:
+              - ACKNOWLEDGED
         error: 
           $ref: '#/components/schemas/Error'
         resp:

@@ -1787,6 +1787,11 @@ components:
             properties:
               transactionId:
                 $ref: '#/components/schemas/UuidSchema'
+              sessionStatus:
+                type: string
+                enum:
+                - REQUESTED
+                - ACKNOWLEDGED
           error: 
             $ref: '#/components/schemas/Error'
           resp:
