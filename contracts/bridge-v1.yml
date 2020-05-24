@@ -298,6 +298,7 @@ paths:
     post:
       tags:
         - link
+        - hip bridge
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"
@@ -421,11 +422,130 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1/health-information/hiu/on-request:
+    post:
+      tags:
+        - data flow
+        - hiu bridge
+      summary: Health information data request
+      description: >
+        Callback API for acknowledgement of Health information request made by HIU. Gateway calls this API when request has validated for the specified  consent id. Either the **hiRequest** or **error** would be specified. If the health info request was valid, then the ***hiRequest.transactionId*** specifies the transaction context against which HIP would send over the data. 
+        Possible cases of errors are
+          1. **Invalid consent artefact id**
+          2. **Consent has expired**
+          3. **Date ranges are invalid**
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-HIU-ID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HIUHealthInformationRequestResponse'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/HIUHealthInformationRequestResponse'
+      responses:
+        '202':
+          description: Request Accepted
+        '400':
+          description: >
+            **Causes:**
+              * Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Token is invalid or Link has expired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/health-information/hip/request:
+    post:
+      tags:
+        - data flow
+        - hip bridge
+      summary: Health information data request
+      description: >
+        API called by CM to request Health information from HIP against a validated consent artefact. The transactionId is the correlation id that HIP should use use when pushing data to the **dataPushUrl**. 
+      parameters:
+        - $ref: '#/components/parameters/authorization'
+        - $ref: '#/components/parameters/X-HIP-ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HIPHealthInformationRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/HIPHealthInformationRequest'
+      responses:
+        '202':
+          description: Request accepted.
+        '400':
+          description: >
+            **Causes:**
+              * Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Token is invalid or Link has expired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1/health-information/request:
     post:
       tags:
         - data flow
         - hip bridge
+      deprecated: true
       summary: Health information data request
       description: >
         Acknowledge data request for Health information
@@ -462,61 +582,6 @@ paths:
           description: >
             **Causes:**
               * Token is invalid or Link has expired
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: >
-            **Causes:**
-              * Downstream system(s) is down.
-              * Unhandled exceptions.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v1/health-information/notification:
-    post:
-      tags:
-        - data flow
-        - hiu bridge
-      description: Notifications corresponding to events during data flow
-      parameters:
-        - $ref: '#/components/parameters/X-CM-ID'
-        - $ref: "#/components/parameters/X-Origin-ID"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/HINotification'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/HINotification'
-      responses:
-        '204':
-          description: Notification is Accepted
-        '400':
-          description: >
-            **Causes:**
-              * Invalid Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description:  >
-            **Causes:**
-              * Expired/Invalid token.
           content:
             application/json:
               schema:
@@ -1482,47 +1547,6 @@ components:
         keyValue:
           type: string
           format: string
-    HINotification:
-      type: object
-      properties:
-        requestId:
-          $ref: '#/components/schemas/UuidSchema'
-        consentId:
-          $ref: '#/components/schemas/UuidSchema'
-        doneAt:
-          type: string
-          format: date-time
-        notifier:
-          type: object
-          properties:
-            type:
-              type: string
-              enum: [HIU, HIP]
-            id:
-              type: string
-              example: tmh
-        statusNotification:
-          type: object
-          properties:
-            sessionStatus:
-              type: string
-              enum: [TRANSFERRED, FAILED]
-            hipId:
-              type: string
-              example: max
-            statusResponses:
-              type: array
-              items:
-                type: object
-                properties:
-                  careContextReference:
-                    type: string
-                  hiStatus:
-                    type: string
-                    enum: [DELIVERED, OK, ERRORED]
-                    example: OK
-                  description:
-                    type: string
     ConsentArtefactReference:
       type: object
       properties:
@@ -1707,3 +1731,63 @@ components:
           $ref: '#/components/schemas/Error'
         resp:
           $ref: '#/components/schemas/RequestReference'
+    Requester:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: Dr. Manju
+        identifier:
+          type: object
+          properties:
+            type: 
+              type: string
+              example: REGNO
+            value:
+              type: string
+              example: "MH1001"
+            system:
+              type: string
+              example: https://www.mciindia.org
+    HIPHealthInformationRequest:
+      type: object
+      required:
+        - requestId
+        - transactionId
+        - consent
+        - dataPushUrl
+        - keyMaterial
+        - dateRange
+      properties:
+        requestId:
+          $ref: '#/components/schemas/UuidSchema'
+        transactionId:
+          $ref: '#/components/schemas/UuidSchema'
+        consent:
+          $ref: '#/components/schemas/consent'
+        dateRange:
+          $ref: '#/components/schemas/dateRange'
+        dataPushUrl:
+          type: string
+        keyMaterial:
+          $ref: '#/components/schemas/keyMaterial'
+    HIUHealthInformationRequestResponse:
+        type: object
+        required:
+          - transactionId
+        properties:
+          requestId:
+            $ref: '#/components/schemas/UuidSchema'
+          timestamp:
+            $ref: '#/components/schemas/TimestampSchema'
+          hiRequest:
+            type: object
+            properties:
+              transactionId:
+                $ref: '#/components/schemas/UuidSchema'
+          error: 
+            $ref: '#/components/schemas/Error'
+          resp:
+            $ref: '#/components/schemas/RequestReference'
