@@ -2979,6 +2979,7 @@ components:
       type: object
       required:
         - requestId
+        - timestamp
         - transactionId
         - consent
         - dataPushUrl
@@ -2987,6 +2988,8 @@ components:
       properties:
         requestId:
           $ref: '#/components/schemas/UuidSchema'
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
         transactionId:
           $ref: '#/components/schemas/UuidSchema'
         consent:
