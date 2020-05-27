@@ -2186,6 +2186,8 @@ components:
           example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
         timestamp:
           $ref: '#/components/schemas/TimestampSchema'
+        transactionId:
+          $ref: '#/components/schemas/UuidSchema'
         link:
           type: object
           properties:
@@ -2655,6 +2657,13 @@ components:
     HINotification:
       type: object
       properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request. 
+          example: "499a5a4a-7dda-4f20-9b67-e24589627061"
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
         transactionId:
           $ref: '#/components/schemas/UuidSchema'
         consentId:
