@@ -620,10 +620,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HealthInformationRequest'
+              $ref: '#/components/schemas/HIRequest'
           application/xml:
             schema:
-              $ref: '#/components/schemas/HealthInformationRequest'
+              $ref: '#/components/schemas/HIRequest'
       responses:
         '202':
           description: Request Accepted
@@ -1156,9 +1156,9 @@ paths:
         - cm facing
       summary: Consent notification
       description: >
-        Notification of consents to health information providers consent request granted, consent revoked, consent expired.
-          1. **IF status is GRANTED, both consent-artefact and signature are available**
-          2. **ELSE both of these fields will be empty**
+        Notification of consents to health information providers consent request granted, consent revoked, consent expired. Only the GRANTED and REVOKED status notifications will be sent to HIP.
+          1. If consent is granted, status=GRANTED, then consentDetail contains the consent artefact details and signature is available. 
+          2. If consent is revoked, then status=REVOKED, and consentId specifes which consent artefact is revoked. 
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"
@@ -1250,8 +1250,12 @@ paths:
         - consent flow
         - cm facing
       summary: Consent notification
-      description: >
-       Health information user will get notified about the consent request granted or denied, consent revoked, consent expired.
+      description: |
+       Health information user will get notified about the consent request granted or denied, consent revoked, consent expired. 
+       1. For consent request grant, status=GRANTED, consentRequestId=<consent-request-id>, and consentArtefacts is an array of generated consent artefact Ids.
+       2. For consent request expiry, status=EXPIRED, consentRequestId=<consent-request-id>
+       3. For consent request denied, status=DENIED, consentRequestId=<consent-request-id>
+       4. For consent revocation, status=REVOKED, consentArtefacts is an array of revoked consent artefact ids
       parameters:
         - $ref: '#/components/parameters/authorization'
         - $ref: '#/components/parameters/X-HIU-ID'
@@ -1260,7 +1264,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HIUConsentNotification'
+              $ref: '#/components/schemas/HIUConsentNotificationEvent'
       responses:
         '202':
           description: Request Accepted.
@@ -1515,10 +1519,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HINotification'
+              $ref: '#/components/schemas/HealthInformationNotification'
           application/xml:
             schema:
-              $ref: '#/components/schemas/HINotification'
+              $ref: '#/components/schemas/HealthInformationNotification'
       responses:
         '204':
           description: Notification is Accepted
@@ -1701,10 +1705,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HIPHealthInformationRequest'
+              $ref: '#/components/schemas/HIPHIRequest'
           application/xml:
             schema:
-              $ref: '#/components/schemas/HIPHealthInformationRequest'
+              $ref: '#/components/schemas/HIPHIRequest'
       responses:
         '202':
           description: Request accepted.
@@ -2301,6 +2305,33 @@ components:
           type: string
         keyMaterial:
           $ref: '#/components/schemas/keyMaterial'
+    HIRequest:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - hiRequest
+      properties:
+        requestId:
+          $ref: '#/components/schemas/UuidSchema'
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        hiRequest:
+          type: object
+          required:
+            - consent
+            - dataPushUrl
+            - keyMaterial
+            - dateRange
+          properties:
+            consent:
+              $ref: '#/components/schemas/consent'
+            dateRange:
+              $ref: '#/components/schemas/dateRange'
+            dataPushUrl:
+              type: string
+            keyMaterial:
+              $ref: '#/components/schemas/keyMaterial'
     consent:
       type: object
       required:
@@ -2333,59 +2364,62 @@ components:
           example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
         timestamp:
           $ref: '#/components/schemas/TimestampSchema'
-        status:
-          $ref: '#/components/schemas/ConsentStatus'
-        consentId:
-          type: string
-          format: uuid
-        consentDetail:
+        notification:
           type: object
           properties:
-            schemaVersion:
-              type: string
-              format: string
+            status:
+              $ref: '#/components/schemas/ConsentStatus'
             consentId:
               type: string
               format: uuid
-            createdAt:
-              type: string
-              format: date-time
-            patient:
-              $ref: '#/components/schemas/ConsentManagerPatientID'
-            careContexts:
-              type: array
-              items:
-                type: object
-                required:
-                  - patientReference
-                  - careContextReference
-                properties:
-                  patientReference:
-                    type: string
-                    example: batman@tmh
-                  careContextReference:
-                    type: string
-                    example: Episode1
-            purpose:
-              $ref: '#/components/schemas/UsePurpose'
-            hip:
+            consentDetail:
               type: object
-              allOf:
-                - $ref: '#/components/schemas/OrganizationRepresentation'
-                - xml:
-                    name: hip
-            consentManager:
-              type: object
-              allOf:
-                - $ref: '#/components/schemas/OrganizationReference'
-                - xml:
-                    name: consentManager
-            hiTypes:
-              type: array
-              items:
-                $ref: '#/components/schemas/HITypeEnum'
-            permission:
-              $ref: '#/components/schemas/Permission'
+              properties:
+                schemaVersion:
+                  type: string
+                  format: string
+                consentId:
+                  type: string
+                  format: uuid
+                createdAt:
+                  type: string
+                  format: date-time
+                patient:
+                  $ref: '#/components/schemas/ConsentManagerPatientID'
+                careContexts:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - patientReference
+                      - careContextReference
+                    properties:
+                      patientReference:
+                        type: string
+                        example: batman@tmh
+                      careContextReference:
+                        type: string
+                        example: Episode1
+                purpose:
+                  $ref: '#/components/schemas/UsePurpose'
+                hip:
+                  type: object
+                  allOf:
+                    - $ref: '#/components/schemas/OrganizationRepresentation'
+                    - xml:
+                        name: hip
+                consentManager:
+                  type: object
+                  allOf:
+                    - $ref: '#/components/schemas/OrganizationReference'
+                    - xml:
+                        name: consentManager
+                hiTypes:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/HITypeEnum'
+                permission:
+                  $ref: '#/components/schemas/Permission'
             signature:
               type: string
               example: Signature of CM as defined in W3C standards; Base64 encoded
@@ -2448,9 +2482,9 @@ components:
                 $ref: '#/components/schemas/HITypeEnum'
             permission:
               $ref: '#/components/schemas/Permission'
-            signature:
-              type: string
-              example: Signature of CM as defined in W3C standards; Base64 encoded
+        signature:
+          type: string
+          example: Signature of CM as defined in W3C standards; Base64 encoded
     HITypeEnum:
       type: string
       enum:
@@ -2702,6 +2736,57 @@ components:
                     example: OK
                   description:
                     type: string
+    HealthInformationNotification:
+      type: object
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request. 
+          example: "499a5a4a-7dda-4f20-9b67-e24589627061"
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        notification:
+          type: object
+          properties:
+            consentId:
+              $ref: '#/components/schemas/UuidSchema'
+            transactionId:
+              $ref: '#/components/schemas/UuidSchema'
+            doneAt:
+              type: string
+              format: date-time
+            notifier:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum: [HIU, HIP]
+                id:
+                  type: string
+                  example: tmh
+            statusNotification:
+              type: object
+              properties:
+                sessionStatus:
+                  type: string
+                  enum: [TRANSFERRED, FAILED]
+                hipId:
+                  type: string
+                  example: max
+                statusResponses:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      careContextReference:
+                        type: string
+                      hiStatus:
+                        type: string
+                        enum: [DELIVERED, OK, ERRORED]
+                        example: OK
+                      description:
+                        type: string
     ConsentArtefactReference:
       type: object
       properties:
@@ -2727,6 +2812,36 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ConsentArtefactReference'
+    HIUConsentNotificationEvent:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - notification
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        notification:
+          type: object
+          required:
+            - status
+            - consentRequestId
+          properties:
+            consentRequestId:
+              type: string
+              example: '<consent-request-id>'
+            status:
+              $ref: '#/components/schemas/ConsentStatus'
+            consentArtefacts:
+              type: array
+              items:
+                $ref: '#/components/schemas/ConsentArtefactReference'
+              description: if the status is GRANTED or REVOKED, then the consentArtefact references (Ids) must be specified.
     HeartbeatResponse:
       type: object
       properties:
@@ -2735,12 +2850,12 @@ components:
           format: date-time
           xml:
             attribute: true
-        Status:
+        status:
           type: string
           enum:
             - UP
             - DOWN
-        Error:
+        error:
           $ref: '#/components/schemas/Error'
       xml:
         name: HeartbeatResponse
@@ -3009,6 +3124,36 @@ components:
           type: string
         keyMaterial:
           $ref: '#/components/schemas/keyMaterial'
+    HIPHIRequest:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - transactionId
+        - hiRequest
+      properties:
+        requestId:
+          $ref: '#/components/schemas/UuidSchema'
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        transactionId:
+          $ref: '#/components/schemas/UuidSchema'
+        hiRequest: 
+          type: object
+          required:
+            - consent
+            - dataPushUrl
+            - keyMaterial
+            - dateRange
+          properties:
+            consent:
+              $ref: '#/components/schemas/consent'
+            dateRange:
+              $ref: '#/components/schemas/dateRange'
+            dataPushUrl:
+              type: string
+            keyMaterial:
+              $ref: '#/components/schemas/keyMaterial'
     ConsentRequestInitResponse:
       type: object
       required:
