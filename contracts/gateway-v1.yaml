@@ -3406,4 +3406,3 @@ components:
         consentId:
           type: string
           example: <consent-artefact-id>
-    
