@@ -661,7 +661,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/health-information/hiu/on-request:
+  /v1/health-information/cm/on-request:
     post:
       tags:
         - data flow
@@ -1156,9 +1156,10 @@ paths:
         - cm facing
       summary: Consent notification
       description: >
-        Notification of consents to health information providers consent request granted, consent revoked, consent expired. Only the GRANTED and REVOKED status notifications will be sent to HIP.
+        Notification of consents to health information providers consent request granted, consent revoked, consent expired. Only the GRANTED, REVOKED and EXPIRED status notifications will be sent to HIP.
           1. If consent is granted, status=GRANTED, then consentDetail contains the consent artefact details and signature is available. 
           2. If consent is revoked, then status=REVOKED, and consentId specifes which consent artefact is revoked. 
+          3. If the consent has expired, then status=EXPIRED, and consentId specifies which consent artefact has expired. Note, this is also responsibility of the HIP to keep track of consent expiry. Any data request on expired consent artefact must not be done. 
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"
@@ -1171,6 +1172,51 @@ paths:
           application/xml:
             schema:
               $ref: '#/components/schemas/HIPConsentNotification'
+      responses:
+        '202':
+          description: Request Accepted
+        '401':
+          description: >
+            **Causes:**
+              * Invalid/Expired/Empty token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream services are down
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/consents/hip/on-notify:
+    post:
+      tags:
+        - consent flow
+        - hip facing
+      summary: Consent notification
+      description: >
+        This API is called by HIP as acknowledgement to notification of consents, in cases of consent revocation and expiration. 
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-CM-ID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HIPConsentNotificationResponse'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/HIPConsentNotificationResponse'
       responses:
         '202':
           description: Request Accepted
@@ -1265,6 +1311,48 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/HIUConsentNotificationEvent'
+      responses:
+        '202':
+          description: Request Accepted.
+        '401':
+          description: >
+            **Causes:**
+              * Invalid/Expired/Empty token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream services are down
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/consents/hiu/on-notify:
+    post:
+      tags:
+        - consent flow
+        - hiu facing
+      summary: Consent notification
+      description: |
+        This API is called by HIU as acknowledgement to consent notifications, specifically for cases when consent is REVOKED or EXPIRED.
+      parameters:
+        - $ref: '#/components/parameters/authorization'
+        - $ref: '#/components/parameters/X-CM-ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HIUConsentNotificationResponse'
       responses:
         '202':
           description: Request Accepted.
@@ -3273,3 +3361,48 @@ components:
           $ref: '#/components/schemas/Error'
         resp:
           $ref: '#/components/schemas/RequestReference'
+    HIPConsentNotificationResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        acknowledgement:
+          $ref: '#/components/schemas/ConsentAcknowledgement'
+        error: 
+          $ref: '#/components/schemas/Error'
+        resp:
+          $ref: '#/components/schemas/RequestReference'
+    HIUConsentNotificationResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        acknowledgement:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConsentAcknowledgement'
+        error: 
+          $ref: '#/components/schemas/Error'
+        resp:
+          $ref: '#/components/schemas/RequestReference'
+    ConsentAcknowledgement:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - OK
+          - UNKNOWN
+        consentId:
+          type: string
+          example: <consent-artefact-id>
