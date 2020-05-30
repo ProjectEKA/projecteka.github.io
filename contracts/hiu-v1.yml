@@ -2,10 +2,15 @@ openapi: 3.0.0
 info:
   version: 0.0.1
   title: Health Information User
-  description: >
+  description: |
     "Health information User" refers to an entity that wishes to consume the
     services of the Health Data Consent Manager and obtain aggregated health
     information for providing services to the patient .
+    
+    # Obselete! 
+    This specification is not maintained anymore, and only exists for histrorical reasons. Instead please refer
+    1. <a href="https://github.com/ProjectEKA/projecteka.github.io/blob/master/contracts/bridge-v1.yml">Bridges</a>
+    2.<a ref="https://github.com/ProjectEKA/projecteka.github.io/blob/master/contracts/gateway-v1.yaml">Gateway</a>
 
 servers:
   - url: https://ncg-dev.projecteka.in/hiu-api
@@ -20,6 +25,7 @@ paths:
     post:
       tags:
         - consent notification
+      deprecated: true
       summary: Consent notification
       description: Call back url from consent manager when consent artefact gets created.
       requestBody:
@@ -46,6 +52,7 @@ paths:
     post:
       tags:
         - data notification
+      deprecated: true
       summary: data notification
       description: Once data is prepared at HIP, will be passed to HIU.
       requestBody:
