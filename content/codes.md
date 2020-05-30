@@ -21,9 +21,9 @@ TBD
 
 
 
-## Meta codes
+## Meta/Concept codes
 These are codes that are used within the contract to express specific concepts. 
-Reference implementations only demonstrate the means and usages of the codes, and not establish a standard. The standards themselves are to be defined by a competent authority publicly and the codes in the reference systems should only reference such defintiions.
+Reference implementations only demonstrate the means and usages of the codes, and not establish a standard. The standards themselves are to be defined by a competent authority, available publicly, and the codes in the reference systems should only reference/use such defintiions.
 
 ##### Purpose of Use codes
 The following codes are referenced from [FHIR Purpose of Use](https://www.hl7.org/fhir/v3/PurposeOfUse/vs.html) Value Set, which in turn includes codes from HL7 ActReason.
@@ -76,7 +76,7 @@ Please see below for examples:
 },
 {
     "code": "DiagnosticReport",
-    "display": "DiagnosticReport"
+    "display": "Diagnostic Report"
 },
 {
     "code": "MedicationRequest",
