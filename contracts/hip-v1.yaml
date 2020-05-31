@@ -2,11 +2,17 @@ openapi: 3.0.0
 info:
   version: 0.0.1
   title: Health Information Provider
-  description: >
+  description: |
     Clinical establishments which generate or store customer data in digital form. 
     These include hospitals, primary or secondary health care centres, nursing homes, 
     diagnostic centres, clinics, medical device companies and other such entities 
     as may be identified by regulatory authorities from time to time.
+    
+    # Obselete! 
+    This specification is not maintained anymore, and only exists for histrorical reasons. Instead please refer
+    1. <a href="https://github.com/ProjectEKA/projecteka.github.io/blob/master/contracts/bridge-v1.yml">Bridges</a>
+    2.<a ref="https://github.com/ProjectEKA/projecteka.github.io/blob/master/contracts/gateway-v1.yaml">Gateway</a>
+    
 servers:
   - url: https://ncg-dev.projecteka.in/hip
     description: Dev
@@ -23,6 +29,7 @@ paths:
       tags:
         - discovery
       summary: Discover patient's accounts
+      deprecated: true
       description: >
         Return only one patient record with (potentially masked) associated care contexts
           1. **At least one of the verified identifier matches.**
@@ -90,6 +97,7 @@ paths:
     post:
       tags:
         - link
+      deprecated: true
       summary: Link patient's care contexts
       description: >
         Links care contexts associated with only one patient
@@ -156,6 +164,7 @@ paths:
     post:
       tags:
         - link
+      deprecated: true
       parameters:
         - $ref: '#/components/parameters/LinkRefNumber'
       summary: Authenticates the token submitted by Consent Manager and links the account if authentication is successful.
@@ -223,6 +232,7 @@ paths:
     post:
       tags:
         - data flow
+      deprecated: true
       summary: Health information data request
 
       description: >
@@ -278,6 +288,7 @@ paths:
     post:
       tags:
         - data flow
+      deprecated: true
       summary: Health information link data request
 
       description: >
@@ -334,6 +345,7 @@ paths:
     post:
       tags:
         - consents
+      deprecated: true
       requestBody:
         required: true
         content:
