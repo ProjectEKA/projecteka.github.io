@@ -851,7 +851,7 @@ paths:
         - hiu facing
       summary: Identify a patient by her consent-manager user-id
       description: >
-        This API is meant for identify to patient given her consent-manager-user-id. CM subsequently makes the /on-find API call to Gateway.
+        This API is meant for identify to patient given her consent-manager-user-id. CM subsequently makes the /on-find Gateway API call with results. 
       parameters:
         - $ref: "#/components/parameters/authorization"
       requestBody:
@@ -1634,21 +1634,9 @@ components:
           example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
         timestamp:
           $ref: '#/components/schemas/TimestampSchema'
-        query:
+        patient:
           type: object
           properties:
-            patient:
-              type: object
-              properties:
-                id:
-                  type: string
-                  example: hinapatel79@ncg
-            requester:
-              type: object
-              properties:
-                type: 
-                  type: string
-                  enum: [HIU, HIP]
-                id:
-                  type: string
-                  example: 100005
+            id:
+              type: string
+              example: hinapatel79@ncg

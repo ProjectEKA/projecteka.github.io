@@ -987,7 +987,6 @@ paths:
         Otherwise, patient is not provided, and possibly error is raised for invalid requests (e.g. CM suffix not mentioned).
       parameters:
         - $ref: "#/components/parameters/authorization"
-        - $ref: "#/components/parameters/X-HIU-ID"
       requestBody:
         required: true
         content:

@@ -2091,7 +2091,6 @@ paths:
         Otherwise, patient is not provided, and possibly error is raised for invalid requests (e.g. CM suffix not mentioned).
       parameters:
         - $ref: "#/components/parameters/authorization"
-        - $ref: "#/components/parameters/X-HIU-ID"
       requestBody:
         required: true
         content:
@@ -3528,24 +3527,12 @@ components:
           example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
         timestamp:
           $ref: '#/components/schemas/TimestampSchema'
-        query:
+        patient:
           type: object
           properties:
-            patient:
-              type: object
-              properties:
-                id:
-                  type: string
-                  example: hinapatel79@ncg
-            requester:
-              type: object
-              properties:
-                type: 
-                  type: string
-                  enum: [HIU, HIP]
-                id:
-                  type: string
-                  example: 100005
+            id:
+              type: string
+              example: hinapatel79@ncg
     PatientIdentificationResponse:
       type: object
       required:
