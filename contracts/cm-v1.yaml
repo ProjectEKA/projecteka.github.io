@@ -829,6 +829,73 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1/heartbeat:
+    get:
+      tags:
+        - monitoring
+      summary: Get consent request status
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HeartbeatResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/HeartbeatResponse'
+  /v1/patients/find:
+    post:
+      tags:
+        - identification
+        - hiu facing
+      summary: Identify a patient by her consent-manager user-id
+      description: >
+        This API is meant for identify to patient given her consent-manager-user-id. CM subsequently makes the /on-find API call to Gateway.
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientIdentificationRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PatientIdentificationRequest'
+      responses:
+        '202':
+          description: Request Accepted
+        '400':
+          description: >
+            Invalid request, required attributes not provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   parameters:
     authorization:
@@ -1023,7 +1090,7 @@ components:
         consent:
           $ref: '#/components/schemas/consent'
         dateRange:
-          $ref: '#/components/schemas/dateRange'
+          $ref: '#/components/schemas/DateRange'
         dataPushUrl:
           type: string
         keyMaterial:
@@ -1050,7 +1117,7 @@ components:
             consent:
               $ref: '#/components/schemas/consent'
             dateRange:
-              $ref: '#/components/schemas/dateRange'
+              $ref: '#/components/schemas/DateRange'
             dataPushUrl:
               type: string
             keyMaterial:
@@ -1062,7 +1129,7 @@ components:
       properties:
         id:
           type: string
-    dateRange:
+    DateRange:
       type: object
       required:
         - from
@@ -1342,7 +1409,7 @@ components:
                   enum: [HIU, HIP]
                 id:
                   type: string
-                  example: tmh
+                  example: 100005
             statusNotification:
               type: object
               properties:
@@ -1539,3 +1606,49 @@ components:
         consentId:
           type: string
           example: <consent-artefact-id>
+    HeartbeatResponse:
+      type: object
+      properties:
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        status:
+          type: string
+          enum:
+            - UP
+            - DOWN
+        error:
+          $ref: '#/components/schemas/Error'
+      xml:
+        name: HeartbeatResponse
+    PatientIdentificationRequest:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - query
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        query:
+          type: object
+          properties:
+            patient:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: hinapatel79@ncg
+            requester:
+              type: object
+              properties:
+                type: 
+                  type: string
+                  enum: [HIU, HIP]
+                id:
+                  type: string
+                  example: 100005
