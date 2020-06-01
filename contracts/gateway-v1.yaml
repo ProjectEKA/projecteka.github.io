@@ -2086,9 +2086,12 @@ paths:
         - identification
         - cm facing
       summary: Identification result for a consent-manager user-id
-      description: >
+      description: |
         If a patient is found then patient.name contains the patients name. 
-        Otherwise, patient is not provided, and possibly error is raised for invalid requests (e.g. CM suffix not mentioned).
+        Otherwise, patient is not provided, and possibly error is raised for invalid requests
+        Note in addition to the "Authorization" header, one of the following headers must be specified
+        1. specify **X-HIU-ID** if the requester is HIU (identified from /find requester.id)
+        2. specify **X-HIP-ID** if the requester is HIP (identified from /find requester.id)
       parameters:
         - $ref: "#/components/parameters/authorization"
       requestBody:
@@ -3527,12 +3530,27 @@ components:
           example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
         timestamp:
           $ref: '#/components/schemas/TimestampSchema'
-        patient:
+        query:
           type: object
+          required:
+            - patient
+            - requester
           properties:
-            id:
-              type: string
-              example: hinapatel79@ncg
+            patient:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: hinapatel79@ncg
+            requester:
+              type: object
+              properties:
+                type: 
+                  type: string
+                  enum: [HIU, HIP]
+                id:
+                  type: string
+                  example: 100005
     PatientIdentificationResponse:
       type: object
       required:
