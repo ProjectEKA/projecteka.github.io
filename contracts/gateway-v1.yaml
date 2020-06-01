@@ -12,6 +12,7 @@ tags:
   - name: link
   - name: consent flow
   - name: data flow
+  - name: identification
   - name: monitoring
   - name: sessions
   - name: cm facing
@@ -2026,6 +2027,115 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1/patients/find:
+    post:
+      tags:
+        - identification
+        - hiu facing
+      summary: Identify a patient by her consent-manager user-id
+      description: >
+        This API is meant for identify to patient given her consent-manager-user-id
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-CM-ID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientIdentificationRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PatientIdentificationRequest'
+      responses:
+        '202':
+          description: Request Accepted
+        '400':
+          description: >
+            Invalid request, required attributes not provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/patients/on-find:
+    post:
+      tags:
+        - identification
+        - cm facing
+      summary: Identification result for a consent-manager user-id
+      description: |
+        If a patient is found then patient.name contains the patients name. 
+        Otherwise, patient is not provided, and possibly error is raised for invalid requests
+        Note in addition to the "Authorization" header, one of the following headers must be specified
+        1. specify **X-HIU-ID** if the requester is HIU (identified from /find requester.id)
+        2. specify **X-HIP-ID** if the requester is HIP (identified from /find requester.id)
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientIdentificationResponse'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PatientIdentificationResponse'
+      responses:
+        '202':
+          description: Request Accepted
+        '400':
+          description: >
+            Invalid request, required attributes not provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   parameters:
     authorization:
@@ -3406,3 +3516,67 @@ components:
         consentId:
           type: string
           example: <consent-artefact-id>
+    PatientIdentificationRequest:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - query
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        query:
+          type: object
+          required:
+            - patient
+            - requester
+          properties:
+            patient:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: hinapatel79@ncg
+            requester:
+              type: object
+              properties:
+                type: 
+                  type: string
+                  enum: [HIU, HIP]
+                id:
+                  type: string
+                  example: 100005
+    PatientIdentificationResponse:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - resp
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        patient:
+          type: object
+          properties:
+            id: 
+              type: string
+              example: hinapatel79@ncg
+            name:
+              type: string
+              example: Hina Patel
+        error: 
+          $ref: '#/components/schemas/Error'
+        resp:
+          $ref: '#/components/schemas/RequestReference'
+      xml:
+        name: PatientIdentificationResponse

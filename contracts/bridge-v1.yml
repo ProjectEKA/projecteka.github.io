@@ -12,6 +12,7 @@ tags:
   - name: link
   - name: consent flow
   - name: data flow
+  - name: identification
   - name: monitoring
   - name: hiu bridge
   - name: hip bridge
@@ -975,6 +976,62 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/HeartbeatResponse'
+  /v1/patients/on-find:
+    post:
+      tags:
+        - identification
+        - cm facing
+      summary: Identification result for a consent-manager user-id
+      description: |
+        If a patient is found then patient.name contains the patients name. 
+        Otherwise, patient is not provided, and possibly error is raised for invalid requests
+        Note in addition to the "Authorization" header, one of the following headers must be specified
+        1. specify **X-HIU-ID** if the requester is HIU (identified from /find requester.id)
+        2. specify **X-HIP-ID** if the requester is HIP (identified from /find requester.id)
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientIdentificationResponse'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PatientIdentificationResponse'
+      responses:
+        '202':
+          description: Request Accepted
+        '400':
+          description: >
+            Invalid request, required attributes not provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   parameters:
     authorization:
@@ -1163,7 +1220,7 @@ components:
         patient:
           type: object
           properties:
-            consentManagerUserID:
+            id:
               type: string
               example: hinapatel79@ncg
             referenceNumber:
@@ -1265,7 +1322,7 @@ components:
         consent:
           $ref: '#/components/schemas/consent'
         dateRange:
-          $ref: '#/components/schemas/dateRange'
+          $ref: '#/components/schemas/DateRange'
         dataPushUrl:
           type: string
         keyMaterial:
@@ -1277,7 +1334,7 @@ components:
       properties:
         id:
           type: string
-    dateRange:
+    DateRange:
       type: object
       required:
         - from
@@ -1817,7 +1874,7 @@ components:
             consent:
               $ref: '#/components/schemas/consent'
             dateRange:
-              $ref: '#/components/schemas/dateRange'
+              $ref: '#/components/schemas/DateRange'
             dataPushUrl:
               type: string
             keyMaterial:
@@ -1845,3 +1902,32 @@ components:
             $ref: '#/components/schemas/Error'
           resp:
             $ref: '#/components/schemas/RequestReference'
+    PatientIdentificationResponse:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - resp
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        patient:
+          type: object
+          properties:
+            id: 
+              type: string
+              example: hinapatel79@ncg
+            name:
+              type: string
+              example: Hina Patel
+        error: 
+          $ref: '#/components/schemas/Error'
+        resp:
+          $ref: '#/components/schemas/RequestReference'
+      xml:
+        name: PatientIdentificationResponse
