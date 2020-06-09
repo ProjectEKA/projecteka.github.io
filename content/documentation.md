@@ -17,5 +17,5 @@ The documentations are maintained in OpenAPI Specification (OAS), commonly known
 Many of the contracts have errors and meta codes. Which are documented [here](./codes.html)
 
 
-Health Information is exchanged via FHIR bundles. [FHIR](https://www.hl7.org/fhir/index.html) is a standard for health care data exchange, published by HL7. The intent of using FHIR is towards standardization of schema, i.e machine readable, rather than addressing or enforcing semantic standards for interoperabilty. See [here](./hirepresentation.html) for health data representation in FHIR in the reference implementation stack.  
+Health Information is exchanged via FHIR bundles. [FHIR](https://www.hl7.org/fhir/index.html) is a standard for health care data exchange, published by HL7. The intent of using FHIR is towards standardization of schema, i.e machine readable, rather than addressing or enforcing semantic standards for interoperabilty. See [here](./fhirepresentation.html) for health data representation in FHIR in the reference implementation stack.  
 
