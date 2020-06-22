@@ -541,6 +541,56 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1/health-information/transfer:
+    post:
+      tags:
+        - data flow
+        - hiu bridge
+      summary: health information transfer API
+      description: >
+        **NOTE**: This API is actually the callback URL that is passed as **dataPushUrl** in the data request API - /v1/health-information/hip/request. This API is directly called by HIP Data Bridge and is not mediated via CM, and hence not routed through the Gateway. 
+          1. This API should be implemented at HIU side. It maybe implemented by the Data Bridge representing the HIU. 
+          2. Entry elements maybe ***content*** or ***link***, although for version 1, entry ***content*** is preferred. 
+          3. Entry ***content*** (or even link reference content) must be encrypted by means of Diffie Hellman Key Exchange, utilizing the HIU keymaterials that are passed through the data request API - /v1/health-information/hip/request. 
+          4. Media contains the mimetype of content, and for v1, it is "application/fhir+json"
+          5. checksum is Md5 checksum of the data conent, before encryption
+          6. Please refer to the ProjectEKA WIKI for the format of FHIR bundle that is passed through content 
+      parameters:
+        - $ref: '#/components/parameters/authorization'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataNotification'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/DataNotification'
+      responses:
+        '202':
+          description: Data accepted.
+        '401':
+          description: >
+            **Causes:**
+              * Invalid/Expired/Empty token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream services are down
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1/health-information/request:
     post:
       tags:
@@ -1931,3 +1981,76 @@ components:
           $ref: '#/components/schemas/RequestReference'
       xml:
         name: PatientIdentificationResponse
+    DataNotification:
+      type: object
+      required:
+        - transactionId
+        - entries
+        - keyMaterial
+        - pageNumber
+        - pageCount
+      properties:
+        pageNumber:
+          type: integer
+          description: Current page number.
+        pageCount:
+          type: integer
+          description: Total number of pages.
+        transactionId:
+          type: string
+          format: uuid
+          description: Transaction Id issued when data requested.
+        entries:
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/EntryContent'
+              - $ref: '#/components/schemas/EntryLink'
+        keyMaterial:
+          $ref: '#/components/schemas/keyMaterial'
+    EntryContent:
+      type: object
+      required:
+        - content
+        - media
+        - checksum
+        - careContextReference
+      properties:
+        content:
+          type: string
+          description: Encrypted content
+          example: Encrypted content of data packaged in FHIR bundle
+        media:
+          type: string
+          enum: ['application/fhir+json']
+          description: mimetype of the content.
+        checksum:
+          type: string
+          description: Md5 checksum of the content before encryption
+        careContextReference:
+          type: string
+          example: RVH1008
+          description: care context reference number.
+    EntryLink:
+      type: object
+      required:
+        - link
+        - media
+        - checksum
+        - careContextReference
+      properties:
+        link:
+          type: string
+          description: Encrypted content
+          example: https://data-from.net/sa2321afaf12e13
+        media:
+          type: string
+          enum: ['application/fhir+json']
+          description: mimetype of the content.
+        checksum:
+          type: string
+          description: Md5 checksum of the content before encryption
+        careContextReference:
+          type: string
+          example: NCC1701
+          description: care context reference number.
