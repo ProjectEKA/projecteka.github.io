@@ -1,0 +1,20 @@
+@startuml
+
+title search for patient
+
+HIU_Bridge->Gateway: POST /patients/search
+note right
+hdr: X-CM-ID=NCG
+end note
+
+
+Gateway->CM: POST /patients/search
+
+CM->Gateway:  POST /patients/on-search
+note left
+hdr: X-HIU-ID=TMH
+end note
+
+Gateway->HIU_Bridge: POST /patients/on-search
+
+@enduml

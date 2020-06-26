@@ -1,0 +1,12 @@
+@startuml
+
+title Consent request denied/refused
+actor User
+User->CM: POST /consent-requests/{consent-request-id}/deny
+
+CM->Gateway:  POST /consents/hiu/notify
+note right of CM: hdr: X-HIU-ID=TMH
+
+Gateway->HIU_Bridge: POST /consents/hiu/notify
+
+@enduml

@@ -1,0 +1,28 @@
+@startuml
+
+title Existing consent revoked
+actor User
+User->CM: POST /consents/revoke
+
+CM->Gateway:  POST /consents/hiu/notify
+note right
+hdr: X-HIU-ID=TMH
+end note
+
+Gateway->HIU_Bridge: POST /consents/hiu/notify
+
+CM->Gateway:  POST /consents/hip/notify
+note right
+hdr: X-HIP-ID=AIMS
+end note
+
+Gateway->HIP_Bridge: POST /consents/hip/notify
+
+HIP_Bridge->Gateway: POST /consents/hip/on-notify
+note left
+hdr: X-CM-ID=NCG
+end note
+
+Gateway->CM: POST /consents/hip/on-notify
+
+@enduml

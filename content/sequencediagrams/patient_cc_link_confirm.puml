@@ -1,0 +1,26 @@
+@startuml
+
+title Link Confirmation
+actor User
+User->CM: POST /links/link/confirm
+
+CM->Gateway: POST /links/link/confirm
+note right
+hdr: X-HIP-ID=TMH
+end note
+note left of CM: waits for response on /on-confirm
+
+
+Gateway->Bridge: POST /links/link/confirm
+
+
+Bridge->Gateway: POST /links/link/on-confirm
+note left
+hdr: X-CM-ID=NCG
+end note
+
+Gateway->CM: POST /links/link/on-confirm
+
+CM-->User: link confirmation reponse
+
+@enduml

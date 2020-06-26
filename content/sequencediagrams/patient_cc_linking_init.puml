@@ -1,0 +1,26 @@
+@startuml
+
+title Linking initialization
+actor User
+User->CM: POST /links/link/init
+
+CM->Gateway: POST /links/link/init
+note right
+hdr: X-HIP-ID=TMH
+end note
+note left of CM: waits for response on /on-init
+
+Gateway->Bridge: POST /links/link/init
+
+
+Bridge->Gateway: POST /links/link/on-init
+note left
+hdr: X-CM-ID=NCG
+end note
+
+Gateway->CM: POST /links/link/on-init
+
+CM-->User: link init response
+
+
+@enduml

@@ -1,0 +1,19 @@
+@startuml
+
+title fetching consent artefact
+
+HIU_Bridge->Gateway: POST /consents/fetch
+note right
+hdr: X-CM-ID=NCG
+consent-id (in body)
+end note
+
+
+Gateway->CM: POST /consents/fetch
+
+CM->Gateway:  POST /consents/on-fetch
+note left of CM: hdr: X-HIU-ID=TMH
+
+Gateway->HIU_Bridge: POST /consents/on-fetch
+
+@enduml

@@ -1,0 +1,26 @@
+@startuml
+
+title Discovery
+actor User
+User->CM: POST /care-contexts/discover
+
+CM->Gateway: POST /care-contexts/discover
+note right
+hdr: X-HIP-ID=TMH
+end note
+note left of CM: waits for response on /on-discover
+
+
+Gateway->HIP_Bridge: POST /care-contexts/discover
+
+
+HIP_Bridge->Gateway: POST /care-contexts/on-discover
+note left
+hdr: X-CM-ID=NCG
+end note
+
+Gateway->CM: POST /care-contexts/on-discover
+
+CM-->User: discovery response
+
+@enduml

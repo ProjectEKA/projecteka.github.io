@@ -1,0 +1,22 @@
+@startuml
+
+title Health data transfer
+
+HIP_Bridge-->HIU: POST /data/transfer
+note right
+sent to datapushUrl
+specified by HIU as part of request
+end note
+
+HIP_Bridge->Gateway:  POST /health-information/notify
+note left of Gateway: hdr: X-CM-ID=NCG
+
+Gateway->CM:  POST /health-information/notify
+
+
+HIU->Gateway:  POST /health-information/notify
+note left of Gateway: hdr: X-CM-ID=NCG
+
+Gateway->CM:  POST /health-information/notify
+
+@enduml

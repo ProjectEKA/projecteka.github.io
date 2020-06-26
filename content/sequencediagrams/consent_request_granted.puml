@@ -1,0 +1,22 @@
+@startuml
+
+title Consent Request Granted
+actor User
+User->CM: POST /consent-requests/{consent-request-id}/approve
+
+CM->Gateway:  POST /consents/hiu/notify
+note right
+hdr: X-HIU-ID=TMH
+end note
+
+Gateway->HIU_Bridge: POST /consents/hiu/notify
+
+
+CM->Gateway:  POST /consents/hip/notify
+note right
+hdr: X-HIP-ID=AIMS
+end note
+
+Gateway->HIP_Bridge: POST /consents/hip/notify
+
+@enduml
