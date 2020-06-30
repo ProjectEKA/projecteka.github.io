@@ -2144,11 +2144,10 @@ paths:
         - hip facing
       summary: Link patient's care contexts
       description: >
-        Request from Hip to link a patient's care contexts
-          1. **Validate account reference number and care context reference number**
-          2. **Before eventual link confirmation, CM needs to authenticate the request with the patient**
+        Notification from Hip to consent manager for a patient's carecontext. 
       parameters:
         - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-CM-ID"
       requestBody:
         required: true
         content:
@@ -2204,13 +2203,10 @@ paths:
         - cm facing
       summary: Response to patient's care context link request
       description: >
-        Result of patient care-context link request from CM end.
-          1. **This is in response to Hip request to link patient care context**
-        The error section in the body, represents the potential errors that may have occurred. Possible reasons:
-          1. **Patient reference number is invalid**
-          2. **Care context reference numbers are invalid**
+        Notification from CM to HIP, Whether patient found or not.
       parameters:
         - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-HIP-ID"
       requestBody:
         required: true
         content:
@@ -3707,18 +3703,13 @@ components:
           format: uuid
         timestamp:
           $ref: '#/components/schemas/TimestampSchema'
-        meta:
-          type: object
-          properties:
-            X-CM-ID:
-              type: string
+        cmId:
+          type: string
         patient:
           type: object
           properties:
             id:
               type: string
-              example: <16 digit Id>
-              description: Identifier of patient to consent manager
             careContexts:
               type: array
               items:
@@ -3738,29 +3729,12 @@ components:
           example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
         timestamp:
           $ref: '#/components/schemas/TimestampSchema'
-        meta:
-          type: object
-          properties:
-            X-HIP-ID:
-              type: string
-        patient:
-          type: object
-          properties:
-            id:
-              type: string
-              example: <16 digit Id>
-              description: Identifier of patient to consent manager
-            careContexts:
-              type: array
-              items:
-                $ref: '#/components/schemas/HipInitiatedLinkCareContext'
-              xml:
-                name: careContexts
-                wrapped: true
+        hipId:
+          type: string
         error:
           $ref: '#/components/schemas/Error'
         resp:
-          $ref: '#/components/schemas/RequestReference'
+          $ref: '#/components/schemas/HipInitiatedRequestReference'
     HipInitiatedLinkCareContext:
       type: object
       properties:
@@ -3770,3 +3744,16 @@ components:
           type: string
       xml:
         name: Tag
+    HipInitiatedRequestReference:
+      type: object
+      required:
+        - requestId
+        - status
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: the requestId that was passed
+        status:
+          type: string
+          example: success/failure

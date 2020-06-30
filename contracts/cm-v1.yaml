@@ -903,9 +903,7 @@ paths:
         - hip facing
       summary: Link patient's care contexts
       description: >
-        Request from Hip to link a patient's care contexts
-          1. **Validate account reference number and care context reference number**
-          2. **Before eventual link confirmation, CM needs to authenticate the request with the patient**
+        Notification from Hip to consent manager for a patient's carecontext.
       parameters:
         - $ref: "#/components/parameters/authorization"
       requestBody:
@@ -1723,18 +1721,13 @@ components:
           format: uuid
         timestamp:
           $ref: '#/components/schemas/TimestampSchema'
-        meta:
-          type: object
-          properties:
-            X-CM-ID:
-              type: string
+        cmId:
+          type: string
         patient:
           type: object
           properties:
             id:
               type: string
-              example: <16 digit Id>
-              description: Identifier of patient to consent manager
             careContexts:
               type: array
               items:
