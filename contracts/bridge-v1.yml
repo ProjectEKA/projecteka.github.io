@@ -2118,31 +2118,26 @@ components:
           example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
         timestamp:
           $ref: '#/components/schemas/TimestampSchema'
-        hipId:
-          type: string
+        linkRequest:
+          $ref: '#/components/schemas/HipInitiatedLinkResponse'
         error:
           $ref: '#/components/schemas/Error'
         resp:
-          $ref: '#/components/schemas/HipInitiatedRequestReference'
+          $ref: '#/components/schemas/RequestReference'
     HipInitiatedLinkCareContext:
       type: object
       properties:
         referenceNumber:
           type: string
-        name:
+        display:
           type: string
       xml:
         name: Tag
-    HipInitiatedRequestReference:
+    HipInitiatedLinkResponse:
       type: object
       required:
-        - requestId
         - status
       properties:
-        requestId:
+        sessionStatus:
           type: string
-          format: uuid
-          description: the requestId that was passed
-        status:
-          type: string
-          example: success/failure
+          example: SUCCESS|FAILURE

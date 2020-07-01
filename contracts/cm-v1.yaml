@@ -1721,12 +1721,16 @@ components:
           format: uuid
         timestamp:
           $ref: '#/components/schemas/TimestampSchema'
-        cmId:
-          type: string
         patient:
           type: object
           properties:
-            id:
+            cmId:
+              type: string
+            referenceNumber:
+              type: string
+            display:
+              type: string
+            hipId:
               type: string
             careContexts:
               type: array
@@ -1742,7 +1746,7 @@ components:
       properties:
         referenceNumber:
           type: string
-        name:
+        display:
           type: string
       xml:
         name: Tag
