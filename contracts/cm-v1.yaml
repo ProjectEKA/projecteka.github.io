@@ -1721,24 +1721,15 @@ components:
           format: uuid
         timestamp:
           $ref: '#/components/schemas/TimestampSchema'
-        patient:
+        link:
           type: object
           properties:
             cmId:
               type: string
-            referenceNumber:
-              type: string
-            display:
-              type: string
             hipId:
               type: string
-            careContexts:
-              type: array
-              items:
-                $ref: '#/components/schemas/HipInitiatedLinkCareContext'
-              xml:
-                name: careContexts
-                wrapped: true
+            patient:
+              $ref: '#/components/schemas/HipInitiatedPatient'
           xml:
             name: HipInitiatedLinkRequest
     HipInitiatedLinkCareContext:
@@ -1750,3 +1741,17 @@ components:
           type: string
       xml:
         name: Tag
+    HipInitiatedPatient:
+      type: object
+      properties:
+        referenceNumber:
+          type: string
+        display:
+          type: string
+        careContexts:
+          type: array
+          items:
+            $ref: '#/components/schemas/HipInitiatedLinkCareContext'
+          xml:
+            name: careContexts
+            wrapped: true

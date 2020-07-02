@@ -2140,4 +2140,6 @@ components:
       properties:
         sessionStatus:
           type: string
-          example: SUCCESS|FAILURE
+          enum:
+              - SUCCESS
+              - FAILURE
