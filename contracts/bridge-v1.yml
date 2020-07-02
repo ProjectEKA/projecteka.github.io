@@ -1082,6 +1082,60 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /hip-links/on-link:
+    post:
+      tags:
+        - link
+        - cm facing
+      summary: Response to patient's care context link request
+      description: >
+        Notification from CM to HIP, Whether patient found or not.
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HipInitiatedLinkResult'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/HipInitiatedLinkResult'
+      responses:
+        '202':
+          description: Request accepted
+        '400':
+          description: >
+            **Causes:**
+              * Format mismatch of any of attributes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
 components:
   parameters:
     authorization:
@@ -2054,3 +2108,38 @@ components:
           type: string
           example: NCC1701
           description: care context reference number.
+    HipInitiatedLinkResult:
+      type: object
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        linkRequest:
+          $ref: '#/components/schemas/HipInitiatedLinkResponse'
+        error:
+          $ref: '#/components/schemas/Error'
+        resp:
+          $ref: '#/components/schemas/RequestReference'
+    HipInitiatedLinkCareContext:
+      type: object
+      properties:
+        referenceNumber:
+          type: string
+        display:
+          type: string
+      xml:
+        name: Tag
+    HipInitiatedLinkResponse:
+      type: object
+      required:
+        - status
+      properties:
+        sessionStatus:
+          type: string
+          enum:
+              - SUCCESS
+              - FAILURE

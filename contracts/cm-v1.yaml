@@ -896,6 +896,64 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /hip-links/link:
+    post:
+      tags:
+        - link
+        - hip facing
+      summary: Link patient's care contexts
+      description: >
+        Notification from Hip to consent manager for a patient's carecontext.
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HipInitiatedLinkRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/HipInitiatedLinkRequest'
+      responses:
+        '202':
+          description: Request accepted
+        '400':
+          description: >
+            **Causes:**
+              * Consent manager user id is not provided
+              * Patient reference number is not provided
+              * Care context references are not provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   parameters:
     authorization:
@@ -1655,3 +1713,45 @@ components:
                 id:
                   type: string
                   example: 100005
+    HipInitiatedLinkRequest:
+      type: object
+      properties:
+        requestId:
+          type: string
+          format: uuid
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        link:
+          type: object
+          properties:
+            cmId:
+              type: string
+            hipId:
+              type: string
+            patient:
+              $ref: '#/components/schemas/HipInitiatedPatient'
+          xml:
+            name: HipInitiatedLinkRequest
+    HipInitiatedLinkCareContext:
+      type: object
+      properties:
+        referenceNumber:
+          type: string
+        display:
+          type: string
+      xml:
+        name: Tag
+    HipInitiatedPatient:
+      type: object
+      properties:
+        referenceNumber:
+          type: string
+        display:
+          type: string
+        careContexts:
+          type: array
+          items:
+            $ref: '#/components/schemas/HipInitiatedLinkCareContext'
+          xml:
+            name: careContexts
+            wrapped: true
