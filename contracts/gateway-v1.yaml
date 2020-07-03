@@ -2143,6 +2143,7 @@ paths:
         - link
         - hip facing
       summary: Link patient's care contexts
+      deprecated: true
       description: >
         Notification from Hip to consent manager for a patient's carecontext. 
       parameters:
@@ -2204,6 +2205,7 @@ paths:
       summary: Response to patient's care context link request
       description: >
         Notification from CM to HIP, Whether patient found or not.
+      deprecated: true
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"

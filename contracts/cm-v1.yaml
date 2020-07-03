@@ -902,6 +902,7 @@ paths:
         - link
         - hip facing
       summary: Link patient's care contexts
+      deprecated: true
       description: >
         Notification from Hip to consent manager for a patient's carecontext.
       parameters:
