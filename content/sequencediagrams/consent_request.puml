@@ -1,0 +1,27 @@
+@startuml
+
+title Consent Requests by HIU
+participant HIU_Bridge
+participant Gateway
+participant CM
+actor User
+
+HIU_Bridge->Gateway: POST /consent-requests/init
+note right
+hdr: X-CM-ID=NCG
+end note
+
+Gateway->CM: POST /consent-requests/init
+
+
+CM->Gateway: POST /consent-requests/on-init
+note right of Gateway: with created consent-request-id
+
+Gateway->HIU_Bridge: POST /consent-requests/on-init
+
+
+CM-->>User: Notification (usually by SMS)
+User->CM: GET /consent-requests/
+
+
+@enduml

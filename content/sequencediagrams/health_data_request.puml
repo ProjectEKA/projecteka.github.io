@@ -1,0 +1,37 @@
+@startuml
+
+title Health data request
+participant HIU_Bridge
+HIU_Bridge->Gateway: POST /health-information/cm/request
+note right
+hdr: X-CM-ID=NCG
+end note
+
+Gateway->CM:  POST /health-information/request
+
+CM->Gateway: POST /health-information/cm/on-request
+note left
+- hdr: X-HIU-ID=TMH
+- with created transaction-id for data transfer
+end note
+
+Gateway->HIU_Bridge: POST /health-information/on-request
+
+== Send request to HIP ==
+
+CM->Gateway:  POST /health-information/hip/request
+note left
+hdr: X-HIP-ID=AIMS
+end note
+
+Gateway->HIP_Bridge: POST /health-information/request
+
+HIP_Bridge->Gateway: POST /health-information/hip/on-request
+note left
+X-CM-ID=NCG
+end note
+
+Gateway->CM: POST /health-information/on-request
+
+
+@enduml
