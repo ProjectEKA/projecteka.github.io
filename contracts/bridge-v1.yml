@@ -1088,6 +1088,7 @@ paths:
         - link
         - cm facing
       summary: Response to patient's care context link request
+      deprecated: true
       description: >
         Notification from CM to HIP, Whether patient found or not.
       parameters:
