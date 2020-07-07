@@ -22,6 +22,7 @@ tags:
   - name: link
   - name: consent
   - name: data flow
+  - name: account
 
 paths:
   /v1/care-contexts/on-discover:
@@ -955,6 +956,64 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /patients/profile:
+    post:
+      tags:
+        - account
+      summary: Create Account
+      description: Patient can create an account once they verified one of the identifiers.
+      parameters:
+        - name: Authorization
+          description: Token received after successful verification of identifier.
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePatientRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/CreatePatientRequest'
+      responses:
+        '201':
+          description: Profile created successfully.
+        '400':
+          description: >
+            **Causes:**
+              * Invalid Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Invalid/expired token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream services are down
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   parameters:
     authorization:
@@ -1756,3 +1815,46 @@ components:
           xml:
             name: careContexts
             wrapped: true
+    CreatePatientRequest:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/PatientName'
+        username:
+          type: string
+          example: raj.sharma@ncg
+        password:
+          type: string
+        dateOfBirth:
+          $ref: '#/components/schemas/DateOfBirth'
+        gender:
+          $ref: '#/components/schemas/Gender'
+      required:
+        - name
+        - username
+        - password
+        - gender
+    PatientName:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: Raj
+        lastName:
+          type: string
+          example: Kumar
+        middleName:
+          type: string
+          example: Sharma
+    DateOfBirth:
+      type: object
+      properties:
+        date:
+          type: integer
+          example: 01
+        month:
+          type: integer
+          example: 01
+        year:
+          type: integer
+          example: 01
