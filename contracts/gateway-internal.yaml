@@ -1,0 +1,123 @@
+openapi: 3.0.0
+info:
+  title: Gateway Internal
+  description: Gateway is the hub that routes/orchestrates the interaction between consent managers and API bridges.
+  version: 1.0.0
+servers:
+  - url: https://ncg-dev.projecteka.in/gateway
+    description: Dev
+tags:
+  - name: registration
+paths:
+  /internal/bridge:
+    post:
+      tags:
+        - registration
+      summary: creation of bridge & it's services entries in DB by admin
+      description: >
+        This API is meant for creating bridge & it's services entries in database.
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BridgeRegistrationRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/BridgeRegistrationRequest'
+      responses:
+        '204':
+          description: Bridge Services entries added successfully
+        '400':
+          description: >
+            Invalid request, required attributes not provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  parameters:
+    authorization:
+      name: Authorization
+      in: header
+      required: true
+      description: Access token which was issued after successful login with gateway auth server.
+      schema:
+        type: string
+  schemas:
+    BridgeRegistrationRequest:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+        active:
+          type: boolean
+        blocklisted:
+          type: boolean
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/BridgeService'
+          xml:
+            name: services
+            wrapped: true
+      xml:
+        name: BridgeRegistrationRequest
+    BridgeService:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ServiceType'
+        active:
+          type: boolean
+      xml:
+        name: BridgeService
+    ServiceType:
+      type: string
+      enum: [HIP, HIU]
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/Error'
+      xml:
+        name: ErrorResponse
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          enum: [1000, 10001]
+        message:
+          type: string
+      xml:
+        name: Error
