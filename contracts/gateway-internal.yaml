@@ -60,7 +60,6 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  paths:
   /bridges/101/services:
     post:
       tags:
