@@ -24,7 +24,7 @@ tags:
   - name: consents
 
 paths:
-  /v1/patients/discover/carecontexts:
+  /v0.5/patients/discover/carecontexts:
     post:
       tags:
         - discovery
@@ -93,7 +93,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/patients/link:
+  /v0.5/patients/link:
     post:
       tags:
         - link
@@ -160,7 +160,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/patients/link/{linkRefNumber}:
+  /v0.5/patients/link/{linkRefNumber}:
     post:
       tags:
         - link
@@ -228,7 +228,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/health-information/request:
+  /v0.5/health-information/request:
     post:
       tags:
         - data flow
@@ -284,7 +284,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/health-information/{informationId}:
+  /v0.5/health-information/{informationId}:
     post:
       tags:
         - data flow
@@ -341,7 +341,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/consent/notification:
+  /v0.5/consent/notification:
     post:
       tags:
         - consents
