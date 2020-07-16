@@ -74,5 +74,5 @@ Please see below for examples:
 
 ```
 
-Codes used in reference stack for Purpose-of-use and Hi-Types are documented in [WIKI](All network API error codes are documented in [WIKI](https://github.com/ProjectEKA/projecteka.github.io/wiki/API-Error-Codes)) 
+Codes used in reference stack for Purpose-of-use and Hi-Types are documented in [WIKI](https://github.com/ProjectEKA/projecteka.github.io/wiki/Meta-Codes) 
 
