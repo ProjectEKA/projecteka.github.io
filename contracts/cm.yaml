@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 0.9.0
+  version: 0.5
   title: Health Data Consent Manager
   description: |
     Entity which provides health information aggregation services to customers of health care services.
@@ -24,7 +24,7 @@ tags:
   - name: data flow
 
 paths:
-  /v1/care-contexts/on-discover:
+  /v0.5/care-contexts/on-discover:
     post:
       tags:
         - discovery
@@ -78,7 +78,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/links/link/on-init:
+  /v0.5/links/link/on-init:
     post:
       tags:
         - link
@@ -138,7 +138,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/links/link/on-confirm:
+  /v0.5/links/link/on-confirm:
     post:
       tags:
         - link
@@ -199,12 +199,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
   # consent-service
-  /v1/consent-requests/init:
+  /v0.5/consent-requests/init:
     post:
       tags:
         - consent
       summary: Create consent request
-      description: Creates a consent request to get data about a patient by HIU user. CM should call Gateway - ***/v1/consent-requests/on-init*** API with the consent-request-id
+      description: Creates a consent request to get data about a patient by HIU user. CM should call Gateway - ***/v0.5/consent-requests/on-init*** API with the consent-request-id
       parameters:
         - $ref: "#/components/parameters/authorization"
       requestBody:
@@ -328,12 +328,12 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/consents/fetch:
+  /v0.5/consents/fetch:
     post:
       tags:
         - consent
       summary: Get consent artefact
-      description: This API is called when a HIU makes a request to get a consent artefact. For response please refer to the Gateway ***/v1/consents/on-fetch***
+      description: This API is called when a HIU makes a request to get a consent artefact. For response please refer to the Gateway ***/v0.5/consents/on-fetch***
       parameters:
         - $ref: "#/components/parameters/authorization"
       requestBody:
@@ -437,13 +437,13 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/consents/hip/on-notify:
+  /v0.5/consents/hip/on-notify:
     post:
       tags:
         - consent
       summary: Consent notification
       description: >
-        This API is called by HIP as acknowledgement to notification of consents, in cases of consent revocation and expiration, notified by CM earlier via Gateway API - ***/v1/consents/hip/notify***. 
+        This API is called by HIP as acknowledgement to notification of consents, in cases of consent revocation and expiration, notified by CM earlier via Gateway API - ***/v0.5/consents/hip/notify***. 
       parameters:
         - $ref: "#/components/parameters/authorization"
       requestBody:
@@ -480,13 +480,13 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/consents/hiu/on-notify:
+  /v0.5/consents/hiu/on-notify:
     post:
       tags:
         - consent
       summary: Consent notification
       description: |
-        This API is called by HIU as acknowledgement to consent notifications, specifically for cases when consent is REVOKED or EXPIRED, notified by CM earlier via Gateway API - ***/v1/consents/hiu/notify***.
+        This API is called by HIU as acknowledgement to consent notifications, specifically for cases when consent is REVOKED or EXPIRED, notified by CM earlier via Gateway API - ***/v0.5/consents/hiu/notify***.
       parameters:
         - $ref: '#/components/parameters/authorization'
       requestBody:
@@ -520,12 +520,12 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/consent-requests/status:
+  /v0.5/consent-requests/status:
     post:
       tags:
         - consent
       summary: Get consent request status
-      description: Get status of consent request done previously. CM responds by calling Gateway API - ***/v1/consent-requests/on-status***
+      description: Get status of consent request done previously. CM responds by calling Gateway API - ***/v0.5/consent-requests/on-status***
       parameters:
         - $ref: '#/components/parameters/authorization'
       requestBody:
@@ -574,13 +574,13 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/health-information/request:
+  /v0.5/health-information/request:
     post:
       tags:
         - data flow
       summary: Health information data request from HIU
       description: >
-        HIU request for Health information against a consent id. CM would generate a transactionId against each consent and pass it as trnasaction context / correlation id to the HIP and also return the same to HIU via Gateway API - ***/v1/health-information/cm/on-request***. 
+        HIU request for Health information against a consent id. CM would generate a transactionId against each consent and pass it as trnasaction context / correlation id to the HIP and also return the same to HIU via Gateway API - ***/v0.5/health-information/cm/on-request***. 
       parameters:
         - $ref: "#/components/parameters/authorization"
       requestBody:
@@ -629,7 +629,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/health-information/on-request:
+  /v0.5/health-information/on-request:
     post:
       tags:
         - data flow
@@ -739,7 +739,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/health-information/notify:
+  /v0.5/health-information/notify:
     post:
       tags:
         - data flow
@@ -829,7 +829,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/heartbeat:
+  /v0.5/heartbeat:
     get:
       tags:
         - monitoring
@@ -844,7 +844,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/HeartbeatResponse'
-  /v1/patients/find:
+  /v0.5/patients/find:
     post:
       tags:
         - identification

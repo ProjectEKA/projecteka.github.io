@@ -10,7 +10,7 @@ servers:
 tags:
   - name: providers
 paths:
-  /v1/healthcare-service:
+  /v0.5/healthcare-service:
     get:
       tags:
         - healthcare service
@@ -61,7 +61,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /v1/healthcare-service/{healthcareServiceId}:
+  /v0.5/healthcare-service/{healthcareServiceId}:
     get:
       tags:
         - providers

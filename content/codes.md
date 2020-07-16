@@ -2,21 +2,10 @@
 layout: home
 ---
 
-Various errors and meta codes that are documented below.
-
 ## Error Codes 
 The response callback APIs (e.g. /on-discover), have an error attribute, which have a code and a message. The codes are described below. Note, only the ones relevant to the network are documented here, for application/system specification error codes (e.g. Patient App), please refer to the reference implementation documentations. 
 
-##### Consent Manager Error Codes
-TBD
-
-
-##### HIP Bridge Error Codes
-TBD
-
-
-##### HIU Bridge Error Codes
-TBD
+All network API error codes are documented in [WIKI](https://github.com/ProjectEKA/projecteka.github.io/wiki/API-Error-Codes)
 
 
 
@@ -84,4 +73,6 @@ Please see below for examples:
 }
 
 ```
+
+Codes used in reference stack for Purpose-of-use and Hi-Types are documented in [WIKI](All network API error codes are documented in [WIKI](https://github.com/ProjectEKA/projecteka.github.io/wiki/API-Error-Codes)) 
 
