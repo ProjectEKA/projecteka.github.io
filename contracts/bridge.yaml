@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 0.5
+  version: "0.5"
   title: Bridge
   description: >
     Bridge where health information providers and health information users are connected.
