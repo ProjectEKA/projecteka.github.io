@@ -2267,10 +2267,10 @@ paths:
         - hip facing
       summary: Confirmation request sending token, otp or other authentication details from HIP for confirmation
       description: >
-        This API is called by HIPs to confirm authentication of users. The transactionId   retuned by the previous callback API /users/auth/on-init has to sent. If Authentication is successful the callback API will send an "access token" for subsequent purpose specific API calls. 
-          1. Patient details are only required for AADHAAR demographic auth as of now. 
-          2. Patient details are required only in MEDIATED cases and if the auth.mode so demands. e.g. if auth.modeis AADHAAR_DEMO. In case of AADHAAR demographic authentication, the name, gender and DOB must be exactly as specified in AADHAAR registration.
-          3. Patient Identifier is optional, however maybe required if authentication so demands. 
+        This API is called by HIPs to confirm authentication of users. The transactionId   retuned by the previous callback API /users/auth/on-init has to sent. If Authentication is successful the callback API will send an "access token" for subsequent purpose specific API calls. Note only **confirmation.credential** or **confirmation.demographic** should be sent
+          1. demographic details are only required for AADHAAR demographic auth as of now. 
+          2. demographic details are required only in MEDIATED cases and if the **auth.mode** so demands. e.g. if **auth.mode** is AADHAAR_DEMO. In case of AADHAAR demographic authentication, the name, gender and DOB must be exactly as specified in AADHAAR registration.
+          3. demographic.identifier is optional, however maybe required if authentication so mandates. 
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-CM-ID"
@@ -2381,6 +2381,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'                
+  
 components:
   parameters:
     authorization:
@@ -3981,7 +3982,7 @@ components:
       properties:
         mode:
           type: string
-          enum: ['AADHAAR_DEMO', 'AADHAAR_OTP', 'M0BILE']
+          enum: ['AADHAAR_DEMO', 'AADHAAR_OTP', 'M0BILE_OTP']
         hint:
           type: string
         expiry:
@@ -3991,6 +3992,10 @@ components:
         name: Meta
     PatientAuthConfirmRequest:
       type: object
+      required:
+        - requestId
+        - timestamp
+        - confirmation
       properties:
         requestId:
           type: string
@@ -3999,28 +4004,42 @@ components:
           example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
         timestamp:
           $ref: '#/components/schemas/TimestampSchema'
+        tranasctionId:
+          type: string
         confirmation:
           type: object
           properties:
-            tranasctionId:
-              type: string
-            token:
-              type: string
-            patient:
-              type: object
-              description: Patient details are only required for AADHAAR demographic auth at this point, in which case identifier.Type must be AADHAAR. 
-              properties:
-                identifier: 
-                  $ref: '#/components/schemas/Identifier'
-                name: 
-                  type: string
-                  example: "jankidas@ncg"
-                gender:
-                  $ref: '#/components/schemas/PatientGender'
-                dateOfBirth:
-                  type: string
-                  example: "1972-02-29"
-                  description: date of birth in YYYY-MM-DD format. 
+            credential:
+              $ref: '#/components/schemas/PatientAuthCredential'
+            demographic:
+              $ref: '#/components/schemas/PatientDemographic'
+    
+    PatientDemographic:
+      type: object
+      required:
+        - name
+        - gender
+        - dateOfBirth
+      description: demographic details are only required for AADHAAR demographic auth at this point, in which case identifier.Type must be AADHAAR. 
+      properties:
+        name: 
+          type: string
+          example: "jankidas@ncg"
+        gender:
+          $ref: '#/components/schemas/PatientGender'
+        dateOfBirth:
+          type: string
+          example: "1972-02-29"
+          description: date of birth in YYYY-MM-DD format. 
+        identifier: 
+          $ref: '#/components/schemas/Identifier'
+    PatientAuthCredential:
+      type: object
+      required:
+        - token
+      properties:
+        token: 
+          type: string
     PatientAuthConfirmResponse:
       type: object
       required:
