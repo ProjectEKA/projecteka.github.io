@@ -542,7 +542,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-CM-ID"
-      summary: API to link care-context on CM for patient
+      summary: API for HIP initiated care-context linking for patient
       description: >
         API to submit care-context to CM for HIP initiated linking. The API must accompany the "accessToken" fetched in the users/auth process.  
           1. subsequent usage for accessToken may be invalid if it was meant for one-time usage or if it expired
