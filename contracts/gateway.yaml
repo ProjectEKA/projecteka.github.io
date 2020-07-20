@@ -3925,9 +3925,7 @@ components:
                   example: "hinapatel@ncg"
                   description: id  of the patient understood by the CM
             purpose:
-              type: string
-              enum: [LINK]
-              description: what is the purpose of user auth
+              $ref: '#/components/schemas/PatientAuthInitPurpose'
             requester:
               type: object
               required:
@@ -3942,6 +3940,13 @@ components:
                   type: string
                   example: 100005
               
+    PatientAuthInitPurpose:
+      type: object
+      properties:
+        code:
+          type: string
+          enum: [LINK]
+          description: what is the purpose of user auth
     PatientAuthInitResponse:
       type: object
       required:
@@ -4006,11 +4011,11 @@ components:
           $ref: '#/components/schemas/TimestampSchema'
         tranasctionId:
           type: string
-        confirmation:
+        credential:
           type: object
           properties:
-            credential:
-              $ref: '#/components/schemas/PatientAuthCredential'
+            confirmation:
+              $ref: '#/components/schemas/PatientTokenConfirmation'
             demographic:
               $ref: '#/components/schemas/PatientDemographic'
     
@@ -4033,7 +4038,7 @@ components:
           description: date of birth in YYYY-MM-DD format. 
         identifier: 
           $ref: '#/components/schemas/Identifier'
-    PatientAuthCredential:
+    PatientTokenConfirmation:
       type: object
       required:
         - token
