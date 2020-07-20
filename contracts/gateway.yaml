@@ -419,7 +419,7 @@ paths:
     post:
       tags:
         - link
-        - cm facing
+        - hip facing
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"
@@ -476,7 +476,7 @@ paths:
     post:
       tags:
         - link
-        - hip facing
+        - cm facing
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-CM-ID"
@@ -504,6 +504,123 @@ paths:
             **Causes:**
               * resp not specified
               * atleast patient or error should be specified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v0.5/links/link/add-contexts:
+    post:
+      tags:
+        - link
+        - hip facing
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-CM-ID"
+      summary: API to link care-context on CM for patient
+      description: >
+        API to submit care-context to CM for HIP initiated linking. The API must accompany the "accessToken" fetched in the users/auth process.  
+          1. subsequent usage for accessToken may be invalid if it was meant for one-time usage or if it expired
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientCareContextLinkRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PatientCareContextLinkRequest'
+      responses:
+        '202':
+          description: accepted
+        '400':
+          description: >
+            **Causes:**
+              * required information not provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v0.5/links/link/on-add-contexts:
+    post:
+      tags:
+        - link
+        - cm facing
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-HIP-ID"
+      summary: callback API for HIP initiated patient linking /link/add-context
+      description: >
+        If the accessToken is valid for purpose of linking, and specified details provided, CM will send "acknoweldgement.status" as SUCCESS. If any error occcurred, for example invalid token, or other required patient or care-context information not provided, then "error" attribute conveys so. 
+          1. **accessToken must be valid and must be for the purpose of linking**
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientCareContextLinkResponse'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PatientCareContextLinkResponse'
+      responses:
+        '202':
+          description: accepted
+        '400':
+          description: >
+            **Causes:**
+              * resp not specified
+              * atleast acknowledgement or error should be specified
           content:
             application/json:
               schema:
@@ -2559,6 +2676,8 @@ components:
         name: Patient
     CareContext:
       type: object
+      required:
+        - referenceNumber
       properties:
         referenceNumber:
           type: string
@@ -2578,6 +2697,11 @@ components:
         name: Tag
     PatientLinkReferenceRequest:
       type: object
+      required:
+        - requestId
+        - timestamp
+        - transcationId
+        - patient
       properties:
         requestId:
           type: string
@@ -2604,8 +2728,10 @@ components:
               xml:
                 name: careContexts
                 wrapped: true
-          xml:
-            name: PatientLinkReferenceRequest
+      xml:
+        name: PatientLinkReferenceRequest
+    
+      
     PatientLinkRequest:
       type: object
       properties:
@@ -4067,6 +4193,80 @@ components:
             accessToken:
               type: string
               description: access token for initialization of subsequent action. 
+        error: 
+          $ref: '#/components/schemas/Error'
+        resp:
+          $ref: '#/components/schemas/RequestReference'
+    PatientCareContextLinkRequest:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - link
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        link:
+          $ref: '#/components/schemas/PatientCareContextLink'
+    PatientCareContextLink:
+      type: object
+      required:
+        - accessToken
+        - patient
+      properties:
+        accessToken:
+          type: string
+          description: AccessToken fetched in the user auth process for the purpose specified
+        patient:
+          type: object
+          required:
+            - id
+            - referenceNumber
+            - careContexts
+          properties:
+            id:
+              type: string
+              example: hinapatel79@ncg
+              description: Identifier of patient at consent manager
+            referenceNumber:
+              type: string
+              example: TMH-PUID-001
+              description: patient reference id at HIP
+            display:
+              type: string
+            careContexts:
+              type: array
+              items:
+                $ref: '#/components/schemas/CareContextRepresentation'
+              xml:
+                name: careContexts
+                wrapped: true
+    PatientCareContextLinkResponse:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - resp
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        acknowledgement:
+          type: object
+          properties:
+            status: 
+              type: string
+              enum:
+              - SUCCESS
         error: 
           $ref: '#/components/schemas/Error'
         resp:
