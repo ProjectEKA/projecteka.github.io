@@ -8,6 +8,7 @@ servers:
   - url: https://ncg-dev.projecteka.in/gateway
     description: Dev
 tags:
+  - name: user auth
   - name: discovery
   - name: link
   - name: consent flow
@@ -2384,7 +2385,7 @@ paths:
         - hip facing
       summary: Confirmation request sending token, otp or other authentication details from HIP for confirmation
       description: >
-        This API is called by HIPs to confirm authentication of users. The transactionId   retuned by the previous callback API /users/auth/on-init has to sent. If Authentication is successful the callback API will send an "access token" for subsequent purpose specific API calls. Note only **credential.confirmation** or **credential.demographic** should be sent
+        This API is called by HIPs to confirm authentication of users. The transactionId   retuned by the previous callback API /users/auth/on-init has to sent. If Authentication is successful the callback API will send an "access token" for subsequent purpose specific API calls. Note only **credential.token** or **credential.demographic** should be sent
           1. demographic details are only required for AADHAAR demographic auth as of now. 
           2. demographic details are required only in MEDIATED cases and if the **auth.mode** so demands. e.g. if **auth.mode** is AADHAAR_DEMO. In case of AADHAAR demographic authentication, the name, gender and DOB must be exactly as specified in AADHAAR registration.
           3. demographic.identifier is optional, however maybe required if authentication so mandates. 
@@ -4051,7 +4052,9 @@ components:
                   example: "hinapatel@ncg"
                   description: id  of the patient understood by the CM
             purpose:
-              $ref: '#/components/schemas/PatientAuthInitPurpose'
+              type: string
+              enum: [LINK]
+              description: what is the purpose of user auth
             requester:
               type: object
               required:
@@ -4066,13 +4069,6 @@ components:
                   type: string
                   example: 100005
               
-    PatientAuthInitPurpose:
-      type: object
-      properties:
-        code:
-          type: string
-          enum: [LINK]
-          description: what is the purpose of user auth
     PatientAuthInitResponse:
       type: object
       required:
@@ -4140,8 +4136,8 @@ components:
         credential:
           type: object
           properties:
-            confirmation:
-              $ref: '#/components/schemas/PatientTokenConfirmation'
+            token:
+              type: string
             demographic:
               $ref: '#/components/schemas/PatientDemographic'
     
@@ -4164,13 +4160,6 @@ components:
           description: date of birth in YYYY-MM-DD format. 
         identifier: 
           $ref: '#/components/schemas/Identifier'
-    PatientTokenConfirmation:
-      type: object
-      required:
-        - token
-      properties:
-        token: 
-          type: string
     PatientAuthConfirmResponse:
       type: object
       required:
@@ -4225,14 +4214,10 @@ components:
         patient:
           type: object
           required:
-            - id
             - referenceNumber
+            - display
             - careContexts
           properties:
-            id:
-              type: string
-              example: hinapatel79@ncg
-              description: Identifier of patient at consent manager
             referenceNumber:
               type: string
               example: TMH-PUID-001
