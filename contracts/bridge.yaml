@@ -1030,7 +1030,7 @@ paths:
     post:
       tags:
         - identification
-        - cm facing
+        - hiu bridge
       summary: Identification result for a consent-manager user-id
       description: |
         If a patient is found then patient.name contains the patients name. 
@@ -1086,7 +1086,6 @@ paths:
     post:
       tags:
         - link
-        - cm facing
       summary: Response to patient's care context link request
       deprecated: true
       description: >
@@ -1136,6 +1135,190 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v0.5/links/link/on-add-contexts:
+    post:
+      tags:
+        - link
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-HIP-ID"
+      summary: callback API for HIP initiated patient linking /link/add-context
+      description: >
+        If the accessToken is valid for purpose of linking, and specified details provided, CM will send "acknoweldgement.status" as SUCCESS. If any error occcurred, for example invalid token, or other required patient or care-context information not provided, then "error" attribute conveys so. 
+          1. **accessToken must be valid and must be for the purpose of linking**
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientCareContextLinkResponse'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PatientCareContextLinkResponse'
+      responses:
+        '202':
+          description: accepted
+        '400':
+          description: >
+            **Causes:**
+              * resp not specified
+              * atleast acknowledgement or error should be specified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v0.5/users/auth/on-init:
+    post:
+      tags:
+        - user auth
+        - hip bridge
+      summary: Response to user authentication initialization from HIP
+      description: >
+        If the patient's id is valid, CM will return a transactionId as initialization of user auth. If the requested 'patient.id' is valid, then 'authInit.authtype' will convey if the authentication is MEDIATED or DIRECT. If MEDIATED then it is expected that HIP sends the required token (OTP) or demographic info as part of the /users/auth/confirm request accompanied with the token. If DIRECT, then a CM will subsequently call a /users/auth/notify call (Not spec'd yet)
+        
+          1. **authType - MEDIATED or DIRECT**
+          2. **'meta.mode' conveys whats the mode of authentication is, and what is expected from HIP in the subsequent /auth/confirm API call. If MEDIATED, the possible values, MOBILE - for OTP sent to mobile, AADHAAR_DEMO - for Aadhaar demographic auth, AADHAAR_OTP - if an OTP was sent as part of Aadhaar authentication.**
+          3. **'meta.expiry' conveys the expiry time of the token and the authentication session**
+          4. **token - the temporary token to be used for subsequent /users/auth/confirm call** 
+          
+        The error section in the body, represents the potential errors that may have occurred. Possible reasons:
+          1. **Patient id is invalid**
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-HIP-ID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientAuthInitResponse'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PatientAuthInitResponse'
+      responses:
+        '202':
+          description: Request accepted
+        '400':
+          description: >
+            **Causes:**
+              * required information not provided
+              * neither authInit nor error specified 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'  
+  /v0.5/users/auth/on-confirm:
+    post:
+      tags:
+        - user auth
+        - hip facing
+      summary: Request sending token, otp or other authentication details from HIP for confirmation
+      description: >
+        This API is called by HIPs to confirm authentication of users. The transactionId retuned by the previous /uses/auth/on-init API must be used along with necessary "mode" specific details.
+        
+          1. **auth.accessToken - is specific to the purpose mentioned in the /auth/init. This token needs to be used for initiating the intended action. For example for HIP initiated linking**      
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-HIP-ID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientAuthConfirmResponse'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PatientAuthConfirmResponse'
+      responses:
+        '202':
+          description: Request accepted
+        '400':
+          description: >
+            **Causes:**
+              * required details not provided
+              * neither auth nor error specified 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'                
 
 components:
   parameters:
@@ -2144,3 +2327,102 @@ components:
           enum:
               - SUCCESS
               - FAILURE
+    PatientAuthInitResponse:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - resp
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        authInit:
+          type: object
+          required:
+            - transactionId
+            - authType
+            - meta
+          properties:
+            transactionId:
+              type: string
+            authType:
+              type: string
+              enum: ['MEDIATED', 'DIRECT']
+            meta:
+              $ref: '#/components/schemas/AuthMeta'
+        error: 
+          $ref: '#/components/schemas/Error'
+        resp:
+          $ref: '#/components/schemas/RequestReference'
+    AuthMeta:
+      type: object
+      required:
+        - mode
+        - expiry
+      properties:
+        mode:
+          type: string
+          enum: ['AADHAAR_DEMO', 'AADHAAR_OTP', 'M0BILE_OTP']
+        hint:
+          type: string
+        expiry:
+          type: string
+          example: "2019-12-30T12:01:55Z"
+      xml:
+        name: Meta
+    PatientAuthConfirmResponse:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - resp
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        auth:
+          type: object
+          required:
+            - accessToken
+          properties:
+            accessToken:
+              type: string
+              description: access token for initialization of subsequent action. 
+        error: 
+          $ref: '#/components/schemas/Error'
+        resp:
+          $ref: '#/components/schemas/RequestReference'
+    PatientCareContextLinkResponse:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - resp
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        acknowledgement:
+          type: object
+          properties:
+            status: 
+              type: string
+              enum:
+              - SUCCESS
+        error: 
+          $ref: '#/components/schemas/Error'
+        resp:
+          $ref: '#/components/schemas/RequestReference'
