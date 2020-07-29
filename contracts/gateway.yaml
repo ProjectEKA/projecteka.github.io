@@ -2443,7 +2443,7 @@ paths:
     post:
       tags:
         - user auth
-        - hip facing
+        - cm facing
       summary: Request sending token, otp or other authentication details from HIP for confirmation
       description: >
         This API is called by HIPs to confirm authentication of users. The transactionId retuned by the previous /uses/auth/on-init API must be used along with necessary "mode" specific details.
