@@ -8,43 +8,11 @@ The response callback APIs (e.g. /on-discover), have an error attribute, which h
 All network API error codes are documented in [WIKI](https://github.com/ProjectEKA/projecteka.github.io/wiki/API-Error-Codes)
 
 
-
-
 ## Meta/Concept codes
 These are codes that are used within the contract to express specific concepts. 
 Reference implementations only demonstrate the means and usages of the codes, and not establish a standard. The standards themselves are to be defined by a competent authority, available publicly, and the codes in the reference systems should only reference/use such defintiions.
 
-##### Purpose of Use codes
-The following codes are referenced from [FHIR Purpose of Use](https://www.hl7.org/fhir/v3/PurposeOfUse/vs.html) Value Set, which in turn includes codes from HL7 ActReason.
-The reference CM exposes [an API](https://github.com/ProjectEKA/consent-manager/blob/master/src/main/resources/static/ValueSet/purpose-of-use.json) to express the Purpose of Codes in FHIR Value Set standard. 
-
-Please see below for examples:
-```
-{
-    "code": "CAREMGT",
-    "display": "Care Management"
-},
-{
-    "code": "BTG",
-    "display": "Break the Glass"
-},
-{
-    "code": "PUBHLTH",
-    "display": "Public Health"
-},
-{
-    "code": "GOV",
-    "display": "Government"
-},
-{
-    "code": "HPAYMT",
-    "display": "Healthcare Payment"
-},
-{
-    "code": "DSRCH",
-    "display": "Disease Specific Healthcare Research"
-}
-```
+Example codes used in reference stack for Purpose-of-use and Hi-Types are documented in [WIKI](https://github.com/ProjectEKA/projecteka.github.io/wiki/Meta-Codes) 
 
 
 ##### Health Information (HI) type codes
@@ -73,6 +41,4 @@ Please see below for examples:
 }
 
 ```
-
-Codes used in reference stack for Purpose-of-use and Hi-Types are documented in [WIKI](https://github.com/ProjectEKA/projecteka.github.io/wiki/Meta-Codes) 
 
