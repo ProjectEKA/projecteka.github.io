@@ -5,9 +5,10 @@ info:
   description: >
     The following are the specifications for the APIs to be implemented at the Health Repository end if an entity is only serving the role of a HIP. The specs are essentially duplicates from the Gateway and Bridge specs, but put together as to make it clear to *HIPs* which set of APIs they should implement to participate in the network. 
     
-      1. The APIs are organized by the flows. They represent the APIs that are expected to be available at the HIP end by the Gateway. 
-      2. For majority of the APIs, there are corresponding callback APIs on the Gateway. e.g for /care-context/discover API on HIP end, its expected that a corresponding callback API /care-context/on-discover on Gateway is called. Such APIs are organized under the **Gateway Callback API** label. 
-      3. Other Gateway relevant APIs for HIPs are grouped under **Gateway** label. These include the APIs that HIPs may require to call on the Gateway. For example, to notify a CM that requested data is transferred, HIP would call **/health-information/notify** API on gateway.
+      1. The APIs are organized by the flows - **discovery**, **link**, **consent flow**, **data flow**, **user auth** and **monitoring**. They represent the APIs that are expected to be available at the HIP end by the Gateway. 
+      2. For majority of the APIs, there are corresponding callback APIs on the Gateway. e.g for **/care-context/discover** API on HIP end, its expected that a corresponding callback API **/care-context/on-discover** on Gateway is called. Such APIs are organized under the **Gateway** label. 
+      3. Gateway relevant APIs for HIPs are grouped under **Gateway** label. These include the APIs that HIPs may require to call on the Gateway. For example, to notify a CM that requested data is transferred, HIP would call **/health-information/notify** API on gateway. Or for example, to get a session or to do a hip-initiated purpose for linking care-contexts. 
+      4. APIs under **data transfer** are meant to be implemented by the HIU. However, these have been marked here to give indication to the HIPs about the data contract. 
     
       
 servers:
@@ -21,7 +22,6 @@ tags:
   - name: data transfer
   - name: user auth
   - name: monitoring
-  - name: Gateway Callback API
   - name: Gateway
 paths:
   /v0.5/care-contexts/discover:
@@ -563,7 +563,7 @@ paths:
   /v0.5/care-contexts/on-discover:
     post:
       tags:
-        - Gateway Callback API
+        - Gateway
       summary: Response to patient's account discovery request
       description: >
         Result of patient care-context discovery request at HIP end. If a matching patient found with zero or more care contexts associated, it is specified as result attribute. If the prior discovery request, resulted in errors then it is specified in the error attribute. Reasons of errors can be 
@@ -618,7 +618,7 @@ paths:
   /v0.5/links/link/on-init:
     post:
       tags:
-        - Gateway Callback API
+        - Gateway
       summary: Response to patient's care context link request
       description: >
         Result of patient care-context link request from HIP end. This happens in context of previous discovery of patient found at HIP end, therefore the link requests ought to be in reference to the patient reference and care-context references previously returned by the HIP. The correlation of discovery and link request is maintained through the transactionId. HIP should have
@@ -679,7 +679,7 @@ paths:
   /v0.5/links/link/on-confirm:
     post:
       tags:
-        - Gateway Callback API
+        - Gateway
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-CM-ID"
@@ -740,7 +740,7 @@ paths:
   /v0.5/consents/hip/on-notify:
     post:
       tags:
-        - Gateway Callback API
+        - Gateway
       summary: Consent notification
       description: >
         This API is called by HIP as acknowledgement to notification of consents, in cases of consent revocation and expiration. 
@@ -784,7 +784,7 @@ paths:
   /v0.5/health-information/hip/on-request:
     post:
       tags:
-        - Gateway Callback API
+        - Gateway
       summary: Health information data request
       description: >
         API called by HIP to acknowledge Health information request receipt. Either the **hiRequest** or **error** must be specified. **hiRequest** element returns the same transactionId as before with a status indicating that the request is acknowledged.  

@@ -9,6 +9,13 @@ API Documentation for the HDCM, HIP and HIU are available from the source code r
 - [Gateway APIs](https://github.com/ProjectEKA/projecteka.github.io/blob/master/contracts/gateway.yaml)
 - [Bridge APIs](https://github.com/ProjectEKA/projecteka.github.io/blob/master/contracts/bridge.yaml)
 
+If you are serving the role of a Health Repository and only are interested in the HIP or HIU relevant APIs, please refer to the following links.
+- [HIP APIs](https://github.com/ProjectEKA/projecteka.github.io/blob/master/contracts/hip.yaml)
+- [HIU APIs](https://github.com/ProjectEKA/projecteka.github.io/blob/master/contracts/hiu.yaml)
+
+The above APIs are essentially duplicates of the Gateway and Bridge specs, but put together as to make it clear to which set of APIs a HIP or HIU should implement to participate in the network.
+
+Majority of the APIs follow HTTPs Async pattern, meaning that for an API call, there is a reciprocal callback API to the requester is made. They follow a pattern of /on-&lt;action&gt;. 
 
 The documentations are maintained in OpenAPI Specification (OAS), commonly known as swagger API documentation format. To view the documentation on the browser, you may follow the following steps. 
 - Install Swagger Viewer Chrome plugin: add this [extension](https://chrome.google.com/webstore/detail/swagger-viewer/nfmkaonpdmaglhjjlggfhlndofdldfag). Once installed, you may open the above API links, and click the swagger button on the toolbar/addressbar of the browser, usually located on top right. 
