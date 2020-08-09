@@ -32,7 +32,7 @@ paths:
           5. **If more than one patient records would be found after aforementioned steps, then patient who matches most verified and unverified identifiers would be returned.**
           6. **If there would be still more than one patients (after ranking) error would be returned**
           7. **Intended HIP should be able to resolve and identify results returned in the subsequent link confirmation request via the specified transactionId**
-          8. **Intended HIP should store the discovery results with transcationId and care contexts discovered for subsequent link initiation**
+          8. **Intended HIP should store the discovery results with transactionId and care contexts discovered for subsequent link initiation**
           
       parameters:
         - $ref: "#/components/parameters/authorization"
@@ -1502,7 +1502,7 @@ components:
           format: uuid
         timestamp:
           $ref: '#/components/schemas/TimestampSchema'
-        transcationId:
+        transactionId:
           type: string
           format: uuid
         patient:
