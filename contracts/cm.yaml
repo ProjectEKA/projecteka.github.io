@@ -1127,7 +1127,61 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
             application/xml:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'  
+                $ref: '#/components/schemas/ErrorResponse' 
+  /v0.5/consents/certs:
+    get:
+      tags:
+        - consent
+      summary: Api for getting the public key for verifying signature
+      description: >
+        This API is called by HIPs to get public key to verify signature.
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+      responses:
+        '200':
+          description: 
+            Body containing the various params of key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KeyDetail'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/KeyDetail'
+        '400':
+          description: >
+            **Causes:**
+              * token is not provided or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   parameters:
     authorization:
@@ -2086,4 +2140,25 @@ components:
          2. MOBILE_APP - for auth through apps (usually direct)
          3. AADHAAR_OTP - for auth using OTP sent to Aadhaar number
          4. AADHAAR_DEMO - for auth using Aadhaar demographic.
-    
+    KeyDetail:
+      type: object
+      properties:
+        key:
+          type: object
+          properties:
+            kty:
+              type: string
+            alg:
+              type: string
+            use:
+              type: string
+            n:
+              type: string
+            e:
+              type: string
+            fmt:
+              type: string
+            publicKey:
+              type: string
+            startDate:
+              type: string
