@@ -1980,6 +1980,9 @@ components:
         name: ErrorResponse
     Identifier:
       type: object
+      required:
+        - type
+        - value
       properties:
         type:
           $ref: '#/components/schemas/IdentifierType'
@@ -2003,6 +2006,7 @@ components:
       required:
         - referenceNumber
         - display
+        - careContexts
       properties:
         referenceNumber:
           type: string
@@ -2157,8 +2161,7 @@ components:
     Meta:
       type: object
       required:
-        - mode
-        - value
+        - communicationMedium
       properties:
         communicationMedium:
           type: string
@@ -2172,6 +2175,9 @@ components:
         name: Meta
     Error:
       type: object
+      required:
+        - code
+        - message
       properties:
         code:
           type: integer
@@ -2497,6 +2503,9 @@ components:
           enum: [VIEW, STORE, QUERY, STREAM]
         dateRange:
           type: object
+          required:
+            - from
+            - to
           properties:
             from:
               type: string
@@ -2643,6 +2652,9 @@ components:
           example: Dr. Manju
         identifier:
           type: object
+          required:
+            - type
+            - value
           properties:
             type: 
               type: string
