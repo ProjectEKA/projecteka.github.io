@@ -1,9 +1,9 @@
 openapi: 3.0.0
 info:
   version: "0.5"
-  title: HIP Bridge
+  title: Health Repository Provider / Bridge Specifications (HIP)
   description: >
-    The following are the specifications for the APIs to be implemented at the Health Repository end if an entity is only serving the role of a HIP. The specs are essentially duplicates from the Gateway and Bridge specs, but put together as to make it clear to *HIPs* which set of APIs they should implement to participate in the network. 
+  The following are the specifications for the APIs to be implemented at the Health Repository end if an entity is only serving the role of a HIP. The specs are essentially duplicates from the Gateway and Health Repository, but put together so as to make it clear to *HIPs* which set of APIs they should implement to participate in the network. 
     
       1. The APIs are organized by the flows - **discovery**, **link**, **consent flow**, **data flow**, **user auth** and **monitoring**. They represent the APIs that are expected to be available at the HIP end by the Gateway. 
       2. For majority of the APIs, there are corresponding callback APIs on the Gateway. e.g for **/care-context/discover** API on HIP end, its expected that a corresponding callback API **/care-context/on-discover** on Gateway is called. Such APIs are organized under the **Gateway** label. 
@@ -1280,6 +1280,11 @@ components:
       example: a1s2c932-2f70-3ds3-a3b5-2sfd46b12a18d
     PatientDiscoveryRequest:
       type: object
+      required:
+        - requestId
+        - timestamp
+        - transactionId
+        - patient
       properties:
         requestId:
           type: string
@@ -1294,6 +1299,12 @@ components:
           description: correlation-Id for patient discovery and subsequent care context linkage
         patient:
           type: object
+          required:
+            - id
+            - verifiedIdentifiers
+            - name
+            - gender
+            - yearOfBirth
           properties:
             id:
               type: string
@@ -1331,6 +1342,9 @@ components:
           $ref: '#/components/schemas/Error'
     Identifier:
       type: object
+      required:
+        - type
+        - value
       properties:
         type:
           $ref: '#/components/schemas/IdentifierType'
@@ -1344,6 +1358,10 @@ components:
       enum: [MOBILE, MR]
     PatientRepresentation:
       type: object
+      required:
+        - referenceNumber
+        - display
+        - careContexts
       properties:
         referenceNumber:
           type: string
@@ -1361,6 +1379,8 @@ components:
         name: Patient
     CareContext:
       type: object
+      required:
+        - referenceNumber
       properties:
         referenceNumber:
           type: string
@@ -1380,6 +1400,11 @@ components:
         name: Tag
     PatientLinkReferenceRequest:
       type: object
+      required:
+        - requestId
+        - timestamp
+        - patient
+        - transactionId
       properties:
         requestId:
           type: string
@@ -1391,6 +1416,10 @@ components:
           format: uuid
         patient:
           type: object
+          required:
+            - id
+            - referenceNumber
+            - careContexts
           properties:
             id:
               type: string
@@ -1409,6 +1438,10 @@ components:
             name: PatientLinkReferenceRequest
     LinkConfirmationRequest:
       type: object
+      required:
+        - requestId
+        - timestamp
+        - confirmation
       properties:
         requestId:
           type: string
@@ -1417,6 +1450,9 @@ components:
           $ref: '#/components/schemas/TimestampSchema'
         confirmation:
           type: object
+          required:
+            - linkRefNumber
+            - token
           properties:
             linkRefNumber:
               type: string
@@ -1425,8 +1461,7 @@ components:
     Meta:
       type: object
       required:
-        - mode
-        - value
+        - communicationMedium
       properties:
         communicationMedium:
           type: string
@@ -1440,6 +1475,9 @@ components:
         name: Meta
     Error:
       type: object
+      required:
+        - code
+        - message
       properties:
         code:
           type: integer
@@ -1470,8 +1508,8 @@ components:
     HIPConsentNotification:
       type: object
       required:
-        - status
-        - consentId
+        - requestId
+        - timestamp
         - notification
       properties:
         requestId:
@@ -1486,6 +1524,8 @@ components:
           required:
             - status
             - consentId
+            - consentDetail
+            - signature
           properties:
             status:
               $ref: '#/components/schemas/ConsentStatus'
@@ -1494,6 +1534,16 @@ components:
               format: uuid
             consentDetail:
               type: object
+              required:
+                - consentId
+                - createdAt
+                - patient
+                - careContexts
+                - purpose
+                - hiTypes
+                - hip
+                - consentManager
+                - permission
               properties:
                 schemaVersion:
                   type: string
@@ -1562,6 +1612,8 @@ components:
         - REVOKED
     ConsentManagerPatientID:
       type: object
+      required:
+        - id
       properties:
         id:
           type: string
@@ -1585,12 +1637,20 @@ components:
           format: uri
     Permission:
       type: object
+      required:
+        - accessMode
+        - dateRange
+        - dataEraseAt
+        - frequency
       properties:
         accessMode:
           type: string
           enum: [VIEW, STORE, QUERY, STREAM]
         dateRange:
           type: object
+          required:
+            - from
+            - to
           properties:
             from:
               type: string
@@ -1635,12 +1695,12 @@ components:
             attribute: true
       xml:
         name: OrganizationReference
-    keyMaterial:
+    KeyMaterial:
       type: object
       required:
         - cryptoAlg
         - curve
-        - DHPublicKey
+        - dhPublicKey
         - nonce
       properties:
         cryptoAlg:
@@ -1689,6 +1749,9 @@ components:
           description: the requestId that was passed
     HeartbeatResponse:
       type: object
+      required:
+        - timestamp
+        - status
       properties:
         timestamp:
           $ref: '#/components/schemas/TimestampSchema'
@@ -1730,7 +1793,7 @@ components:
             dataPushUrl:
               type: string
             keyMaterial:
-              $ref: '#/components/schemas/keyMaterial'
+              $ref: '#/components/schemas/KeyMaterial'
     DataNotification:
       type: object
       required:
@@ -1757,7 +1820,7 @@ components:
               - $ref: '#/components/schemas/EntryContent'
               - $ref: '#/components/schemas/EntryLink'
         keyMaterial:
-          $ref: '#/components/schemas/keyMaterial'
+          $ref: '#/components/schemas/KeyMaterial'
     EntryContent:
       type: object
       required:
@@ -1894,6 +1957,8 @@ components:
           $ref: '#/components/schemas/TimestampSchema'
         acknowledgement:
           type: object
+          required:
+            - status
           properties:
             status: 
               type: string
@@ -1905,6 +1970,11 @@ components:
           $ref: '#/components/schemas/RequestReference'
     PatientDiscoveryResult:
       type: object
+      required:
+        - requestId
+        - timestamp
+        - transactionId
+        - resp
       properties:
         requestId:
           type: string
@@ -1926,6 +1996,11 @@ components:
         name: PatientDiscoveryResult
     PatientLinkReferenceResult:
       type: object
+      required:
+        - requestId
+        - timestamp
+        - resp
+        - transactionId
       properties:
         requestId:
           type: string
@@ -1938,6 +2013,9 @@ components:
           $ref: '#/components/schemas/UuidSchema'
         link:
           type: object
+          required:
+            - referenceNumber
+            - authenticationType
           properties:
             referenceNumber:
               type: string
@@ -1952,6 +2030,10 @@ components:
           $ref: '#/components/schemas/RequestReference'
     PatientLinkResult:
       type: object
+      required:
+        - requestId
+        - timestamp
+        - resp
       properties:
         requestId:
           type: string
@@ -1962,6 +2044,10 @@ components:
           $ref: '#/components/schemas/TimestampSchema'
         patient:
           type: object
+          required:
+            - referenceNumber
+            - display
+            - careContexts
           properties:
             referenceNumber:
               type: string
@@ -1977,6 +2063,10 @@ components:
           $ref: '#/components/schemas/RequestReference'
     HIPConsentNotificationResponse:
       type: object
+      required:
+        - requestId
+        - timestamp
+        - resp
       properties:
         requestId:
           type: string
@@ -2031,6 +2121,9 @@ components:
           type: string
     ConsentAcknowledgement:
       type: object
+      required:
+        - status
+        - consentId
       properties:
         status:
           type: string
@@ -2062,6 +2155,10 @@ components:
           example: bearer
     SessionRequest:
       type: object
+      required:
+        - clientId
+        - clientSecret
+        - grantType
       properties:
         clientId:
           type: string
@@ -2072,6 +2169,10 @@ components:
           enum: [ClientCredentials,RefreshToken]
     HealthInformationNotification:
       type: object
+      required:
+        - requestId
+        - timestamp
+        - notification
       properties:
         requestId:
           type: string
@@ -2082,6 +2183,12 @@ components:
           $ref: '#/components/schemas/TimestampSchema'
         notification:
           type: object
+          required:
+            - consentId
+            - transactionId
+            - doneAt
+            - notifier
+            - statusNotification
           properties:
             consentId:
               $ref: '#/components/schemas/UuidSchema'
@@ -2101,6 +2208,9 @@ components:
                   example: tmh
             statusNotification:
               type: object
+              required:
+                - sessionStatus
+                - hipId
               properties:
                 sessionStatus:
                   type: string
@@ -2112,6 +2222,9 @@ components:
                   type: array
                   items:
                     type: object
+                    required:
+                      - careContextReference
+                      - hiStatus
                     properties:
                       careContextReference:
                         type: string
@@ -2171,6 +2284,7 @@ components:
       required:
         - requestId
         - timestamp
+        - tranasctionId
         - credential
       properties:
         requestId:
@@ -2209,6 +2323,7 @@ components:
             - patient
             - purpose
             - requester
+            - authMode
           properties:
             patient:
               type: object
@@ -2238,6 +2353,10 @@ components:
                   example: 100005
     HIPHealthInformationRequestAcknowledgement:
       type: object
+      required:
+        - requestId
+        - timestamp
+        - resp
       properties:
         requestId:
           type: string
@@ -2248,6 +2367,9 @@ components:
           $ref: '#/components/schemas/TimestampSchema'
         hiRequest:
           type: object
+          required:
+            - transactionId
+            - sessionStatus
           properties:
             transactionId: 
               type: string

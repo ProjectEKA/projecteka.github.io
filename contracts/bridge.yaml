@@ -1044,48 +1044,12 @@ components:
     IdentifierType:
       type: string
       enum: [MOBILE, MR]
-    PatientDiscoveryResponse:
-      type: object
-      properties:
-        patient:
-          $ref: '#/components/schemas/PatientRepresentation'
-      xml:
-        name: PatientDiscoveryResponse
-    PatientRepresentation:
-      type: object
-      properties:
-        referenceNumber:
-          type: string
-        display:
-          type: string
-        careContexts:
-          type: array
-          items:
-            $ref: '#/components/schemas/CareContextRepresentation'
-        matchedBy:
-          type: array
-          items:
-            $ref: '#/components/schemas/IdentifierType'
-      xml:
-        name: Patient
     CareContext:
       type: object
       required:
         - referenceNumber
       properties:
         referenceNumber:
-          type: string
-      xml:
-        name: Tag
-    CareContextRepresentation:
-      type: object
-      required:
-        - referenceNumber
-        - display
-      properties:
-        referenceNumber:
-          type: string
-        display:
           type: string
       xml:
         name: Tag
@@ -1127,11 +1091,6 @@ components:
                 wrapped: true
           xml:
             name: PatientLinkReferenceRequest
-    PatientLinkRequest:
-      type: object
-      properties:
-        token:
-          type: string
     LinkConfirmationRequest:
       type: object
       required:
@@ -1154,35 +1113,6 @@ components:
               type: string
             token:
               type: string
-    PatientLinkReferenceResponse:
-      type: object
-      properties:
-        link:
-          type: object
-          properties:
-            referenceNumber:
-              type: string
-            authenticationType:
-              type: string
-              enum: ['DIRECT', 'MEDIATED']
-            meta:
-              $ref: '#/components/schemas/Meta'
-    Meta:
-      type: object
-      required:
-        - mode
-        - value
-      properties:
-        communicationMedium:
-          type: string
-          enum: ['M0BILE', 'EMAIL']
-        communicationHint:
-          type: string
-        communicationExpiry:
-          type: string
-          example: "2019-12-30T12:01:55Z"
-      xml:
-        name: Meta
     Error:
       type: object
       required:
@@ -1197,39 +1127,6 @@ components:
           type: string
       xml:
         name: Error
-    PatientLinkResponse:
-      type: object
-      properties:
-        patient:
-          type: object
-          properties:
-            referenceNumber:
-              type: string
-            display:
-              type: string
-            careContexts:
-              type: array
-              items:
-                $ref: '#/components/schemas/CareContextRepresentation'
-    HealthInformationRequest:
-      type: object
-      required:
-        - requestId
-        - consent
-        - dataPushUrl
-        - keyMaterial
-        - dateRange
-      properties:
-        requestId:
-          $ref: '#/components/schemas/UuidSchema'
-        consent:
-          $ref: '#/components/schemas/consent'
-        dateRange:
-          $ref: '#/components/schemas/DateRange'
-        dataPushUrl:
-          type: string
-        keyMaterial:
-          $ref: '#/components/schemas/keyMaterial'
     consent:
       type: object
       required:
@@ -1337,68 +1234,6 @@ components:
             signature:
               type: string
               example: Signature of CM as defined in W3C standards; Base64 encoded
-    ConsentArtefact:
-      type: object
-      required:
-        - status
-        - consentId
-      properties:
-        status:
-          $ref: '#/components/schemas/ConsentStatus'
-        consentId:
-          type: string
-          format: uuid
-        consentDetail:
-          type: object
-          properties:
-            schemaVersion:
-              type: string
-              format: string
-            consentId:
-              type: string
-              format: uuid
-            createdAt:
-              type: string
-              format: date-time
-            patient:
-              $ref: '#/components/schemas/ConsentManagerPatientID'
-            careContexts:
-              type: array
-              items:
-                type: object
-                required:
-                  - patientReference
-                  - careContextReference
-                properties:
-                  patientReference:
-                    type: string
-                    example: batman@tmh
-                  careContextReference:
-                    type: string
-                    example: Episode1
-            purpose:
-              $ref: '#/components/schemas/UsePurpose'
-            hip:
-              type: object
-              allOf:
-                - $ref: '#/components/schemas/OrganizationRepresentation'
-                - xml:
-                    name: hip
-            consentManager:
-              type: object
-              allOf:
-                - $ref: '#/components/schemas/OrganizationReference'
-                - xml:
-                    name: consentManager
-            hiTypes:
-              type: array
-              items:
-                $ref: '#/components/schemas/HITypeEnum'
-            permission:
-              $ref: '#/components/schemas/Permission'
-            signature:
-              type: string
-              example: Signature of CM as defined in W3C standards; Base64 encoded
     HITypeEnum:
       type: string
       enum:
@@ -1501,7 +1336,7 @@ components:
             attribute: true
       xml:
         name: OrganizationReference
-    keyMaterial:
+    KeyMaterial:
       type: object
       required:
         - cryptoAlg
@@ -1548,25 +1383,6 @@ components:
         id:
           type: string
           example: '<consent-artefact-id>'
-    HIUConsentNotification:
-      type: object
-      properties:
-        requestId:
-          type: string
-          format: uuid
-          description: a nonce, unique for each HTTP request
-          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
-        timestamp:
-          $ref: '#/components/schemas/TimestampSchema'
-        consentRequestId:
-          type: string
-          example: '<consent-request-id>'
-        status:
-          $ref: '#/components/schemas/ConsentStatus'
-        consentArtefacts:
-          type: array
-          items:
-            $ref: '#/components/schemas/ConsentArtefactReference'
     HIUConsentNotificationEvent:
       type: object
       required:
@@ -1835,7 +1651,7 @@ components:
             dataPushUrl:
               type: string
             keyMaterial:
-              $ref: '#/components/schemas/keyMaterial'
+              $ref: '#/components/schemas/KeyMaterial'
     HIUHealthInformationRequestResponse:
         type: object
         required:
@@ -1922,7 +1738,7 @@ components:
               - $ref: '#/components/schemas/EntryContent'
               - $ref: '#/components/schemas/EntryLink'
         keyMaterial:
-          $ref: '#/components/schemas/keyMaterial'
+          $ref: '#/components/schemas/KeyMaterial'
     EntryContent:
       type: object
       required:
@@ -1969,41 +1785,7 @@ components:
           type: string
           example: NCC1701
           description: care context reference number.
-    HipInitiatedLinkResult:
-      type: object
-      properties:
-        requestId:
-          type: string
-          format: uuid
-          description: a nonce, unique for each HTTP request
-          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
-        timestamp:
-          $ref: '#/components/schemas/TimestampSchema'
-        linkRequest:
-          $ref: '#/components/schemas/HipInitiatedLinkResponse'
-        error:
-          $ref: '#/components/schemas/Error'
-        resp:
-          $ref: '#/components/schemas/RequestReference'
-    HipInitiatedLinkCareContext:
-      type: object
-      properties:
-        referenceNumber:
-          type: string
-        display:
-          type: string
-      xml:
-        name: Tag
-    HipInitiatedLinkResponse:
-      type: object
-      required:
-        - status
-      properties:
-        sessionStatus:
-          type: string
-          enum:
-              - SUCCESS
-              - FAILURE
+    
     PatientAuthInitResponse:
       type: object
       required:
