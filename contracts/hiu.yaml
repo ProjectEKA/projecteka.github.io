@@ -967,9 +967,9 @@ components:
     HITypeEnum:
       type: string
       enum:
-        - Condition
-        - Observation
-        - MedicationRequest
+        - OPConsultation
+        - Prescription
+        - DischargeSummary
         - DiagnosticReport
       xml:
         name: HIType
