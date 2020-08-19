@@ -3,7 +3,7 @@ info:
   version: "0.5"
   title: Health Repository Provider / Bridge Specifications (HIP)
   description: >
-  The following are the specifications for the APIs to be implemented at the Health Repository end if an entity is only serving the role of a HIP. The specs are essentially duplicates from the Gateway and Health Repository, but put together so as to make it clear to *HIPs* which set of APIs they should implement to participate in the network. 
+    The following are the specifications for the APIs to be implemented at the Health Repository end if an entity is only serving the role of a HIP. The specs are essentially duplicates from the Gateway and Health Repository, but put together so as to make it clear to *HIPs* which set of APIs they should implement to participate in the network. 
     
       1. The APIs are organized by the flows - **discovery**, **link**, **consent flow**, **data flow**, **user auth** and **monitoring**. They represent the APIs that are expected to be available at the HIP end by the Gateway. 
       2. For majority of the APIs, there are corresponding callback APIs on the Gateway. e.g for **/care-context/discover** API on HIP end, its expected that a corresponding callback API **/care-context/on-discover** on Gateway is called. Such APIs are organized under the **Gateway** label. 
