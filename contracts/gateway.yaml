@@ -3589,13 +3589,13 @@ components:
           $ref: '#/components/schemas/RequestReference'
     AuthenticationMode:
       type: string
-      enum: ['M0BILE_OTP', 'MOBILE_APP', 'AADHAAR_DEMO', 'AADHAAR_OTP']
+      enum: ['M0BILE_OTP', 'MOBILE_APP', 'DEMOGRAPHICS', 'AADHAAR_OTP']
       description: > 
         Subjected to CM specific capability
          1. MOBILE_OTP - for SMS OTP
          2. MOBILE_APP - for auth through apps (usually direct)
          3. AADHAAR_OTP - for auth using OTP sent to Aadhaar number
-         4. AADHAAR_DEMO - for auth using Aadhaar demographic.
+         4. DEMOGRAPHICS - for auth using demographic.
     AuthMeta:
       type: object
       required:
