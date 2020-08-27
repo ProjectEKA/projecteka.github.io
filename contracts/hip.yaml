@@ -1907,7 +1907,7 @@ components:
       properties:
         mode:
           type: string
-          enum: ['AADHAAR_DEMO', 'AADHAAR_OTP', 'M0BILE_OTP']
+          enum: ['AADHAAR_OTP', 'DEMOGRAPHICS', 'M0BILE_OTP']
         hint:
           type: string
         expiry:
