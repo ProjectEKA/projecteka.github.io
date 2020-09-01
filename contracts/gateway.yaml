@@ -1850,7 +1850,7 @@ paths:
         '400':
           description: >
             **Causes:**
-              * Token is not provided
+              * Invalid Request Details
           content:
             application/json:
               schema:
@@ -1907,8 +1907,7 @@ paths:
         '400':
           description: >
             **Causes:**
-              * required details not provided
-              * neither auth nor error specified
+              * Invalid Request Details
           content:
             application/json:
               schema:
