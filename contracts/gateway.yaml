@@ -19,6 +19,7 @@ tags:
   - name: cm facing
   - name: hiu facing
   - name: hip facing
+  - name: patient
 paths:
   /v0.5/care-contexts/discover:
     post:
@@ -1822,8 +1823,122 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
             application/xml:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'                
-  
+                $ref: '#/components/schemas/ErrorResponse'
+  /v0.5/patient/share:
+    post:
+      tags:
+        - patient
+        - hip facing
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-HIP-ID"
+      summary: Patient details on Share by user
+      description: >
+        API to submit the patient details on QR code scan.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientShareRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PatientShareRequest'
+      responses:
+        '202':
+          description: accepted
+        '400':
+          description: >
+            **Causes:**
+              * Token is not provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v0.5/patient/on-share:
+    post:
+      tags:
+        - patient
+        - cm facing
+      summary: Acknowledgement for share request
+      description: >
+        Acknowledgement response for patient details on share by user
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-CM-ID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientShareResponse'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PatientShareResponse'
+      responses:
+        '202':
+          description: Request accepted
+        '400':
+          description: >
+            **Causes:**
+              * required details not provided
+              * neither auth nor error specified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   parameters:
     authorization:
@@ -3750,6 +3865,97 @@ components:
               enum:
               - SUCCESS
         error: 
+          $ref: '#/components/schemas/Error'
+        resp:
+          $ref: '#/components/schemas/RequestReference'
+    PatientShareRequest:
+      type: object
+      required:
+        - requestId
+        - timeStamp
+        - patient
+        - hipDetails
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        hipDetails:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "100005"
+            customCode:
+              type: string
+        patient:
+          type: object
+          properties:
+            healthId:
+              type: string
+              example: <username>@<suffix>
+            name:
+              type: string
+              example: "Jane Doe"
+            gender:
+              $ref: '#/components/schemas/PatientGender'
+            address:
+              type: string
+            state:
+              type: string
+            district:
+              type: string
+            yearOfBirth:
+              type: integer
+              example: 2000
+            dateOfBirth:
+              type: string
+              example: "1972-02-29"
+              description: date of birth in YYYY-MM-DD format.
+            monthOfBirth:
+              type: string
+              example: "1972-02-29"
+              description: date of birth in YYYY-MM-DD format.
+            verifiedIdentifiers:
+              type: array
+              items:
+                $ref: '#/components/schemas/Identifier'
+              xml:
+                name: verifiedIdentifiers
+                wrapped: true
+            unverifiedIdentifiers:
+              type: array
+              items:
+                $ref: '#/components/schemas/Identifier'
+              xml:
+                name: unverifiedIdentifiers
+                wrapped: true
+    PatientShareResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        acknowledgement:
+          type: object
+          required:
+            - status
+          properties:
+            status:
+              type: string
+              enum:
+              - SUCCESS
+            healthId:
+              type: string
+              example: <username>@<suffix>
+        error:
           $ref: '#/components/schemas/Error'
         resp:
           $ref: '#/components/schemas/RequestReference'
