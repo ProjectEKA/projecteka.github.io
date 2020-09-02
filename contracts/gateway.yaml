@@ -1824,7 +1824,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v0.5/patient/share:
+  /v0.5/patient/profile/share:
     post:
       tags:
         - patient
@@ -1881,7 +1881,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v0.5/patient/on-share:
+  /v0.5/patient/profile/on-share:
     post:
       tags:
         - patient
