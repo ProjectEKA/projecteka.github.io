@@ -1840,10 +1840,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatientQueryRequest'
+              $ref: '#/components/schemas/PatientAuthModeQueryRequest'
           application/xml:
             schema:
-              $ref: '#/components/schemas/PatientQueryRequest'
+              $ref: '#/components/schemas/PatientAuthModeQueryRequest'
       responses:
         '202':
           description: Request Accepted
@@ -3900,7 +3900,7 @@ components:
           $ref: '#/components/schemas/Error'
         resp:
           $ref: '#/components/schemas/RequestReference'
-    PatientQueryRequest:
+    PatientAuthModeQueryRequest:
       type: object
       required:
         - requestId
