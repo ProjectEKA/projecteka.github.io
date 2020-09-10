@@ -3794,7 +3794,7 @@ components:
           items:
             $ref: '#/components/schemas/Identifier'
           xml:
-            name: verifiedIdentifiers
+            name: identifiers
             wrapped: true
     PatientAuthConfirmResponse:
       type: object
