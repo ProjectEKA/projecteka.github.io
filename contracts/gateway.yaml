@@ -1818,7 +1818,7 @@ paths:
         - hip facing
       summary: Confirmation request sending token, otp or other authentication details from HIP for confirmation
       description: >
-        This API is called by HIPs to confirm authentication of users. The transactionId   retuned by the previous callback API /users/auth/on-init has to sent. If Authentication is successful the callback API will send an "access token" for subsequent purpose specific API calls. Note only **credential.token** or **credential.demographic** should be sent
+        This API is called by HIPs to confirm authentication of users. The transactionId   retuned by the previous callback API /users/auth/on-init has to sent. If Authentication is successful the callback API will send an "access token" for subsequent purpose specific API calls. Note only **credential.authCode** or **credential.demographic** should be sent
           1. demographic details are only required for AADHAAR demographic auth as of now. 
           2. demographic details are required only in MEDIATED cases and if the **auth.mode** so demands. e.g. if **auth.mode** is AADHAAR_DEMO. In case of AADHAAR demographic authentication, the name, gender and DOB must be exactly as specified in AADHAAR registration.
           3. demographic.identifier is optional, however maybe required if authentication so mandates. 
@@ -3682,14 +3682,12 @@ components:
           type: object
           required:
             - transactionId
-            - authType
-            - meta
+            - mode
           properties:
             transactionId:
               type: string
-            authType:
-              type: string
-              enum: ['MEDIATED', 'DIRECT']
+            mode:
+              $ref: '#/components/schemas/AuthenticationMode'
             meta:
               $ref: '#/components/schemas/AuthMeta'
         error: 
@@ -3698,7 +3696,7 @@ components:
           $ref: '#/components/schemas/RequestReference'
     AuthenticationMode:
       type: string
-      enum: ['M0BILE_OTP', 'DIRECT_AUTH', 'DEMOGRAPHICS', 'AADHAAR_OTP']
+      enum: ['M0BILE_OTP', 'DIRECT', 'DEMOGRAPHIC', 'AADHAAR_OTP']
       description: > 
         Subjected to CM specific capability
          1. MOBILE_OTP - for SMS OTP
@@ -3711,8 +3709,6 @@ components:
         - mode
         - expiry
       properties:
-        mode:
-          $ref: '#/components/schemas/AuthenticationMode'
         hint:
           type: string
         expiry:
@@ -3741,7 +3737,7 @@ components:
           type: object
           description: note, demographic details are only required for demographic auth at this point, in which case identifier.
           properties:
-            token:
+            authCode:
               type: string
             demographic:
               $ref: '#/components/schemas/PatientDemographic'
@@ -3816,7 +3812,7 @@ components:
               2. DEMOGRAPHICS - only returns **patient**
               3. LINK_AND_DEMOGRAPHICS - returns both **accessToken** and **patient**
           properties:
-            authCode :
+            accessToken :
               type: string
               description: access token for initialization of subsequent action. 
             patient:
