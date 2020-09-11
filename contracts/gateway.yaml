@@ -1579,6 +1579,115 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /v0.5/users/auth/fetch-modes:
+    post:
+      tags:
+        - user auth
+        - hip facing
+      summary: Get a patient's authentication modes by her consent-manager user-id relevant to specified purpose
+      description: >
+        This API is meant for identify to patient given her consent-manager-user-id
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-CM-ID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientAuthModeQueryRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PatientAuthModeQueryRequest'
+      responses:
+        '202':
+          description: Request Accepted
+        '400':
+          description: >
+            Invalid request, required attributes not provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v0.5/users/auth/on-fetch-modes:
+    post:
+      tags:
+        - user auth
+        - cm facing
+      summary: Identification result for a consent-manager user-id
+      description: |
+        If a patient is found then **auth** attribute contains the supported modes for the specified purpose. 
+        Otherwise, error is raised for invalid requests or for non-existent id.
+        Note in addition to the "Authorization" header, one of the following headers must be specified
+        1. specify **X-HIU-ID** if the requester is HIU (identified from /find requester.id)
+        2. specify **X-HIP-ID** if the requester is HIP (identified from /find requester.id)
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientAuthModeQueryResponse'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PatientAuthModeQueryResponse'
+      responses:
+        '202':
+          description: Request Accepted
+        '400':
+          description: >
+            Invalid request, required attributes not provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v0.5/users/auth/init:
     post:
       tags:
@@ -1823,116 +1932,6 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'                
-                
-  /v0.5/users/auth/fetch-modes:
-    post:
-      tags:
-        - user auth
-        - hip facing
-      summary: Get a patient's authentication modes by her consent-manager user-id relevant to specified purpose
-      description: >
-        This API is meant for identify to patient given her consent-manager-user-id
-      parameters:
-        - $ref: "#/components/parameters/authorization"
-        - $ref: "#/components/parameters/X-CM-ID"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatientAuthModeQueryRequest'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/PatientAuthModeQueryRequest'
-      responses:
-        '202':
-          description: Request Accepted
-        '400':
-          description: >
-            Invalid request, required attributes not provided
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: >
-            **Causes:**
-              * Unauthorized request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: >
-            **Causes:**
-              * Downstream system(s) is down.
-              * Unhandled exceptions.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v0.5/users/auth/on-fetch-modes:
-    post:
-      tags:
-        - user auth
-        - cm facing
-      summary: Identification result for a consent-manager user-id
-      description: |
-        If a patient is found then **auth** attribute contains the supported modes for the specified purpose. 
-        Otherwise, error is raised for invalid requests or for non-existent id.
-        Note in addition to the "Authorization" header, one of the following headers must be specified
-        1. specify **X-HIU-ID** if the requester is HIU (identified from /find requester.id)
-        2. specify **X-HIP-ID** if the requester is HIP (identified from /find requester.id)
-      parameters:
-        - $ref: "#/components/parameters/authorization"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatientAuthModeQueryResponse'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/PatientAuthModeQueryResponse'
-      responses:
-        '202':
-          description: Request Accepted
-        '400':
-          description: >
-            Invalid request, required attributes not provided
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: >
-            **Causes:**
-              * Unauthorized request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: >
-            **Causes:**
-              * Downstream system(s) is down.
-              * Unhandled exceptions.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
   
 components:
   parameters:
@@ -3617,7 +3616,7 @@ components:
             wrapped: true
     PatientAuthPurpose:
       type: string
-      enum: [LINK, DEMOGRAPHICS, DEMOGRAPHICS_AND_LINK]
+      enum: [LINK, KYC, KYC_AND_LINK]
       description: what is the purpose of user auth
     PatientAuthInitRequest:
       type: object
@@ -3637,7 +3636,6 @@ components:
           type: object
           required:
             - patient
-            - purpose
             - requester
             - authMode
           properties:
@@ -3661,7 +3659,7 @@ components:
               properties:
                 type: 
                   type: string
-                  enum: [HIP]
+                  enum: [HIP, HIU]
                 id:
                   type: string
                   example: 100005
@@ -3680,7 +3678,7 @@ components:
           example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
         timestamp:
           $ref: '#/components/schemas/TimestampSchema'
-        authInit:
+        auth:
           type: object
           required:
             - transactionId
@@ -3700,7 +3698,7 @@ components:
           $ref: '#/components/schemas/RequestReference'
     AuthenticationMode:
       type: string
-      enum: ['M0BILE_OTP', 'MOBILE_APP', 'DEMOGRAPHICS', 'AADHAAR_OTP']
+      enum: ['M0BILE_OTP', 'DIRECT_AUTH', 'DEMOGRAPHICS', 'AADHAAR_OTP']
       description: > 
         Subjected to CM specific capability
          1. MOBILE_OTP - for SMS OTP
@@ -3818,7 +3816,7 @@ components:
               2. DEMOGRAPHICS - only returns **patient**
               3. LINK_AND_DEMOGRAPHICS - returns both **accessToken** and **patient**
           properties:
-            accessToken:
+            authCode :
               type: string
               description: access token for initialization of subsequent action. 
             patient:
@@ -3918,6 +3916,7 @@ components:
           type: object
           required:
             - id
+            - purpose
             - requester
           properties:
             id:
