@@ -3762,11 +3762,23 @@ components:
           description: date of birth in YYYY-MM-DD format. 
         identifier: 
           $ref: '#/components/schemas/Identifier'
+    
+    PatientAddress:
+      type: object
+      properties:
+        line:
+          type: string
+        district:
+          type: string
+        state:
+          type: string
+        pincode:
+          type: string
+    
     PatientDemographicResponse:
       type: object
       required:
         - id
-        - verifiedIdentifiers
         - name
         - gender
         - yearOfBirth
@@ -3783,6 +3795,8 @@ components:
         yearOfBirth:
           type: integer
           example: 2000
+        address:
+          $ref: '#/components/schemas/PatientAddress'
         identifiers:
           type: array
           items:
@@ -3790,6 +3804,8 @@ components:
           xml:
             name: identifiers
             wrapped: true
+        
+          
     PatientAuthConfirmResponse:
       type: object
       required:
