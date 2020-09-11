@@ -1579,6 +1579,115 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /v0.5/users/auth/fetch-modes:
+    post:
+      tags:
+        - user auth
+        - hip facing
+      summary: Get a patient's authentication modes by her consent-manager user-id relevant to specified purpose
+      description: >
+        This API is meant for identify to patient given her consent-manager-user-id
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-CM-ID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientAuthModeQueryRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PatientAuthModeQueryRequest'
+      responses:
+        '202':
+          description: Request Accepted
+        '400':
+          description: >
+            Invalid request, required attributes not provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v0.5/users/auth/on-fetch-modes:
+    post:
+      tags:
+        - user auth
+        - cm facing
+      summary: Identification result for a consent-manager user-id
+      description: |
+        If a patient is found then **auth** attribute contains the supported modes for the specified purpose. 
+        Otherwise, error is raised for invalid requests or for non-existent id.
+        Note in addition to the "Authorization" header, one of the following headers must be specified
+        1. specify **X-HIU-ID** if the requester is HIU (identified from /find requester.id)
+        2. specify **X-HIP-ID** if the requester is HIP (identified from /find requester.id)
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientAuthModeQueryResponse'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PatientAuthModeQueryResponse'
+      responses:
+        '202':
+          description: Request Accepted
+        '400':
+          description: >
+            Invalid request, required attributes not provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v0.5/users/auth/init:
     post:
       tags:
@@ -1709,7 +1818,7 @@ paths:
         - hip facing
       summary: Confirmation request sending token, otp or other authentication details from HIP for confirmation
       description: >
-        This API is called by HIPs to confirm authentication of users. The transactionId   retuned by the previous callback API /users/auth/on-init has to sent. If Authentication is successful the callback API will send an "access token" for subsequent purpose specific API calls. Note only **credential.token** or **credential.demographic** should be sent
+        This API is called by HIPs to confirm authentication of users. The transactionId   retuned by the previous callback API /users/auth/on-init has to sent. If Authentication is successful the callback API will send an "access token" for subsequent purpose specific API calls. Note only **credential.authCode** or **credential.demographic** should be sent
           1. demographic details are only required for AADHAAR demographic auth as of now. 
           2. demographic details are required only in MEDIATED cases and if the **auth.mode** so demands. e.g. if **auth.mode** is AADHAAR_DEMO. In case of AADHAAR demographic authentication, the name, gender and DOB must be exactly as specified in AADHAAR registration.
           3. demographic.identifier is optional, however maybe required if authentication so mandates. 
@@ -1772,7 +1881,7 @@ paths:
       description: >
         This API is called by HIPs to confirm authentication of users. The transactionId retuned by the previous /uses/auth/on-init API must be used along with necessary "mode" specific details.
         
-          1. **auth.accessToken - is specific to the purpose mentioned in the /auth/init. This token needs to be used for initiating the intended action. For example for HIP initiated linking**      
+          1. **auth.accessToken** - is specific to the purpose mentioned in the /auth/init. This token needs to be used for initiating the intended action. For example for HIP initiated linking     
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"
@@ -3424,7 +3533,6 @@ components:
           type: object
           required:
             - id
-            - name
           properties:
             id: 
               type: string
@@ -3506,6 +3614,10 @@ components:
           xml:
             name: careContexts
             wrapped: true
+    PatientAuthPurpose:
+      type: string
+      enum: [LINK, KYC, KYC_AND_LINK]
+      description: what is the purpose of user auth
     PatientAuthInitRequest:
       type: object
       required:
@@ -3524,7 +3636,6 @@ components:
           type: object
           required:
             - patient
-            - purpose
             - requester
             - authMode
           properties:
@@ -3536,9 +3647,7 @@ components:
                   example: "hinapatel@ncg"
                   description: id  of the patient understood by the CM
             purpose:
-              type: string
-              enum: [LINK]
-              description: what is the purpose of user auth
+              $ref: '#/components/schemas/PatientAuthPurpose'
             authMode:
               $ref: '#/components/schemas/AuthenticationMode'
             requester:
@@ -3550,7 +3659,7 @@ components:
               properties:
                 type: 
                   type: string
-                  enum: [HIP]
+                  enum: [HIP, HIU]
                 id:
                   type: string
                   example: 100005
@@ -3569,18 +3678,16 @@ components:
           example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
         timestamp:
           $ref: '#/components/schemas/TimestampSchema'
-        authInit:
+        auth:
           type: object
           required:
             - transactionId
-            - authType
-            - meta
+            - mode
           properties:
             transactionId:
               type: string
-            authType:
-              type: string
-              enum: ['MEDIATED', 'DIRECT']
+            mode:
+              $ref: '#/components/schemas/AuthenticationMode'
             meta:
               $ref: '#/components/schemas/AuthMeta'
         error: 
@@ -3589,7 +3696,7 @@ components:
           $ref: '#/components/schemas/RequestReference'
     AuthenticationMode:
       type: string
-      enum: ['M0BILE_OTP', 'MOBILE_APP', 'DEMOGRAPHICS', 'AADHAAR_OTP']
+      enum: ['M0BILE_OTP', 'DIRECT', 'DEMOGRAPHIC', 'AADHAAR_OTP']
       description: > 
         Subjected to CM specific capability
          1. MOBILE_OTP - for SMS OTP
@@ -3602,8 +3709,6 @@ components:
         - mode
         - expiry
       properties:
-        mode:
-          $ref: '#/components/schemas/AuthenticationMode'
         hint:
           type: string
         expiry:
@@ -3630,11 +3735,13 @@ components:
           type: string
         credential:
           type: object
+          description: note, demographic details are only required for demographic auth at this point, in which case identifier.
           properties:
-            token:
+            authCode:
               type: string
             demographic:
               $ref: '#/components/schemas/PatientDemographic'
+              
     
     PatientDemographic:
       type: object
@@ -3646,7 +3753,7 @@ components:
       properties:
         name: 
           type: string
-          example: "jankidas@ncg"
+          example: "janki das"
         gender:
           $ref: '#/components/schemas/PatientGender'
         dateOfBirth:
@@ -3655,6 +3762,34 @@ components:
           description: date of birth in YYYY-MM-DD format. 
         identifier: 
           $ref: '#/components/schemas/Identifier'
+    PatientDemographicResponse:
+      type: object
+      required:
+        - id
+        - verifiedIdentifiers
+        - name
+        - gender
+        - yearOfBirth
+      properties:
+        id:
+          type: string
+          example: <patient-id>@<consent-manager-id>
+          description: PHR Identifier of patient at consent manager
+        name:
+          type: string
+          example: "Hina Patel"
+        gender:
+          $ref: '#/components/schemas/PatientGender'
+        yearOfBirth:
+          type: integer
+          example: 2000
+        identifiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Identifier'
+          xml:
+            name: identifiers
+            wrapped: true
     PatientAuthConfirmResponse:
       type: object
       required:
@@ -3671,16 +3806,22 @@ components:
           $ref: '#/components/schemas/TimestampSchema'
         auth:
           type: object
-          required:
-            - accessToken
+          description: >
+            depending on the purpose of auth, as specified in /auth/init, the response may include the following 
+              1. LINK - only returns **accessToken**
+              2. DEMOGRAPHICS - only returns **patient**
+              3. LINK_AND_DEMOGRAPHICS - returns both **accessToken** and **patient**
           properties:
-            accessToken:
+            accessToken :
               type: string
               description: access token for initialization of subsequent action. 
+            patient:
+              $ref: '#/components/schemas/PatientDemographicResponse'
         error: 
           $ref: '#/components/schemas/Error'
         resp:
           $ref: '#/components/schemas/RequestReference'
+    
     PatientCareContextLinkRequest:
       type: object
       required:
@@ -3749,6 +3890,70 @@ components:
               type: string
               enum:
               - SUCCESS
+        error: 
+          $ref: '#/components/schemas/Error'
+        resp:
+          $ref: '#/components/schemas/RequestReference'
+    PatientAuthModeQueryRequest:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - query
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        query:
+          type: object
+          required:
+            - id
+            - purpose
+            - requester
+          properties:
+            id:
+              type: string
+              example: hinapatel79@ncg
+            purpose:
+              $ref: '#/components/schemas/PatientAuthPurpose'
+            requester:
+              type: object
+              properties:
+                type: 
+                  type: string
+                  enum: [HIU, HIP]
+                id:
+                  type: string
+                  example: 100005
+    PatientAuthModeQueryResponse:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - resp
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        auth:
+          type: object
+          required:
+            - status
+          properties:
+            purpose:
+              $ref: '#/components/schemas/PatientAuthPurpose'
+            modes: 
+              type: array
+              items:
+                $ref: '#/components/schemas/AuthenticationMode'
         error: 
           $ref: '#/components/schemas/Error'
         resp:
