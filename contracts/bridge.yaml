@@ -3,7 +3,7 @@ info:
   version: "0.5"
   title: Health Repository Provider / Bridge Specifications
   description: >
-    Specification for Health Repository Provider/Data Bridge who services Health Information Providers (HIP) and Health Information Users (HIU). 
+    Specification for Health Repository Provider/Data Bridge who services Health Information Providers (HIP) and Health Information Users (HIU). This document only specifies the APIs that are expected to be implemented at HIU/HIP/HRP bridge level. For relevant APIs to be called by the entities, please refer to the Gateway specification labelled as "hiu facing" and "hip facing".
 servers:
   - url: https://ncg-dev.projecteka.in/api-bridge1
     description: Dev
@@ -13,6 +13,7 @@ tags:
   - name: consent flow
   - name: data flow
   - name: identification
+  - name: user auth
   - name: monitoring
   - name: hiu bridge
   - name: hip bridge
@@ -718,6 +719,7 @@ paths:
     post:
       tags:
         - link
+        - hip bridge
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"
@@ -772,6 +774,67 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  
+  /v0.5/users/auth/on-fetch-modes:
+    post:
+      tags:
+        - user auth
+        - hiu facing
+        - hip facing
+      summary: Identification result for a consent-manager user-id. 
+      description: | 
+        This is the callback API for /auth/fetch-modes. If a patient is found then **auth** attribute contains the supported modes for the specified purpose. 
+        Otherwise, error is raised for invalid requests or for non-existent id.
+        Note in addition to the "Authorization" header, one of the following headers must be specified
+        1. **X-HIU-ID** if the requester is HIU (identified from /auth/fetch-modes requester.id)
+        2. **X-HIP-ID** if the requester is HIP (identified from /auth/fetch-modes requester.id)
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-HIP-ID"
+        - $ref: "#/components/parameters/X-HIU-ID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientAuthModeQueryResponse'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PatientAuthModeQueryResponse'
+      responses:
+        '202':
+          description: Request Accepted
+        '400':
+          description: >
+            Invalid request, required attributes not provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  
   /v0.5/users/auth/on-init:
     post:
       tags:
@@ -1807,8 +1870,7 @@ components:
           type: object
           required:
             - transactionId
-            - authType
-            - meta
+            - mode
           properties:
             transactionId:
               type: string
@@ -1946,6 +2008,42 @@ components:
               type: string
               enum:
               - SUCCESS
+        error: 
+          $ref: '#/components/schemas/Error'
+        resp:
+          $ref: '#/components/schemas/RequestReference'
+    
+    PatientAuthPurpose:
+      type: string
+      enum: [LINK, KYC, KYC_AND_LINK]
+      description: what is the purpose of user auth
+    
+    PatientAuthModeQueryResponse:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - resp
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        auth:
+          type: object
+          required:
+            - purpose
+            - modes
+          properties:
+            purpose:
+              $ref: '#/components/schemas/PatientAuthPurpose'
+            modes: 
+              type: array
+              items:
+                $ref: '#/components/schemas/AuthenticationMode'
         error: 
           $ref: '#/components/schemas/Error'
         resp:

@@ -445,8 +445,8 @@ paths:
         If a patient is found then **auth** attribute contains the supported modes for the specified purpose. 
         Otherwise, error is raised for invalid requests or for non-existent id.
         Note in addition to the "Authorization" header, one of the following headers must be specified
-        1. specify **X-HIU-ID** if the requester is HIU (identified from /find requester.id)
-        2. specify **X-HIP-ID** if the requester is HIP (identified from /find requester.id)
+        1. specify **X-HIU-ID** if the requester is HIU (identified from /auth/fetch-modes requester.id)
+        2. specify **X-HIP-ID** if the requester is HIP (identified from /auth/fetch-modes requester.id)
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"
@@ -2588,7 +2588,8 @@ components:
         auth:
           type: object
           required:
-            - status
+            - purpose
+            - modes
           properties:
             purpose:
               $ref: '#/components/schemas/PatientAuthPurpose'
