@@ -1818,7 +1818,7 @@ paths:
       tags:
         - user auth
         - hip facing
-      summary: Confirmation request sending token, otp or other authentication details from HIP for confirmation
+      summary: Confirmation request sending token, otp or other authentication details from HIP/HIU for confirmation
       description: >
         This API is called by HIP/HIUs to confirm authentication of users. The transactionId returned by the previous callback API /users/auth/on-init must be sent. If Authentication is successful the callback API will send an "access token" for subsequent purpose specific API calls. Note only **credential.authCode** or **credential.demographic** should be sent
           1. demographic details are only required for  demographic auth as of now. 
@@ -1884,7 +1884,7 @@ paths:
       description: >
         This API is called by HIPs to confirm authentication of users. The transactionId retuned by the previous /uses/auth/on-init API must be used along with necessary "mode" specific details.
         
-          1. **auth.accessToken** - is specific to the purpose mentioned in the /auth/init. This token needs to be used for initiating the intended action. For example for HIP initiated linking
+          1. **auth.accessToken** - is specific to the purpose mentioned in the /auth/init. This token needs to be used for initiating the intended action. For example for HIP initiated linking of care-contexts
           2. **NOTE**, only one of **X-HIP-ID** or **X-HIU-ID** will be sent as part of header, not both.
       parameters:
         - $ref: "#/components/parameters/authorization"
@@ -3751,7 +3751,7 @@ components:
         - name
         - gender
         - dateOfBirth
-      description: demographic details are only required for demographic auth at this point. 
+      description: Demographic details are only required for demographic auth at this point. Demographic details must be same as registered
       properties:
         name: 
           type: string
@@ -3827,8 +3827,8 @@ components:
           description: >
             depending on the purpose of auth, as specified in /auth/init, the response may include the following 
               1. LINK - only returns **accessToken**
-              2. DEMOGRAPHICS - only returns **patient**
-              3. LINK_AND_DEMOGRAPHICS - returns both **accessToken** and **patient**
+              2. KYC - only returns **patient**
+              3. KYC_AND_LINK - returns both **accessToken** and **patient**
           properties:
             accessToken :
               type: string

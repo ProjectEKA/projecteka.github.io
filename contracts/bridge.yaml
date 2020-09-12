@@ -1864,8 +1864,8 @@ components:
           description: >
             depending on the purpose of auth, as specified in /auth/init, the response may include the following 
               1. LINK - only returns **accessToken**
-              2. DEMOGRAPHICS - only returns **patient**
-              3. LINK_AND_DEMOGRAPHICS - returns both **accessToken** and **patient**
+              2. KYC - only returns **patient**
+              3. KYC_AND_LINK - returns both **accessToken** and **patient**
           properties:
             accessToken :
               type: string
