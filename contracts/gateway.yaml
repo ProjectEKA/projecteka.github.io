@@ -1586,7 +1586,7 @@ paths:
         - hip facing
       summary: Get a patient's authentication modes by her consent-manager user-id relevant to specified purpose
       description: >
-        This API is meant for identify to patient given her consent-manager-user-id
+        This API is meant for identify supported authentication modes for a patient given a specific purpose
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-CM-ID"
@@ -1752,18 +1752,18 @@ paths:
         - cm facing
       summary: Response to user authentication initialization from HIP
       description: >
-        If the patient's id is valid, CM will return a transactionId as initialization of user auth. If the requested 'patient.id' is valid, then 'authInit.authtype' will convey if the authentication is MEDIATED or DIRECT. If MEDIATED then it is expected that HIP sends the required token (OTP) or demographic info as part of the /users/auth/confirm request accompanied with the token. If DIRECT, then a CM will subsequently call a /users/auth/notify call (Not spec'd yet)
+        If the patient's id is valid, CM will return a transactionId as initialization of user auth. If the request is valid, then 'auth.mode' will convey how the authentication should be done. The authentication can be mediated or direct. For example, if the auth.modeis DIRECT, then HIP/HIU is not expected to send over anything as part of /auth/confirm, rather way for CM to notify them when patient approves so. For other mediated authentication modes, HIP or HIU is epected to send over eiter codes (OTP or similar) or demographic info as part of the /users/auth/confirm request accompanied with the transactionId. Note, for DIRECT authentication, CM will subsequently call /users/auth/notify call (Not spec'd yet)
         
-          1. **authType - MEDIATED or DIRECT**
-          2. **'meta.mode' conveys whats the mode of authentication is, and what is expected from HIP in the subsequent /auth/confirm API call. If MEDIATED, the possible values, MOBILE - for OTP sent to mobile, AADHAAR_DEMO - for Aadhaar demographic auth, AADHAAR_OTP - if an OTP was sent as part of Aadhaar authentication.**
-          3. **'meta.expiry' conveys the expiry time of the token and the authentication session**
-          4. **token - the temporary token to be used for subsequent /users/auth/confirm call** 
+          1. **auth.mode** conveys whats the mode of authentication is, and what is expected from HIP/HIU in the subsequent /auth/confirm API call. Possible values, MOBILE_OTP - for OTP sent to mobile,  AADHAAR_OTP - if an OTP was sent as part of Aadhaar authentication. DEMOGRAPHICS - If it is expected that the HIP/HIU sends over demographi details in the /auth/confirm API call. 
+          2. **meta.expiry** conveys the expiry time of the token and the authentication session
+          3. **NOTE**, only one of **X-HIP-ID** or **X-HIU-ID** will be sent as part of header, not both. 
           
         The error section in the body, represents the potential errors that may have occurred. Possible reasons:
           1. **Patient id is invalid**
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"
+        - $ref: "#/components/parameters/X-HIU-ID"
       requestBody:
         required: true
         content:
@@ -1818,10 +1818,11 @@ paths:
         - hip facing
       summary: Confirmation request sending token, otp or other authentication details from HIP for confirmation
       description: >
-        This API is called by HIPs to confirm authentication of users. The transactionId   retuned by the previous callback API /users/auth/on-init has to sent. If Authentication is successful the callback API will send an "access token" for subsequent purpose specific API calls. Note only **credential.authCode** or **credential.demographic** should be sent
-          1. demographic details are only required for AADHAAR demographic auth as of now. 
-          2. demographic details are required only in MEDIATED cases and if the **auth.mode** so demands. e.g. if **auth.mode** is AADHAAR_DEMO. In case of AADHAAR demographic authentication, the name, gender and DOB must be exactly as specified in AADHAAR registration.
+        This API is called by HIP/HIUs to confirm authentication of users. The transactionId returned by the previous callback API /users/auth/on-init must be sent. If Authentication is successful the callback API will send an "access token" for subsequent purpose specific API calls. Note only **credential.authCode** or **credential.demographic** should be sent
+          1. demographic details are only required for  demographic auth as of now. 
+          2. demographic details are required only in MEDIATED cases and if the **auth.mode** so demands. e.g. if **auth.mode** is DEMOGRAPHICS. Usually for demographic authentication, the name, gender and DOB must be exactly as specified in User Account.
           3. demographic.identifier is optional, however maybe required if authentication so mandates. 
+          4. credential.authCode is required for other MEDIATED authentication like MOBILE_OTP, AADHAAR_OTP. 
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-CM-ID"
@@ -2102,7 +2103,7 @@ components:
         name: Identifier
     IdentifierType:
       type: string
-      enum: [MOBILE, MR, AADHAAR]
+      enum: [MOBILE, MR]
     PatientDiscoveryResponse:
       type: object
       properties:
@@ -3635,17 +3636,14 @@ components:
         query:
           type: object
           required:
-            - patient
+            - id
             - requester
-            - authMode
+            - purpose
           properties:
-            patient:
-              type: object
-              properties:
-                id:
-                  type: string
-                  example: "hinapatel@ncg"
-                  description: id  of the patient understood by the CM
+            id:
+              type: string
+              example: "hinapatel@ncg"
+              description: id  of the patient understood by the CM
             purpose:
               $ref: '#/components/schemas/PatientAuthPurpose'
             authMode:
@@ -3696,11 +3694,11 @@ components:
           $ref: '#/components/schemas/RequestReference'
     AuthenticationMode:
       type: string
-      enum: ['M0BILE_OTP', 'DIRECT', 'DEMOGRAPHIC', 'AADHAAR_OTP']
+      enum: ['M0BILE_OTP', 'DIRECT', 'DEMOGRAPHICS', 'AADHAAR_OTP']
       description: > 
         Subjected to CM specific capability
          1. MOBILE_OTP - for SMS OTP
-         2. MOBILE_APP - for auth through apps (usually direct)
+         2. DIRECT - for auth through apps (usually direct)
          3. AADHAAR_OTP - for auth using OTP sent to Aadhaar number
          4. DEMOGRAPHICS - for auth using demographic.
     AuthMeta:
@@ -3735,7 +3733,7 @@ components:
           type: string
         credential:
           type: object
-          description: note, demographic details are only required for demographic auth at this point, in which case identifier.
+          description: note, demographic details are only required for demographic auth at this point.
           properties:
             authCode:
               type: string
@@ -3749,7 +3747,7 @@ components:
         - name
         - gender
         - dateOfBirth
-      description: demographic details are only required for AADHAAR demographic auth at this point, in which case identifier.Type must be AADHAAR. 
+      description: demographic details are only required for demographic auth at this point. 
       properties:
         name: 
           type: string
@@ -3941,7 +3939,7 @@ components:
               properties:
                 type: 
                   type: string
-                  enum: [HIU, HIP]
+                  enum: [HIP, HIU]
                 id:
                   type: string
                   example: 100005
