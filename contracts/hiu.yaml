@@ -2184,12 +2184,9 @@ components:
           $ref: '#/components/schemas/Error'
         resp:
           $ref: '#/components/schemas/RequestReference'
-    
+        
     AuthMeta:
       type: object
-      required:
-        - mode
-        - expiry
       properties:
         hint:
           type: string

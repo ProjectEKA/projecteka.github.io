@@ -1895,9 +1895,6 @@ components:
     
     AuthMeta:
       type: object
-      required:
-        - mode
-        - expiry
       properties:
         hint:
           type: string
