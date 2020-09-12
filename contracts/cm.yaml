@@ -1793,6 +1793,9 @@ components:
               $ref: '#/components/schemas/PatientAuthPurpose'
             requester:
               type: object
+              required:
+                - id
+                - type
               properties:
                 type: 
                   type: string
