@@ -1937,7 +1937,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v0.5/patient/profile/share:
+  /v0.5/patients/profile/share:
     post:
       tags:
         - identification
@@ -1995,7 +1995,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v0.5/patient/profile/on-share:
+  /v0.5/patients/profile/on-share:
     post:
       tags:
         - identification
