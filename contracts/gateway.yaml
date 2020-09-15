@@ -1945,7 +1945,6 @@ paths:
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"
-        - $ref: "#/components/parameters/X-HIU-ID"
       summary: Patient details on Share by user
       description: >
         API to submit the patient details on QR code scan.
