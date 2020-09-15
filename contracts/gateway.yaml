@@ -4106,6 +4106,7 @@ components:
         code:
           type: string
           example: "CustomCode"
+          description: Custom code generated on scanning QR code
         patient:
           type: object
           properties:
