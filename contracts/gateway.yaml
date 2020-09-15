@@ -1938,7 +1938,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v0.5/patient/profile/share:
+  /v0.5/patients/profile/share:
     post:
       tags:
         - patient
@@ -1995,7 +1995,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v0.5/patient/profile/on-share:
+  /v0.5/patients/profile/on-share:
     post:
       tags:
         - patient
@@ -4098,7 +4098,7 @@ components:
       type: object
       required:
         - requestId
-        - timeStamp
+        - timestamp
         - patient
         - hipDetails
       properties:
@@ -4112,10 +4112,10 @@ components:
         hipDetails:
           type: object
           properties:
-            id:
+            hipId:
               type: string
               example: "100005"
-            customCode:
+            code:
               type: string
         patient:
           type: object
