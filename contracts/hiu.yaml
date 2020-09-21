@@ -2108,7 +2108,7 @@ components:
     
     AuthenticationMode:
       type: string
-      enum: ['M0BILE_OTP', 'DIRECT', 'DEMOGRAPHICS', 'AADHAAR_OTP']
+      enum: ['MOBILE_OTP', 'DIRECT', 'DEMOGRAPHICS', 'AADHAAR_OTP']
       description: > 
         Subjected to CM specific capability
          1. MOBILE_OTP - for SMS OTP
