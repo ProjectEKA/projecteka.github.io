@@ -1944,7 +1944,7 @@ paths:
         - cm facing
       summary: This API is called in case of DIRECT mode of authentication by the CM
       description: >
-        This API is called by CM to confirm authentication of users. The transactionId returned is same as that passed in /auth/on-init. The "auth.status" conveys whether the request was APPROVED or DENIED.
+        This API is called by CM to confirm authentication of users. The transactionId returned is same as that passed in /auth/on-init. The "auth.status" conveys whether the request was GRANTED or DENIED.
         
           1. **auth.accessToken** - is specific to the purpose mentioned in the /auth/init. This token needs to be used for initiating the intended action. For example for HIP initiated linking of care-contexts
           2. **NOTE**, only one of **X-HIP-ID** or **X-HIU-ID** will be sent as part of header, not both.
@@ -4221,6 +4221,9 @@ components:
               1. LINK - only returns **accessToken**
               2. KYC - only returns **patient**
               3. KYC_AND_LINK - returns both **accessToken** and **patient**
+          required:
+            - transactionId
+            - status
           properties:
             accessToken :
               type: string
@@ -4230,7 +4233,7 @@ components:
               description: transaction id for auth session
             status:
               type: string
-              enum: ["APPROVED", "DENIED"]
+              enum: ["GRANTED", "DENIED"]
             patient:
               $ref: '#/components/schemas/PatientDemographicResponse'
     
