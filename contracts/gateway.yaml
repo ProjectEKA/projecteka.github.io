@@ -2099,7 +2099,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v0.5/subscriptions/approvals/notify:
+  /v0.5/subscriptions/hiu/notify-request:
     post:
       tags:
         - subscriptions
@@ -3837,10 +3837,26 @@ components:
           xml:
             name: careContexts
             wrapped: true
+    
+    PatientAuthRequester:
+      type: object
+      required:
+        - type
+        - id
+      description: identification of requester
+      properties:
+        type: 
+          type: string
+          enum: [HIP, HIU]
+        id:
+          type: string
+          example: 100005
+          
     PatientAuthPurpose:
       type: string
       enum: [LINK, KYC, KYC_AND_LINK]
       description: what is the purpose of user auth
+    
     PatientAuthInitRequest:
       type: object
       required:
@@ -3871,18 +3887,7 @@ components:
             authMode:
               $ref: '#/components/schemas/AuthenticationMode'
             requester:
-              type: object
-              required:
-                - type
-                - id
-              description: identification of requester
-              properties:
-                type: 
-                  type: string
-                  enum: [HIP, HIU]
-                id:
-                  type: string
-                  example: 100005
+              $ref: '#/components/schemas/PatientAuthRequester'
               
     PatientAuthInitResponse:
       type: object
@@ -4051,6 +4056,8 @@ components:
             accessToken :
               type: string
               description: access token for initialization of subsequent action. 
+            validity:
+              $ref: '#/components/schemas/AccessTokenValidity'
             patient:
               $ref: '#/components/schemas/PatientDemographicResponse'
         error: 
@@ -4205,7 +4212,6 @@ components:
         - requestId
         - timestamp
         - transactionId
-        
       properties:
         requestId:
           type: string
@@ -4225,18 +4231,39 @@ components:
             - transactionId
             - status
           properties:
-            accessToken :
-              type: string
-              description: access token for initialization of subsequent action. 
             transactionId:
               type: string
               description: transaction id for auth session
             status:
               type: string
               enum: ["GRANTED", "DENIED"]
+            accessToken :
+              type: string
+              description: access token for initialization of subsequent action. 
+            validity:
+              $ref: '#/components/schemas/AccessTokenValidity'
             patient:
               $ref: '#/components/schemas/PatientDemographicResponse'
     
+    AccessTokenValidity: 
+      type: object
+      required:
+        - purpose
+        - requester
+        - expiry
+        - limit
+      properties:
+        purpose:
+          $ref: '#/components/schemas/PatientAuthPurpose'
+        requester:
+          $ref: '#/components/schemas/PatientAuthRequester'
+        expiry:
+          $ref: '#/components/schemas/TimestampSchema'
+        limit:
+          type: integer
+          example: "1"
+          description: number of times, the token can be used
+      
     SubscriptionPeriod:
       type: object
       required:
@@ -4283,17 +4310,9 @@ components:
             purpose:
               $ref: '#/components/schemas/UsePurpose'
             patient:
-              type: object
-              allOf:
-                - $ref: '#/components/schemas/ConsentManagerPatientID'
-                - xml:
-                    name: patient
+              $ref: '#/components/schemas/ConsentManagerPatientID'
             hiu:
-              type: object
-              allOf:
-                - $ref: '#/components/schemas/OrganizationRepresentation'
-                - xml:
-                    name: hiu
+              $ref: '#/components/schemas/OrganizationRepresentation'
             hips:
               type: array
               items:
@@ -4302,10 +4321,6 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/SubscriptionType'
-            hiTypes:
-              type: array
-              items:
-                $ref: '#/components/schemas/HITypeEnum'
             period:
               $ref: '#/components/schemas/SubscriptionPeriod'
     
@@ -4406,4 +4421,3 @@ components:
             $ref: '#/components/schemas/HITypeEnum'
         period:
           $ref: '#/components/schemas/SubscriptionPeriod'
-                
