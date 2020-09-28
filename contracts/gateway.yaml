@@ -2984,7 +2984,9 @@ components:
           type: string
         grantType:
           type: string
-          enum: [ClientCredentials,RefreshToken]
+          enum: [client_credentials,refresh_token]
+        refreshToken:
+          type: string
     SessionResponse:
       type: object
       properties:
