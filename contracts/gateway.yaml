@@ -1584,6 +1584,7 @@ paths:
       tags:
         - user auth
         - hip facing
+        - hiu facing
       summary: Get a patient's authentication modes by her consent-manager user-id relevant to specified purpose
       description: >
         This API is meant for identify supported authentication modes for a patient given a specific purpose
@@ -1695,6 +1696,7 @@ paths:
       tags:
         - user auth
         - hip facing
+        - hiu facing
       summary: Initialize authentication from HIP
       description: >
         This API is called by HIPs to initiate authentication of users. A transactionId is retuned by the corresponding callback API for confirmation of user auth.
@@ -1818,6 +1820,7 @@ paths:
       tags:
         - user auth
         - hip facing
+        - hiu facing
       summary: Confirmation request sending token, otp or other authentication details from HIP/HIU for confirmation
       description: >
         This API is called by HIP/HIUs to confirm authentication of users. The transactionId returned by the previous callback API /users/auth/on-init must be sent. If Authentication is successful the callback API will send an "access token" for subsequent purpose specific API calls. Note only **credential.authCode** or **credential.demographic** should be sent
@@ -2000,7 +2003,66 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'                
-  /v0.5/subscriptions/subscribe:
+  /v0.5/users/auth/on-notify:
+    post:
+      tags:
+        - user auth
+        - hip facing
+        - hiu facing
+      summary: callback API by HIU/HIPs as acknowledgement of auth notification
+      description: >
+        This API is called by HIU/HIPs to confirm acknowledgement for receipt of auth notification is case of DIRECT authentication. 
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-CM-ID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientAuthNotificationAcknowledgement'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PatientAuthNotificationAcknowledgement'
+      responses:
+        '202':
+          description: Request accepted
+        '400':
+          description: >
+            **Causes:**
+              * required details not provided
+              * neither auth nor error specified 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'                
+  /v0.5/subscription-requests/cm/init:
     post:
       tags:
         - subscriptions
@@ -2057,7 +2119,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v0.5/subscriptions/on-subscribe:
+  /v0.5/subscription-requests/cm/on-init:
     post:
       tags:
         - subscriptions
@@ -2099,7 +2161,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v0.5/subscriptions/hiu/notify-request:
+  /v0.5/subscription-requests/hiu/notify:
     post:
       tags:
         - subscriptions
@@ -2149,6 +2211,48 @@ paths:
             **Causes:**
               * Downstream system(s) is down.
               * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v0.5/subscription-requests/hiu/on-notify:
+    post:
+      tags:
+        - subscriptions
+        - hiu facing
+      summary: Callback API to acknowledge receipt of notification.
+      description: |
+        This API is called by HIU as acknowledgement to consent notifications, specifically for cases when consent is REVOKED or EXPIRED.
+      parameters:
+        - $ref: '#/components/parameters/authorization'
+        - $ref: '#/components/parameters/X-CM-ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HIUSubscriptionRequestNotification'
+      responses:
+        '202':
+          description: Request Accepted.
+        '401':
+          description: >
+            **Causes:**
+              * Invalid/Expired/Empty token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream services are down
           content:
             application/json:
               schema:
@@ -4421,3 +4525,59 @@ components:
             $ref: '#/components/schemas/HITypeEnum'
         period:
           $ref: '#/components/schemas/SubscriptionPeriod'
+    HIUSubscriptionRequestNotification:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - resp
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        acknowledgement:
+          type: object
+          required:
+            - status
+            - subscriptionId
+          properties:
+            status:
+              type: string
+              enum: ["OK"]
+            subscriptionId:
+              type: string
+              example: "subscription Id"
+        error: 
+          $ref: '#/components/schemas/Error'
+        resp:
+          $ref: '#/components/schemas/RequestReference'
+    PatientAuthNotificationAcknowledgement:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - resp
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        acknowledgement:
+          type: object
+          required:
+            - status
+          properties:
+            status:
+              type: string
+              enum: ["OK"]
+        error: 
+          $ref: '#/components/schemas/Error'
+        resp:
+          $ref: '#/components/schemas/RequestReference'
