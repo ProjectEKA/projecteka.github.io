@@ -3168,6 +3168,10 @@ components:
                 - $ref: '#/components/schemas/OrganizationRepresentation'
                 - xml:
                     name: hip
+            careContexts:
+              type: array
+              items:
+                $ref: '#/components/schemas/CareContextDefinition'
             hiu:
               type: object
               allOf:
