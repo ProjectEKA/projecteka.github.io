@@ -2068,7 +2068,7 @@ paths:
         - subscriptions
         - hiu facing
       summary: Request for subscription
-      description: creates a request for subscription. The subscription types can be for care-contexts linkages or availability of data against existing care-contexts. Note that the requester must have HIU role
+      description: creates a request for subscription. The subscription categories can be for care-contexts linkages or availability of data against existing care-contexts. Note that the requester must have HIU role
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-CM-ID"
@@ -2135,7 +2135,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SubscriptionReceipt'
+              $ref: '#/components/schemas/HIUSubscriptionRequestReceipt'
       responses:
         '202':
           description: Request Accepted.
@@ -2167,7 +2167,8 @@ paths:
         - subscriptions
         - cm facing
       summary: Notification for subscription grant/deny/revoke
-      description: This API is used by CM to notify a HIU (or a Health Locker) to grant or deny a request for subscription, and also to notify that in case an existing subscription is revoked. For notifying that a particular subscription request was GRANTED or DENIED, the **acknowledgementId** is passed. For notifying that an existing subscription was REVOKED, the **acknowledgmentId** is not passed, but **notification.subscription.id** is passed. 
+      description: | 
+        This API is used by CM to notify a HIU to grant or deny a request for subscription, and also to notify that in case an existing subscription is revoked or expired. For notifying that a particular subscription request was GRANTED or DENIED or REVOKED, the **subscriptionRequestId** is passed. 
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIU-ID"
@@ -2225,6 +2226,109 @@ paths:
         - hiu facing
       summary: Callback API to acknowledge receipt of notification.
       description: |
+        This API is called by HIU as acknowledgement to subscription request relevant notifications. 
+      parameters:
+        - $ref: '#/components/parameters/authorization'
+        - $ref: '#/components/parameters/X-CM-ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HIUSubscriptionRequestNotificationAcknowledgement'
+      responses:
+        '202':
+          description: Request Accepted.
+        '401':
+          description: >
+            **Causes:**
+              * Invalid/Expired/Empty token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream services are down
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v0.5/subscriptions/hiu/notify:
+    post:
+      tags:
+        - subscriptions
+        - cm facing
+      summary: Notification for a granted subscription
+      description: |
+        This API is used by CM to notify a HIU for notification relevant to subscription. Notifications are sent to subscribed HIUs whenever a new care-context is linked or new data is available on an existing linked care-context. 
+        1. if event.category = LINK, then only care-contexts are passed when new care-contexts are linked for patient. 
+        2. If event.category = DATA, then hiTypes are passed. Care-context is passed only if the subscribed HIU has any valid consent for that care-context
+      
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-HIU-ID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HIUSubscriptionNotification'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/HIUSubscriptionNotification'
+      responses:
+        '202':
+          description: Request Accepted
+        '400':
+          description:  >
+            **Causes:**
+              * Invalid data sent 
+              * Required attributes not mentioned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description:  >
+            **Causes:**
+              * Expired/Invalid token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v0.5/subscriptions/hiu/on-notify:
+    post:
+      tags:
+        - subscriptions
+        - hiu facing
+      summary: Callback API to acknowledge receipt of notification.
+      description: |
         This API is called by HIU as acknowledgement to consent notifications, specifically for cases when consent is REVOKED or EXPIRED.
       parameters:
         - $ref: '#/components/parameters/authorization'
@@ -2234,7 +2338,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HIUSubscriptionRequestNotification'
+              $ref: '#/components/schemas/HIUSubscriptionNotificationAcknowledgment'
       responses:
         '202':
           description: Request Accepted.
@@ -4367,7 +4471,20 @@ components:
           type: integer
           example: "1"
           description: number of times, the token can be used
-      
+    
+    CareContextDefinition:
+      type: object
+      required:
+        - patientReference
+        - careContextReference
+      properties:
+        patientReference:
+          type: string
+          example: batman@tmh
+        careContextReference:
+          type: string
+          example: Episode1  
+    
     SubscriptionPeriod:
       type: object
       required:
@@ -4384,9 +4501,9 @@ components:
       xml:
         name: Permission
       
-    SubscriptionType:
+    SubscriptionCategory:
       type: string
-      enum: ["CARE_CONTEXT", "DATA"]
+      enum: ["LINK", "DATA"]
       
     SubscriptionRequest:
       type: object
@@ -4408,7 +4525,7 @@ components:
             - purpose
             - patient
             - hiu
-            - types
+            - categories
             - period
           properties:
             purpose:
@@ -4421,14 +4538,14 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/OrganizationRepresentation'
-            types:
+            categories:
               type: array
               items:
-                $ref: '#/components/schemas/SubscriptionType'
+                $ref: '#/components/schemas/SubscriptionCategory'
             period:
               $ref: '#/components/schemas/SubscriptionPeriod'
     
-    SubscriptionReceipt:
+    HIUSubscriptionRequestReceipt:
       type: object
       required:
         - requestId
@@ -4442,7 +4559,7 @@ components:
           example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
         timestamp:
           $ref: '#/components/schemas/TimestampSchema'
-        acknowledgement:
+        subscriptionRequest:
           type: object
           required:
             - id
@@ -4461,8 +4578,7 @@ components:
         
     SubscriptionStatus:
       type: string
-      enum: ["GRANTED", "DENIED", "REVOKED"]
-    
+      enum: ["GRANTED", "DENIED", "REVOKED", "EXPIRED"]
     SubscriptionApprovalNotification:
       type: object
       required:
@@ -4482,14 +4598,13 @@ components:
           required:
             - status
           properties:
-            acknowledgementId:
+            subscriptionRequestId:
               type: string
               example: 'request id of the subscription'
             status:
               $ref: '#/components/schemas/SubscriptionStatus'
             subscription:
               $ref: '#/components/schemas/HIUSubscription'
-    
     HIUSubscription:
       type: object
       required:
@@ -4497,7 +4612,7 @@ components:
         - patient
         - hiu
         - hips
-        - types
+        - categories
         - period
       properties:
         id:
@@ -4515,17 +4630,17 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/OrganizationRepresentation'
-        types:
+        categories:
           type: array
           items:
-            $ref: '#/components/schemas/SubscriptionType'
+            $ref: '#/components/schemas/SubscriptionCategory'
         hiTypes:
           type: array
           items:
             $ref: '#/components/schemas/HITypeEnum'
         period:
           $ref: '#/components/schemas/SubscriptionPeriod'
-    HIUSubscriptionRequestNotification:
+    HIUSubscriptionRequestNotificationAcknowledgement:
       type: object
       required:
         - requestId
@@ -4548,7 +4663,7 @@ components:
             status:
               type: string
               enum: ["OK"]
-            subscriptionId:
+            subscriptionRequestId:
               type: string
               example: "subscription Id"
         error: 
@@ -4577,6 +4692,81 @@ components:
             status:
               type: string
               enum: ["OK"]
+        error: 
+          $ref: '#/components/schemas/Error'
+        resp:
+          $ref: '#/components/schemas/RequestReference'
+    HIUSubscriptionEventContent:
+      type: object
+      properties:
+        hip:
+          $ref: '#/components/schemas/OrganizationRepresentation'
+        careContexts:
+          type: array
+          items:
+            $ref: '#/components/schemas/CareContextDefinition'
+        hiTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/HITypeEnum'
+    HIUSubscriptionNotification:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - notification
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        event:
+          type: object
+          required:
+            - id
+            - published
+            - event
+          properties:
+            id:
+              $ref: '#/components/schemas/UuidSchema'
+            published:
+              $ref: '#/components/schemas/TimestampSchema'
+            subscriptionId:
+              type: string
+              example: "subscription Id"
+            category: 
+              $ref: '#/components/schemas/SubscriptionCategory'
+            content:
+              $ref: '#/components/schemas/HIUSubscriptionEventContent'
+    HIUSubscriptionNotificationAcknowledgment:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - resp
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        acknowledgement:
+          type: object
+          required:
+            - status
+            - eventId
+          properties:
+            status:
+              type: string
+              enum: ["OK"]
+            eventId:
+              type: string
+              example: "subscription event Id"
         error: 
           $ref: '#/components/schemas/Error'
         resp:
