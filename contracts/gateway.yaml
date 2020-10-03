@@ -4487,7 +4487,21 @@ components:
           example: batman@tmh
         careContextReference:
           type: string
-          example: Episode1  
+          example: Episode1
+          
+    EventCategoryDetail:
+      type: object
+      required:
+        - hiTypes
+        - careContext
+      properties:
+        careContext:
+          $ref: '#/components/schemas/CareContextDefinition'
+        hiTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/HITypeEnum'
+        
     
     SubscriptionPeriod:
       type: object
@@ -4703,16 +4717,14 @@ components:
     HIUSubscriptionEventContent:
       type: object
       properties:
+        patient:
+          $ref: '#/components/schemas/ConsentManagerPatientID'
         hip:
           $ref: '#/components/schemas/OrganizationRepresentation'
-        careContexts:
+        context:
           type: array
           items:
-            $ref: '#/components/schemas/CareContextDefinition'
-        hiTypes:
-          type: array
-          items:
-            $ref: '#/components/schemas/HITypeEnum'
+            $ref: '#/components/schemas/EventCategoryDetail'
     HIUSubscriptionNotification:
       type: object
       required:
