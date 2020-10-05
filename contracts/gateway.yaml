@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: "0.5"
+  version: "0.5.1"
   title: Gateway
   description: >
     Gateway is the hub that routes/orchestrates the interaction between consent managers and API bridges. There are 5 categories of APIs; discovery, link, consent flow, data flow and  monitoring. To reflect the consumers of APIs, the above apis are also categorized under cm facing, hiu facing and hip facing 
@@ -13,6 +13,7 @@ tags:
   - name: link
   - name: consent flow
   - name: data flow
+  - name: subscriptions
   - name: identification
   - name: monitoring
   - name: sessions
@@ -3634,13 +3635,6 @@ components:
         signature:
           type: string
           example: Signature of CM as defined in W3C standards; Base64 encoded
-    HealthInformationRequestResponse:
-        type: object
-        required:
-          - transactionId
-        properties:
-          transactionId:
-            $ref: '#/components/schemas/UuidSchema'
     HIUHealthInformationRequestResponse:
         type: object
         required:
@@ -3669,31 +3663,6 @@ components:
             $ref: '#/components/schemas/Error'
           resp:
             $ref: '#/components/schemas/RequestReference'
-    HIPHealthInformationRequest:
-      type: object
-      required:
-        - requestId
-        - timestamp
-        - transactionId
-        - consent
-        - dataPushUrl
-        - keyMaterial
-        - dateRange
-      properties:
-        requestId:
-          $ref: '#/components/schemas/UuidSchema'
-        timestamp:
-          $ref: '#/components/schemas/TimestampSchema'
-        transactionId:
-          $ref: '#/components/schemas/UuidSchema'
-        consent:
-          $ref: '#/components/schemas/consent'
-        dateRange:
-          $ref: '#/components/schemas/dateRange'
-        dataPushUrl:
-          type: string
-        keyMaterial:
-          $ref: '#/components/schemas/keyMaterial'
     HIPHIRequest:
       type: object
       required:
@@ -3981,41 +3950,7 @@ components:
           $ref: '#/components/schemas/RequestReference'
       xml:
         name: PatientIdentificationResponse
-    HipInitiatedLinkRequest:
-      type: object
-      properties:
-        requestId:
-          type: string
-          format: uuid
-        timestamp:
-          $ref: '#/components/schemas/TimestampSchema'
-        link:
-          type: object
-          properties:
-            cmId:
-              type: string
-            hipId:
-              type: string
-            patient:
-              $ref: '#/components/schemas/HipInitiatedPatient'
-          xml:
-            name: HipInitiatedLinkRequest
-    HipInitiatedLinkResult:
-      type: object
-      properties:
-        requestId:
-          type: string
-          format: uuid
-          description: a nonce, unique for each HTTP request
-          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
-        timestamp:
-          $ref: '#/components/schemas/TimestampSchema'
-        linkRequest:
-          $ref: '#/components/schemas/HipInitiatedLinkResponse'
-        error:
-          $ref: '#/components/schemas/Error'
-        resp:
-          $ref: '#/components/schemas/RequestReference'
+    
     HipInitiatedLinkCareContext:
       type: object
       properties:
@@ -4025,30 +3960,6 @@ components:
           type: string
       xml:
         name: Tag
-    HipInitiatedLinkResponse:
-      type: object
-      required:
-        - status
-      properties:
-        sessionStatus:
-          type: string
-          enum:
-              - SUCCESS
-              - FAILURE
-    HipInitiatedPatient:
-      type: object
-      properties:
-        referenceNumber:
-          type: string
-        display:
-          type: string
-        careContexts:
-          type: array
-          items:
-            $ref: '#/components/schemas/HipInitiatedLinkCareContext'
-          xml:
-            name: careContexts
-            wrapped: true
     
     PatientAuthRequester:
       type: object
@@ -4596,7 +4507,7 @@ components:
         
     SubscriptionStatus:
       type: string
-      enum: ["GRANTED", "DENIED", "REVOKED", "EXPIRED"]
+      enum: ["GRANTED", "DENIED"]
     SubscriptionApprovalNotification:
       type: object
       required:
@@ -4623,12 +4534,29 @@ components:
               $ref: '#/components/schemas/SubscriptionStatus'
             subscription:
               $ref: '#/components/schemas/HIUSubscription'
+    
+    HIUSubscriptionContext:
+      type: object
+      required:
+        - test
+      properties:
+        hip:
+          $ref: '#/components/schemas/OrganizationRepresentation'
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionCategory'
+        period:
+          $ref: '#/components/schemas/SubscriptionPeriod'
+        
+      
     HIUSubscription:
       type: object
       required:
         - id
         - patient
         - hiu
+        - context
         - hips
         - categories
         - period
@@ -4637,27 +4565,14 @@ components:
           type: string
           example: "subscription Id"
         patient:
-          type: object
-          allOf:
-            - $ref: '#/components/schemas/ConsentManagerPatientID'
-            - xml:
-                name: patient
+          $ref: '#/components/schemas/ConsentManagerPatientID'
         hiu:
           $ref: '#/components/schemas/OrganizationRepresentation'
-        hips:
+        context:
           type: array
           items:
-            $ref: '#/components/schemas/OrganizationRepresentation'
-        categories:
-          type: array
-          items:
-            $ref: '#/components/schemas/SubscriptionCategory'
-        hiTypes:
-          type: array
-          items:
-            $ref: '#/components/schemas/HITypeEnum'
-        period:
-          $ref: '#/components/schemas/SubscriptionPeriod'
+            $ref: '#/components/schemas/HIUSubscriptionContext'
+        
     HIUSubscriptionRequestNotificationAcknowledgement:
       type: object
       required:
