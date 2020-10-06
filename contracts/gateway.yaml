@@ -2169,7 +2169,7 @@ paths:
         - cm facing
       summary: Notification for subscription grant/deny/revoke
       description: | 
-        This API is used by CM to notify a HIU to grant or deny a request for subscription, and also to notify that in case an existing subscription is revoked or expired. For notifying that a particular subscription request was GRANTED or DENIED or REVOKED, the **subscriptionRequestId** is passed. 
+        This API is used by CM to notify a HIU to grant or deny a request for subscription, and also to notify that in case an existing subscription is revoked or expired. For notifying that a particular subscription request was GRANTED or DENIED, the **subscriptionRequestId** is passed. 
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIU-ID"
@@ -2535,13 +2535,6 @@ components:
     IdentifierType:
       type: string
       enum: [MOBILE, MR]
-    PatientDiscoveryResponse:
-      type: object
-      properties:
-        patient:
-          $ref: '#/components/schemas/PatientRepresentation'
-      xml:
-        name: PatientDiscoveryResponse
     PatientRepresentation:
       type: object
       required:
@@ -2623,13 +2616,6 @@ components:
                 wrapped: true
       xml:
         name: PatientLinkReferenceRequest
-    
-      
-    PatientLinkRequest:
-      type: object
-      properties:
-        token:
-          type: string
     LinkConfirmationRequest:
       type: object
       required:
@@ -2686,19 +2672,6 @@ components:
           $ref: '#/components/schemas/Error'
         resp:
           $ref: '#/components/schemas/RequestReference'
-    PatientLinkReferenceResponse:
-      type: object
-      properties:
-        link:
-          type: object
-          properties:
-            referenceNumber:
-              type: string
-            authenticationType:
-              type: string
-              enum: ['DIRECT', 'MEDIATED']
-            meta:
-              $ref: '#/components/schemas/Meta'
     Meta:
       type: object
       required:
@@ -2727,20 +2700,6 @@ components:
           type: string
       xml:
         name: Error
-    PatientLinkResponse:
-      type: object
-      properties:
-        patient:
-          type: object
-          properties:
-            referenceNumber:
-              type: string
-            display:
-              type: string
-            careContexts:
-              type: array
-              items:
-                $ref: '#/components/schemas/CareContextRepresentation'
     PatientLinkResult:
       type: object
       required:
@@ -2774,27 +2733,6 @@ components:
           $ref: '#/components/schemas/Error'
         resp:
           $ref: '#/components/schemas/RequestReference'
-    HealthInformationRequest:
-      type: object
-      required:
-        - requestId
-        - consent
-        - dataPushUrl
-        - keyMaterial
-        - dateRange
-      properties:
-        requestId:
-          $ref: '#/components/schemas/UuidSchema'
-        timestamp:
-          $ref: '#/components/schemas/TimestampSchema'
-        consent:
-          $ref: '#/components/schemas/consent'
-        dateRange:
-          $ref: '#/components/schemas/dateRange'
-        dataPushUrl:
-          type: string
-        keyMaterial:
-          $ref: '#/components/schemas/keyMaterial'
     HIRequest:
       type: object
       required:
@@ -2929,68 +2867,6 @@ components:
             signature:
               type: string
               example: Signature of CM as defined in W3C standards; Base64 encoded
-    ConsentArtefact:
-      type: object
-      required:
-        - status
-        - consentId
-      properties:
-        status:
-          $ref: '#/components/schemas/ConsentStatus'
-        consentId:
-          type: string
-          format: uuid
-        consentDetail:
-          type: object
-          properties:
-            schemaVersion:
-              type: string
-              format: string
-            consentId:
-              type: string
-              format: uuid
-            createdAt:
-              type: string
-              format: date-time
-            patient:
-              $ref: '#/components/schemas/ConsentManagerPatientID'
-            careContexts:
-              type: array
-              items:
-                type: object
-                required:
-                  - patientReference
-                  - careContextReference
-                properties:
-                  patientReference:
-                    type: string
-                    example: batman@tmh
-                  careContextReference:
-                    type: string
-                    example: Episode1
-            purpose:
-              $ref: '#/components/schemas/UsePurpose'
-            hip:
-              type: object
-              allOf:
-                - $ref: '#/components/schemas/OrganizationRepresentation'
-                - xml:
-                    name: hip
-            consentManager:
-              type: object
-              allOf:
-                - $ref: '#/components/schemas/OrganizationReference'
-                - xml:
-                    name: consentManager
-            hiTypes:
-              type: array
-              items:
-                $ref: '#/components/schemas/HITypeEnum'
-            permission:
-              $ref: '#/components/schemas/Permission'
-        signature:
-          type: string
-          example: Signature of CM as defined in W3C standards; Base64 encoded
     HITypeEnum:
       type: string
       enum:
@@ -3210,54 +3086,6 @@ components:
             system:
               type: string
               example: https://www.mciindia.org
-    HINotification:
-      type: object
-      properties:
-        requestId:
-          type: string
-          format: uuid
-          description: a nonce, unique for each HTTP request. 
-          example: "499a5a4a-7dda-4f20-9b67-e24589627061"
-        timestamp:
-          $ref: '#/components/schemas/TimestampSchema'
-        transactionId:
-          $ref: '#/components/schemas/UuidSchema'
-        consentId:
-          $ref: '#/components/schemas/UuidSchema'
-        doneAt:
-          type: string
-          format: date-time
-        notifier:
-          type: object
-          properties:
-            type:
-              type: string
-              enum: [HIU, HIP]
-            id:
-              type: string
-              example: tmh
-        statusNotification:
-          type: object
-          properties:
-            sessionStatus:
-              type: string
-              enum: [TRANSFERRED, FAILED]
-            hipId:
-              type: string
-              example: max
-            statusResponses:
-              type: array
-              items:
-                type: object
-                properties:
-                  careContextReference:
-                    type: string
-                  hiStatus:
-                    type: string
-                    enum: [DELIVERED, OK, ERRORED]
-                    example: OK
-                  description:
-                    type: string
     HealthInformationNotification:
       type: object
       required:
@@ -3336,25 +3164,6 @@ components:
         id:
           type: string
           example: '<consent-artefact-id>'
-    HIUConsentNotification:
-      type: object
-      properties:
-        requestId:
-          type: string
-          format: uuid
-          description: a nonce, unique for each HTTP request
-          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
-        timestamp:
-          $ref: '#/components/schemas/TimestampSchema'
-        consentRequestId:
-          type: string
-          example: '<consent-request-id>'
-        status:
-          $ref: '#/components/schemas/ConsentStatus'
-        consentArtefacts:
-          type: array
-          items:
-            $ref: '#/components/schemas/ConsentArtefactReference'
     HIUConsentNotificationEvent:
       type: object
       required:
@@ -3571,70 +3380,6 @@ components:
           $ref: '#/components/schemas/Error'
         resp:
           $ref: '#/components/schemas/RequestReference'
-    ConsentArtefactRepresentation:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/ConsentStatus'
-        consentDetail:
-          type: object
-          properties:
-            schemaVersion:
-              type: string
-              format: string
-            consentId:
-              type: string
-              format: uuid
-            createdAt:
-              type: string
-              format: date-time
-            patient:
-              $ref: '#/components/schemas/ConsentManagerPatientID'
-            careContexts:
-              type: array
-              items:
-                type: object
-                required:
-                  - patientReference
-                  - careContextReference
-                properties:
-                  patientReference:
-                    type: string
-                    example: batman@tmh
-                  careContextReference:
-                    type: string
-                    example: Episode1
-            purpose:
-              $ref: '#/components/schemas/UsePurpose'
-            hip:
-              type: object
-              allOf:
-                - $ref: '#/components/schemas/OrganizationRepresentation'
-                - xml:
-                    name: hip
-            hiu:
-              type: object
-              allOf:
-                - $ref: '#/components/schemas/OrganizationRepresentation'
-                - xml:
-                    name: hiu
-            consentManager:
-              type: object
-              allOf:
-                - $ref: '#/components/schemas/OrganizationRepresentation'
-                - xml:
-                    name: consentManager
-            requester:
-              $ref: '#/components/schemas/Requester'
-            hiTypes:
-              type: array
-              items:
-                $ref: '#/components/schemas/HITypeEnum'
-            permission:
-              $ref: '#/components/schemas/Permission'
-        signature:
-          type: string
-          example: Signature of CM as defined in W3C standards; Base64 encoded
     HIUHealthInformationRequestResponse:
         type: object
         required:
@@ -3950,16 +3695,6 @@ components:
           $ref: '#/components/schemas/RequestReference'
       xml:
         name: PatientIdentificationResponse
-    
-    HipInitiatedLinkCareContext:
-      type: object
-      properties:
-        referenceNumber:
-          type: string
-        display:
-          type: string
-      xml:
-        name: Tag
     
     PatientAuthRequester:
       type: object
@@ -4568,7 +4303,7 @@ components:
           $ref: '#/components/schemas/ConsentManagerPatientID'
         hiu:
           $ref: '#/components/schemas/OrganizationRepresentation'
-        context:
+        sources:
           type: array
           items:
             $ref: '#/components/schemas/HIUSubscriptionContext'
