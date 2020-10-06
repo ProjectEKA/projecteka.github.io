@@ -93,7 +93,7 @@ paths:
     post:
       tags:
         - discovery
-        - cm facing
+        - hip facing
       summary: Response to patient's account discovery request
       description: >
         Result of patient care-context discovery request at HIP end. If a matching patient found with zero or more care contexts associated, it is specified as result attribute. If the prior discovery request, resulted in errors then it is specified in the error attribute. Reasons of errors can be 
@@ -275,7 +275,7 @@ paths:
     post:
       tags:
         - link
-        - hip facing
+        - cm facing
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"
@@ -332,7 +332,7 @@ paths:
     post:
       tags:
         - link
-        - cm facing
+        - hip facing
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-CM-ID"
