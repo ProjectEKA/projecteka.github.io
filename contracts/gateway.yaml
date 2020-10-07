@@ -16,6 +16,7 @@ tags:
   - name: identification
   - name: monitoring
   - name: sessions
+  - name: services
   - name: cm facing
   - name: hiu facing
   - name: hip facing
@@ -1469,6 +1470,58 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v0.5/hi-services/{service-id}:
+    get:
+      tags:
+        - services
+      summary: Get bridge service details/profile by the serviceId provided.
+      description: >
+        This API is meant for displaying the bridge service details by the serviceId provided .
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/service-id"
+      responses:
+        '200':
+          description: service details fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceProfileResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ServiceProfileResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Service doesn't exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v0.5/patients/find:
     post:
       tags:
@@ -1991,6 +2044,12 @@ components:
       schema:
         type: string
         format: uuid
+    service-id:
+      name: service-id
+      in: path
+      required: true
+      schema:
+        type: string
   schemas:
     TimestampSchema:
       type: string
@@ -3982,3 +4041,19 @@ components:
           $ref: '#/components/schemas/Error'
         resp:
           $ref: '#/components/schemas/RequestReference'
+    ServiceProfileResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          $ref: '#/components/schemas/ServiceType'
+        active:
+          type: boolean
+      xml:
+        name: ServiceProfileResponse
+      ServiceType:
+        type: string
+        enum: [HIP, HIU, HIP_AND_HIU, HEALTH_LOCKER]
