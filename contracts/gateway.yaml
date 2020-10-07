@@ -4054,6 +4054,6 @@ components:
           type: boolean
       xml:
         name: ServiceProfileResponse
-      ServiceType:
-        type: string
-        enum: [HIP, HIU, HIP_AND_HIU, HEALTH_LOCKER]
+    ServiceType:
+      type: string
+      enum: [HIP, HIU, HIP_AND_HIU, HEALTH_LOCKER]
