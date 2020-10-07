@@ -4167,7 +4167,7 @@ components:
       
     SubscriptionCategory:
       type: string
-      enum: ["LINK", "DATA"]
+      enum: ["LINK"]
       
     SubscriptionRequest:
       type: object
