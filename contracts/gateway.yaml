@@ -4273,7 +4273,8 @@ components:
     HIUSubscriptionContext:
       type: object
       required:
-        - test
+        - categories
+        - period
       properties:
         hip:
           $ref: '#/components/schemas/OrganizationRepresentation'
@@ -4291,10 +4292,7 @@ components:
         - id
         - patient
         - hiu
-        - context
-        - hips
-        - categories
-        - period
+        - sources
       properties:
         id:
           type: string
@@ -4326,7 +4324,7 @@ components:
           type: object
           required:
             - status
-            - subscriptionId
+            - subscriptionRequestId
           properties:
             status:
               type: string
@@ -4366,6 +4364,10 @@ components:
           $ref: '#/components/schemas/RequestReference'
     HIUSubscriptionEventContent:
       type: object
+      required:
+        - patient
+        - hip
+        - context
       properties:
         patient:
           $ref: '#/components/schemas/ConsentManagerPatientID'
@@ -4380,7 +4382,7 @@ components:
       required:
         - requestId
         - timestamp
-        - notification
+        - event
       properties:
         requestId:
           type: string
@@ -4394,7 +4396,9 @@ components:
           required:
             - id
             - published
-            - event
+            - subscriptionId
+            - category
+            - content
           properties:
             id:
               $ref: '#/components/schemas/UuidSchema'
