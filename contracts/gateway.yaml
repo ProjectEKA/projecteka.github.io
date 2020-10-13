@@ -4049,11 +4049,24 @@ components:
         name:
           type: string
         type:
-          $ref: '#/components/schemas/ServiceType'
+          $ref: '#/components/schemas/ServiceRole'
+        endpoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/Endpoint'
         active:
           type: boolean
       xml:
         name: ServiceProfileResponse
-    ServiceType:
+    Endpoint:
+      type: object
+      properties:
+        use:
+          type: string
+        connectionType:
+          type: string
+        address:
+          type: string
+    ServiceRole:
       type: string
       enum: [HIP, HIU, HIP_AND_HIU, HEALTH_LOCKER]
