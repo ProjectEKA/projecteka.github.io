@@ -4513,8 +4513,6 @@ components:
         type:
           $ref: '#/components/schemas/ServiceRole'
         endpoints:
-          type: array
-          items:
             $ref: '#/components/schemas/Endpoint'
         active:
           type: boolean
@@ -4523,12 +4521,45 @@ components:
     Endpoint:
       type: object
       properties:
+        hipEndpoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/EndpointDetails'
+        hiuEndpoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/EndpointDetails'
+        healthLockerEndpoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/EndpointDetails'
+      xml:
+        name: Endpoint
+    EndpointDetails:
+      type: object
+      properties:
         use:
-          type: string
+          $ref: '#/components/schemas/EndpointUse'
         connectionType:
-          type: string
+          $ref: '#/components/schemas/EndpointConnectionType'
         address:
           type: string
+      xml:
+        name: EndpointDetails
+    EndpointUse:
+      type: string
+      enum:
+        - registration
+        - data-upload
+      xml:
+        name: EndpointUse
+    EndpointConnectionType:
+      type: string
+      enum:
+        - HTTPS
+        - APP
+      xml:
+        name: EndpointConnectionType
     ServiceRole:
       type: string
       enum: [HIP, HIU, HIP_AND_HIU, HEALTH_LOCKER]
