@@ -4715,5 +4715,3 @@ components:
           $ref: '#/components/schemas/Error'
         resp:
           $ref: '#/components/schemas/RequestReference'
-        
-            
