@@ -508,6 +508,115 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v0.5/links/context/notify:
+    post:
+      tags:
+        - link
+        - hip facing
+        - data notification
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-CM-ID"
+      summary: API for HIPs to notify CM about new health data added to already linked care contexts
+      description: >
+        HIPs can notify CM whenever there is new data added to an linked care context for a patient. HIPs can specify the date
+        of new data added and type of health information added.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HipDataNotificationRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/HipDataNotificationRequest'
+      responses:
+        '202':
+          description: accepted
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v0.5/links/context/on-notify:
+    post:
+      tags:
+        - link
+        - cm facing
+        - data notification
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-HIP-ID"
+      summary: Acknowledgement sent by Consent Manager to HIP for data notification
+      description: >
+        CM sends back acknowledgement of receiving data notification by HIPs. CM may return errors if in following scenarios:
+          1. **Patient id sent by HIP in the data notification is incorrect**
+          2. **Carecontext sent by HIP in the data notification is not linked or incorrect.**
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HipDataNotificationAcknowledgement'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/HipDataNotificationAcknowledgement'
+      responses:
+        '202':
+          description: accepted
+        '400':
+          description: >
+            **Causes:**
+              * resp not specified
+              * atleast acknowledgement or error should be specified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v0.5/health-information/cm/request:
     post:
       tags:
@@ -4532,3 +4641,79 @@ components:
     ServiceRole:
       type: string
       enum: [HIP, HIU, HIP_AND_HIU, HEALTH_LOCKER]
+    HipDataNotificationRequest:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - notification
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        notification:
+          type: object
+          required:
+            - patient
+            - careContext
+            - hiTypes
+            - date
+            - hip
+          properties:
+            patient:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: string
+                  example: hinapatel@ncg
+            careContext:
+              $ref: '#/components/schemas/CareContextDefinition'
+            hiTypes:
+              type: array
+              items:
+                $ref: '#/components/schemas/HITypeEnum'
+            date:
+              $ref: '#/components/schemas/TimestampSchema'
+            hip: 
+              type: object
+              required:
+                - id
+              properties:
+                id: 
+                  type: string
+                  example: 1000010
+    HipDataNotificationAcknowledgement:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - acknowledgement
+        - resp
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        acknowledgement:
+          type: object
+          required:
+            - status
+          properties:
+            status: 
+              type: string
+              enum: ["SUCCESS"]
+        error: 
+          $ref: '#/components/schemas/Error'
+        resp:
+          $ref: '#/components/schemas/RequestReference'
+        
+            
