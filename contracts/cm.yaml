@@ -256,6 +256,52 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v0.5/links/context/notify:
+    post:
+      tags:
+        - hip facing
+        - data notification
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+      summary: API for HIPs to notify CM about new health data added to already linked care contexts
+      description: >
+        HIPs can notify CM whenever there is new data added to an linked care context for a patient. HIPs can specify the date
+        of new data added and type of health information added.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HipDataNotificationRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/HipDataNotificationRequest'
+      responses:
+        '202':
+          description: accepted
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   # consent-service
   /v0.5/consent-requests/init:
     post:
@@ -1803,3 +1849,62 @@ components:
                 id:
                   type: string
                   example: 100005
+    CareContextDefinition:
+      type: object
+      required:
+        - patientReference
+        - careContextReference
+      properties:
+        patientReference:
+          type: string
+          example: batman@tmh
+        careContextReference:
+          type: string
+          example: Episode1
+    HipDataNotificationRequest:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - notification
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        notification:
+          type: object
+          required:
+            - patient
+            - careContext
+            - hiTypes
+            - date
+            - hip
+          properties:
+            patient:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: string
+                  example: hinapatel@ncg
+            careContext:
+              $ref: '#/components/schemas/CareContextDefinition'
+            hiTypes:
+              type: array
+              items:
+                $ref: '#/components/schemas/HITypeEnum'
+            date:
+              $ref: '#/components/schemas/TimestampSchema'
+            hip: 
+              type: object
+              required:
+                - id
+              properties:
+                id: 
+                  type: string
+                  example: 1000010
