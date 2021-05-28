@@ -519,8 +519,15 @@ paths:
         - $ref: "#/components/parameters/X-CM-ID"
       summary: API for HIPs to notify CM about new health data added to already linked care contexts
       description: >
-        HIPs can notify CM whenever there is new data added to an linked care context for a patient. HIPs can specify the date
-        of new data added and type of health information added.
+        This API is called by HIP only when there is new health data is added/created for a patient and under a care context that is already linked with patient's Health Account. 
+        HIP can send following things in this API to notify the Consent Manager about the new health data added:
+          1. **Patient's Identifier for which the new health data is added (It can be NDHM id or NDHM number)**
+          2. **Care Context reference under which the new health data is added**
+          3. **Patient's reference (An identifier with which the patient is registered on HIP)**
+          4. **Types of health information documents that have been added**
+          5. **A date when the health information was created/added on the HIP**
+
+        Note: This API shouldn't be called if the new heath data of is added/created under new care context. 
       requestBody:
         required: true
         content:
@@ -565,7 +572,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-HIP-ID"
-      summary: Acknowledgement sent by Consent Manager to HIP for data notification
+      summary: Acknowledgement sent by Consent Manager to HIP for data notification.
       description: >
         CM sends back acknowledgement of receiving data notification by HIPs. CM may return errors if in following scenarios:
           1. **Patient id sent by HIP in the data notification is incorrect**
@@ -4301,9 +4308,11 @@ components:
       properties:
         patientReference:
           type: string
+          description: A patient identifier with which patient is registered in the facility/hospital
           example: batman@tmh
         careContextReference:
           type: string
+          description: An identifier of patient's care context created in HIP. A care context is a group of patient's health data (Not the actuall health data)
           example: Episode1
           
     EventCategoryDetail:
@@ -4672,10 +4681,12 @@ components:
                 id:
                   type: string
                   example: hinapatel@ncg
+                  description: A patient identifier, NDHM id or NDHM number
             careContext:
               $ref: '#/components/schemas/CareContextDefinition'
             hiTypes:
               type: array
+              description: Type of health data that created in the care context
               items:
                 $ref: '#/components/schemas/HITypeEnum'
             date:
