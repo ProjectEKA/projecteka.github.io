@@ -210,6 +210,120 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v0.5/links/context/notify:
+    post:
+      tags:
+        - Gateway
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-CM-ID"
+      summary: This API is meant to be called by HIPs when there is new health data generated for a patient, against a care context that is already linked to patient's NDHM account.
+      description: >
+        This API is called by HIP only when there is new health data is added/created for a patient and under a care context that is already linked with patient's Health Account. 
+        HIP can send following things in this API to notify the Consent Manager about the new health data added:
+          1. **Patient's Identifier for which the new health data is added (It can be NDHM id or NDHM number)**
+          2. **Care Context reference under which the new health data is added**
+          3. **Patient's reference (An identifier with which the patient is registered on HIP)**
+          4. **Types of health information documents that have been added**
+          5. **A date when the health information was created/added on the HIP**
+
+        Note: This API shouldn't be called if the new heath data of is added/created under new care context. 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HipDataNotificationRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/HipDataNotificationRequest'
+      responses:
+        '202':
+          description: accepted
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v0.5/links/context/on-notify:
+    post:
+      tags:
+        - link
+        - cm facing
+        - data notification
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-HIP-ID"
+      summary: Acknowledgement sent by Consent Manager to HIP for data notification
+      description: >
+        CM sends back acknowledgement of receiving data notification by HIPs. CM may return errors if in following scenarios:
+          1. **Patient id sent by HIP in the data notification is incorrect**
+          2. **Carecontext sent by HIP in the data notification is not linked or incorrect.**
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HipDataNotificationAcknowledgement'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/HipDataNotificationAcknowledgement'
+      responses:
+        '202':
+          description: accepted
+        '400':
+          description: >
+            **Causes:**
+              * resp not specified
+              * atleast acknowledgement or error should be specified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v0.5/health-information/hip/request:
     post:
       tags:
@@ -361,8 +475,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  
-  
+
   /v0.5/heartbeat:
     get:
       tags:
@@ -493,8 +606,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  
-  
+
   /v0.5/users/auth/on-init:
     post:
       tags:
@@ -898,8 +1010,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  
-  
+
   /v0.5/users/auth/fetch-modes:
     post:
       tags:
@@ -1322,8 +1433,6 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  
-  
 
 components:
   parameters:
@@ -2640,3 +2749,93 @@ components:
                 id:
                   type: string
                   example: 100005
+    CareContextDefinition:
+      type: object
+      required:
+        - patientReference
+        - careContextReference
+      properties:
+        patientReference:
+          type: string
+          description: A patient identifier with which patient is registered in the facility/hospital
+          example: batman@tmh
+        careContextReference:
+          type: string
+          description: An identifier of patient's care context created in HIP. A care context is a group of patient's health data (Not the actuall health data)
+          example: Episode1
+    HipDataNotificationRequest:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - notification
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        notification:
+          type: object
+          required:
+            - patient
+            - careContext
+            - hiTypes
+            - date
+            - hip
+          properties:
+            patient:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: string
+                  example: hinapatel@ncg
+                  description: A patient identifier, NDHM id or NDHM number
+            careContext:
+              $ref: '#/components/schemas/CareContextDefinition'
+            hiTypes:
+              type: array
+              description: Type of health data that created in the care context
+              items:
+                $ref: '#/components/schemas/HITypeEnum'
+            date:
+              $ref: '#/components/schemas/TimestampSchema'
+            hip: 
+              type: object
+              required:
+                - id
+              properties:
+                id: 
+                  type: string
+                  example: 1000010
+    HipDataNotificationAcknowledgement:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - acknowledgement
+        - resp
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        acknowledgement:
+          type: object
+          required:
+            - status
+          properties:
+            status: 
+              type: string
+              enum: ["SUCCESS"]
+        error: 
+          $ref: '#/components/schemas/Error'
+        resp:
+          $ref: '#/components/schemas/RequestReference'

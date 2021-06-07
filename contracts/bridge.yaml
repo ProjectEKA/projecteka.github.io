@@ -207,6 +207,66 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v0.5/links/context/on-notify:
+    post:
+      tags:
+        - link
+        - hip bridge
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+        - $ref: "#/components/parameters/X-HIP-ID"
+      summary: Acknowledgement sent by Consent Manager to HIP for data notification
+      description: >
+        CM sends back acknowledgement of receiving data notification by HIPs. CM may return errors if in following scenarios:
+          1. **Patient id sent by HIP in the data notification is incorrect**
+          2. **Carecontext sent by HIP in the data notification is not linked or incorrect.**
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HipDataNotificationAcknowledgement'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/HipDataNotificationAcknowledgement'
+      responses:
+        '202':
+          description: accepted
+        '400':
+          description: >
+            **Causes:**
+              * resp not specified
+              * atleast acknowledgement or error should be specified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v0.5/health-information/hiu/on-request:
     post:
       tags:
@@ -2045,6 +2105,33 @@ components:
               items:
                 $ref: '#/components/schemas/AuthenticationMode'
         error: 
+          $ref: '#/components/schemas/Error'
+        resp:
+          $ref: '#/components/schemas/RequestReference'
+    HipDataNotificationAcknowledgement:
+      type: object
+      required:
+        - requestId
+        - timestamp
+        - acknowledgement
+        - resp
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: a nonce, unique for each HTTP request
+          example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+        timestamp:
+          $ref: '#/components/schemas/TimestampSchema'
+        acknowledgement:
+          type: object
+          required:
+            - status
+          properties:
+            status:
+              type: string
+              enum: ["SUCCESS"]
+        error:
           $ref: '#/components/schemas/Error'
         resp:
           $ref: '#/components/schemas/RequestReference'
