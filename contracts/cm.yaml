@@ -260,10 +260,10 @@ paths:
     post:
       tags:
         - hip facing
-        - data notification
+        - link
       parameters:
         - $ref: "#/components/parameters/authorization"
-      summary: API for HIPs to notify CM about new health data added to already linked care contexts
+      summary: This API is meant to be called by HIPs when there is new health data generated for a patient, against a care conteext that is already linked to patient's NDHM account.
       description: >
         This API is called by HIP only when there is new health data is added/created for a patient and under a care context that is already linked with patient's Health Account. 
         HIP can send following things in this API to notify the Consent Manager about the new health data added:
@@ -273,7 +273,7 @@ paths:
           4. **Types of health information documents that have been added**
           5. **A date when the health information was created/added on the HIP**
 
-        Note: This API shouldn't be called if the new heath data of is added/created under new care context. 
+        Note: This API shouldn't be called if the new heath data of is added/created under new care context.
       requestBody:
         required: true
         content:
@@ -788,7 +788,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  
+
   /v0.5/users/auth/fetch-modes:
     post:
       tags:

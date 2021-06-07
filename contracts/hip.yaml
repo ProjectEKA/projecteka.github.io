@@ -217,7 +217,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/authorization"
         - $ref: "#/components/parameters/X-CM-ID"
-      summary: API for HIPs to notify CM about new health data added to already linked care contexts
+      summary: This API is meant to be called by HIPs when there is new health data generated for a patient, against a care conteext that is already linked to patient's NDHM account.
       description: >
         This API is called by HIP only when there is new health data is added/created for a patient and under a care context that is already linked with patient's Health Account. 
         HIP can send following things in this API to notify the Consent Manager about the new health data added:
@@ -475,8 +475,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  
-  
+
   /v0.5/heartbeat:
     get:
       tags:
@@ -607,8 +606,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  
-  
+
   /v0.5/users/auth/on-init:
     post:
       tags:
@@ -1012,8 +1010,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  
-  
+
   /v0.5/users/auth/fetch-modes:
     post:
       tags:
@@ -1436,8 +1433,6 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  
-  
 
 components:
   parameters:

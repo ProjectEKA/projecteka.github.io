@@ -210,7 +210,7 @@ paths:
   /v0.5/links/context/on-notify:
     post:
       tags:
-        - data notification
+        - link
         - hip bridge
       parameters:
         - $ref: "#/components/parameters/authorization"
